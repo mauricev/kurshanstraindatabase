@@ -1,0 +1,11 @@
+what can changename can change if it's externally-sourced. 1) need to check against original name	a. if the same, then we are restrictied to updating the record. we always do a wholesale update and call it quits. This catches any other changes automatically.	b. if it's not the same, need to check if the new name exists, if it does, bail; otherwise, we can update all wholesale and call it quits. This catches any other changes automaticaly.what info do we need. ideally, the old name and that's all. we will concatenate
+
+contributors_htmlValue
+coinjection_markers_htmlValue
+antibiotics_htmlValue
+fluorotags_btn_htmlValue
+
+select-contributors
+select-coinjection_markers
+select-antibiotics
+select-fluorotags

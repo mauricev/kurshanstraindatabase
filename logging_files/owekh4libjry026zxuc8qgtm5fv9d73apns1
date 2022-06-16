@@ -1,0 +1,17 @@
+The item you just submitted, nico12, was already in the database
+The item you just submitted, nico13, was already in the database
+The item you just submitted, nico888, was already in the database
+The item you just submitted, nico300, was already in the database
+created coinjection marker: sparkles1
+created coinjection marker: sparkles2
+created antibiotic: cryptolepis
+added balancer: balancer1; with comment 'did this balancer get added'; on chromosome I; and on chromosome III
+added gene: pos-233; with comment 'a comment on pos233'; on chromosome IV
+added allele: kur6; with comment 'kur6 has gene pos-233'; and gene pos-233
+added allele: meu211; with comment 'menu-211 has gene mig-13'; and gene mig-13
+added transgene: kurSi4; with comment 'this will be kursi4'; no chromosome given ; parent transgene: none; coinjectionMarker: none; and plasmids: EBF016, PK123
+added plasmid: plasmidhasaname; with no comment given ; cDNA: ; location: over the rainbow; promoter: Perl-307; gene: mig-13; with antibiotic: Ampicillin; with fluorotags: GFP, RFP; sequenceFile: 
+created antibiotic: sida
+added allele: kur7; with no comment given ; no gene specified 
+added plasmid: plasmid no seq; with no comment given ; cDNA: ; location: ; promoter: Pmig-13; gene: erl-307; with fluorotags: RFP; sequenceFile: 
+added balancer: bal213; with no comment given ; on chromosome III; and on chromosome V

@@ -1,0 +1,13 @@
+created fluor/tag: twirl tag
+created antibiotic: cryptolepsis
+created coinjection marker: coinjection2
+created contributor: Captain Picard
+added balancer: good trouble; with no comment given ; on chromosome II; and on chromosome V
+added transgene: triIs411; with no comment given ; on chromosome III; parent transgene: none; coinjectionMarker: Podr-1>GFP; and plasmids: none
+added allele: efi217; with no comment given ; and gene erl-307; sequenceFile: 6.ape
+added allele: kur27; with no comment given ; and gene mig-13; sequenceFile: 
+added allele: osy562; with no comment given ; no gene specified ; sequenceFile: 
+added allele: oxi976; with no comment given ; no gene specified ; sequenceFile: 
+added gene: mwq-599; with comment 'chipwich is great ice cream'; on chromosome III
+added plasmid: neato plasmid; with no comment given ; cDNA: ; location: ; promoter: Pepo-303; gene: erl-307; with antibiotic: ciprofloxacin; with fluorotags: GFP, RFP, twirl tag; sequenceFile: 5.ape
+added strain: HJQ2073; with no isolation name given ; with no comment given '; frozen on 2022-04-01; thawed on ; located at F-0002, A1-3, N-001, D1 with parent strains PTK10, PTK13 with alleles kur13, kur15 with transgenes kurEx1 with balancers good trouble, mex[kwvEx3]

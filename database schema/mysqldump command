@@ -1,0 +1,10 @@
+mysqldump -u root -p --opt straindatabase-withtestdata -d --single-transaction | sed 's/ AUTO_INCREMENT=[0-9]*//g' >peri-schema-6-22-21.sql
+
+extract from real database
+mysqldump -u root -p --opt straindatabase --single-transaction > actualdatabase.sql
+
+
+
+
+
+GRANT SELECT, FILE, ALTER, SHOW VIEW, PROCESS, EVENT, TRIGGER, RELOAD, LOCK TABLES ON *.* TO 'backup-user'@'localhost'

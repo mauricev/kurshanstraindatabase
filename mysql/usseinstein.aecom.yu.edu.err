@@ -1,0 +1,980 @@
+2019-10-25T06:58:32.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-10-25T06:58:32.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-10-25T06:58:33.370153Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 35905
+2019-10-25T06:58:33.386734Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-10-25T06:58:35.060978Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-10-25T06:58:35.089859Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-10-25T06:58:35.159780Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-10-25T14:34:05.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-10-25T14:34:06.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-10-25T14:34:08.194443Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1102
+2019-10-25T14:34:08.240080Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-10-25T14:34:20.773128Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-10-25T14:34:20.784618Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-10-25T14:34:20.964473Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-10-25T14:34:21.006487Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-10-25T14:34:21.095407Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-10-30T14:38:29.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-10-30T14:38:30.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-10-30T14:38:32.236195Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1122
+2019-10-30T14:38:32.304235Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-10-30T14:38:34.904598Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-10-30T14:38:34.917126Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-10-30T14:38:35.996694Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-10-30T14:38:36.648664Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-10-30T14:38:37.177048Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-10-31T15:09:40.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-10-31T15:09:40.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-10-31T15:09:41.298981Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1102
+2019-10-31T15:09:41.351449Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-10-31T15:09:43.021118Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-10-31T15:09:43.032330Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-10-31T15:09:43.218624Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-10-31T15:09:43.295437Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-10-31T15:09:43.352390Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-10-31T15:15:55.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-10-31T15:15:56.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-10-31T15:15:57.015543Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1099
+2019-10-31T15:15:57.076859Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-10-31T15:15:59.272965Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-10-31T15:15:59.283051Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-10-31T15:15:59.455643Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-10-31T15:15:59.534261Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-10-31T15:15:59.643010Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-11-01T18:08:41.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-11-01T18:08:41.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-11-01T18:08:43.076012Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1121
+2019-11-01T18:08:43.095513Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-11-01T18:08:44.338602Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-11-01T18:08:44.349110Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-11-01T18:08:44.529396Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-11-01T18:08:44.594531Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-11-01T18:08:44.657718Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-11-06T22:45:27.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-11-06T22:45:29.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-11-06T22:45:39.131722Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1501
+2019-11-06T22:45:39.353966Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-11-06T22:45:43.182842Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-11-06T22:45:43.195782Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-11-06T22:45:43.459636Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-11-06T22:45:43.698658Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-11-06T22:45:43.820557Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-11-15T15:46:20.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-11-15T15:46:20.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-11-15T15:46:21.235950Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1062
+2019-11-15T15:46:21.252689Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-11-15T15:46:22.938137Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-11-15T15:46:22.946921Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-11-15T15:46:23.094074Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-11-15T15:46:23.133648Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-11-15T15:46:23.239873Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-11-18T02:13:49.446762Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2019-11-18T02:16:29.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-11-18T02:16:30.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-11-18T02:16:33.320383Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1153
+2019-11-18T02:16:33.338390Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-11-18T02:16:34.824997Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-11-18T02:16:34.870157Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-11-18T02:16:35.177194Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-11-29T05:30:33.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-11-29T05:30:34.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-11-29T05:30:38.087208Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1204
+2019-11-29T05:30:38.104113Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-11-29T05:30:39.507146Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-11-29T05:30:39.520164Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-11-29T05:30:39.746745Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-11-29T05:30:39.788396Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-11-29T05:30:39.797624Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-01T03:51:52.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-01T03:51:53.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-01T03:51:54.488936Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1595
+2019-12-01T03:51:54.507516Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-01T03:51:56.510351Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-01T03:51:56.524326Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-01T03:51:56.696318Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-01T03:51:56.870642Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-01T03:51:57.142832Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-09T15:45:04.032233Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2019-12-09T16:03:48.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-09T16:03:49.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-09T16:03:50.177447Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1130
+2019-12-09T16:03:50.192496Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-09T16:03:53.707472Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-09T16:03:53.790193Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-09T16:03:53.852740Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-09T16:04:54.385257Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2019-12-09T16:26:25.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-09T16:26:25.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-09T16:26:27.886831Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1784
+2019-12-09T16:26:27.902642Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-09T16:26:29.978826Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-09T16:26:30.049240Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-09T16:26:30.245256Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-10T19:00:41.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-10T19:00:41.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-10T19:00:42.985871Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1307
+2019-12-10T19:00:43.003169Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-10T19:00:45.418343Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-10T19:00:45.429897Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-10T19:00:45.583699Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-10T19:00:45.650952Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-10T19:00:45.982179Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-12T23:34:06.679343Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2019-12-12T23:39:20.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-12T23:39:20.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-12T23:39:21.777454Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1204
+2019-12-12T23:39:21.877323Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-12T23:39:23.393940Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-12T23:39:23.467904Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-12T23:39:23.567247Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-15T00:58:35.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-15T00:58:35.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-15T00:58:36.726956Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1247
+2019-12-15T00:58:36.868081Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-15T00:58:38.599677Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-15T00:58:38.609392Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-15T00:58:38.758832Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-15T00:58:38.925593Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-15T00:58:39.207501Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-17T22:58:17.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-17T22:58:17.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-17T22:58:18.585465Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1255
+2019-12-17T22:58:18.603199Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-17T22:58:20.437477Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-17T22:58:20.446890Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-17T22:58:20.597542Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-17T22:58:20.713766Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-17T22:58:21.039146Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-21T20:17:56.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-21T20:17:56.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-21T20:17:57.782786Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1226
+2019-12-21T20:17:57.801797Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-21T20:17:59.336421Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-21T20:17:59.350109Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-21T20:17:59.547480Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-21T20:17:59.693916Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-21T20:18:00.156896Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2019-12-28T20:32:46.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2019-12-28T20:32:46.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2019-12-28T20:32:49.896416Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1097
+2019-12-28T20:32:54.207001Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2019-12-28T20:33:10.775972Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2019-12-28T20:33:10.788862Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2019-12-28T20:33:11.634419Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2019-12-28T20:33:13.401764Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2019-12-28T20:33:14.234816Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-05T00:56:45.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-05T00:56:46.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-05T00:56:49.570899Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1053
+2020-01-05T00:56:51.283923Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-05T00:57:00.435372Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-05T00:57:00.450875Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-05T00:57:00.794115Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-05T00:57:00.994661Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-05T00:57:01.184465Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+
+Status information:
+
+Current dir: /usr/local/var/mysql/
+Running threads: 1  Stack size: 286720
+Current locks:
+lock: 0x7fecf516de98:
+
+lock: 0x7fecf3e88528:
+
+lock: 0x109051ca8:
+
+lock: 0x109051798:
+
+lock: 0x109051f30:
+
+lock: 0x1090516c0:
+
+lock: 0x1090515e8:
+
+lock: 0x109051510:
+
+lock: 0x109051438:
+
+lock: 0x109051360:
+
+lock: 0x109051288:
+
+lock: 0x1090511b0:
+
+lock: 0x1090510d8:
+
+lock: 0x109051000:
+
+lock: 0x109051e58:
+
+lock: 0x10904de38:
+
+lock: 0x109052878:
+
+lock: 0x109052a28:
+
+lock: 0x109052950:
+
+lock: 0x1090527a0:
+
+lock: 0x1090526c8:
+
+lock: 0x1090525f0:
+
+lock: 0x109052518:
+
+lock: 0x109052440:
+
+lock: 0x109052368:
+
+lock: 0x109052290:
+
+lock: 0x1090521b8:
+
+lock: 0x10904fbc0:
+
+lock: 0x10904fae8:
+
+lock: 0x10904fa10:
+
+lock: 0x109051870:
+
+lock: 0x1090500d0:
+
+lock: 0x10904fff8:
+
+lock: 0x10904ff20:
+
+lock: 0x10904fe48:
+
+lock: 0x10904fd70:
+
+lock: 0x10904fc98:
+
+lock: 0x1090520e0:
+
+lock: 0x109052008:
+
+lock: 0x109050508:
+
+lock: 0x109050430:
+
+lock: 0x109050358:
+
+lock: 0x1090506b8:
+
+lock: 0x10904d418:
+
+lock: 0x109051d80:
+
+lock: 0x10904e930:
+
+lock: 0x10904e858:
+
+lock: 0x10904e5d0:
+
+lock: 0x10904e6a8:
+
+lock: 0x10904e780:
+
+lock: 0x10904e4f8:
+
+lock: 0x10904e270:
+
+lock: 0x10904e420:
+
+lock: 0x10904e198:
+
+lock: 0x10904e348:
+
+lock: 0x10904f0c8:
+
+lock: 0x10904eff0:
+
+lock: 0x10904ef18:
+
+lock: 0x10904da00:
+
+lock: 0x10904d928:
+
+lock: 0x10904dd60:
+
+lock: 0x10904dc88:
+
+lock: 0x10904e0c0:
+
+lock: 0x10904dbb0:
+
+lock: 0x10904dfe8:
+
+lock: 0x10904dad8:
+
+lock: 0x10904df10:
+
+lock: 0x10904ee40:
+
+lock: 0x10904ed68:
+
+lock: 0x10904ec90:
+
+lock: 0x10904d850:
+
+lock: 0x10904d5c8:
+
+lock: 0x10904d778:
+
+lock: 0x10904d4f0:
+
+lock: 0x10904d6a0:
+
+lock: 0x10904ebb8:
+
+lock: 0x10904eae0:
+
+lock: 0x10904ea08:
+
+lock: 0x109051948:
+
+lock: 0x109051bd0:
+
+lock: 0x109051af8:
+
+lock: 0x109051a20:
+
+lock: 0x109050ca0:
+
+lock: 0x109050bc8:
+
+lock: 0x109050af0:
+
+lock: 0x109050a18:
+
+lock: 0x109050940:
+
+lock: 0x109050e50:
+
+lock: 0x109050868:
+
+lock: 0x109050790:
+
+lock: 0x109050d78:
+
+lock: 0x1090505e0:
+
+lock: 0x1090501a8:
+
+lock: 0x109050280:
+
+lock: 0x10904f938:
+
+lock: 0x10904f860:
+
+lock: 0x10904f500:
+
+lock: 0x10904f788:
+
+lock: 0x10904f6b0:
+
+lock: 0x10904f428:
+
+
+Key caches:
+default
+Buffer_size:       8388608
+Block_size:           1024
+Division_limit:        100
+Age_limit:             300
+blocks used:             0
+not flushed:             0
+w_requests:              0
+writes:                  0
+r_requests:              0
+reads:                   0
+
+
+handler status:
+read_key:        11858
+read_next:       14320
+read_rnd           718
+read_first:       2082
+write:           34028
+delete              10
+update:            344
+
+Table status:
+Opened tables:        753
+Open tables:          675
+Open files:             6
+Open streams:           0
+
+
+
+Events status:
+LLA = Last Locked At  LUA = Last Unlocked At
+WOC = Waiting On Condition  DL = Data Locked
+
+Event scheduler status:
+State      : RUNNING
+Thread id  : 4
+LLA        : is_running:647
+LUA        : is_running:649
+WOC        : NO
+Workers    : 0
+Executed   : 0
+Data locked: NO
+
+Event queue status:
+Element count   : 0
+Data locked     : NO
+Attempting lock : NO
+LLA             : get_top_for_execution_if_time:538
+LUA             : get_top_for_execution_if_time:557
+WOC             : YES
+Next activation : never
+
+Status information:
+
+Current dir: /usr/local/var/mysql/
+Running threads: 1  Stack size: 286720
+Current locks:
+lock: 0x109051ca8:
+
+lock: 0x109051798:
+
+lock: 0x109051f30:
+
+lock: 0x1090516c0:
+
+lock: 0x1090515e8:
+
+lock: 0x109051510:
+
+lock: 0x109051438:
+
+lock: 0x109051360:
+
+lock: 0x109051288:
+
+lock: 0x1090511b0:
+
+lock: 0x1090510d8:
+
+lock: 0x109051000:
+
+lock: 0x109051e58:
+
+lock: 0x10904de38:
+
+lock: 0x109052878:
+
+lock: 0x109052a28:
+
+lock: 0x109052950:
+
+lock: 0x1090527a0:
+
+lock: 0x1090526c8:
+
+lock: 0x1090525f0:
+
+lock: 0x109052518:
+
+lock: 0x109052440:
+
+lock: 0x109052368:
+
+lock: 0x109052290:
+
+lock: 0x1090521b8:
+
+lock: 0x10904fbc0:
+
+lock: 0x10904fae8:
+
+lock: 0x10904fa10:
+
+lock: 0x109051870:
+
+lock: 0x1090500d0:
+
+lock: 0x10904fff8:
+
+lock: 0x10904ff20:
+
+lock: 0x10904fe48:
+
+lock: 0x10904fd70:
+
+lock: 0x10904fc98:
+
+lock: 0x1090520e0:
+
+lock: 0x109052008:
+
+lock: 0x109050508:
+
+lock: 0x109050430:
+
+lock: 0x109050358:
+
+lock: 0x1090506b8:
+
+lock: 0x10904d418:
+
+lock: 0x109051d80:
+
+lock: 0x10904e930:
+
+lock: 0x10904e858:
+
+lock: 0x10904e5d0:
+
+lock: 0x10904e6a8:
+
+lock: 0x10904e780:
+
+lock: 0x10904e4f8:
+
+lock: 0x10904e270:
+
+lock: 0x10904e420:
+
+lock: 0x10904e198:
+
+lock: 0x10904e348:
+
+lock: 0x10904f0c8:
+
+lock: 0x10904eff0:
+
+lock: 0x10904ef18:
+
+lock: 0x10904da00:
+
+lock: 0x10904d928:
+
+lock: 0x10904dd60:
+
+lock: 0x10904dc88:
+
+lock: 0x10904e0c0:
+
+lock: 0x10904dbb0:
+
+lock: 0x10904dfe8:
+
+lock: 0x10904dad8:
+
+lock: 0x10904df10:
+
+lock: 0x10904ee40:
+
+lock: 0x10904ed68:
+
+lock: 0x10904ec90:
+
+lock: 0x10904d850:
+
+lock: 0x10904d5c8:
+
+lock: 0x10904d778:
+
+lock: 0x10904d4f0:
+
+lock: 0x10904d6a0:
+
+lock: 0x10904ebb8:
+
+lock: 0x10904eae0:
+
+lock: 0x10904ea08:
+
+lock: 0x109051948:
+
+lock: 0x109051bd0:
+
+lock: 0x109051af8:
+
+lock: 0x109051a20:
+
+lock: 0x109050ca0:
+
+lock: 0x109050bc8:
+
+lock: 0x109050af0:
+
+lock: 0x109050a18:
+
+lock: 0x109050940:
+
+lock: 0x109050e50:
+
+lock: 0x109050868:
+
+lock: 0x109050790:
+
+lock: 0x109050d78:
+
+lock: 0x1090505e0:
+
+lock: 0x1090501a8:
+
+lock: 0x109050280:
+
+lock: 0x10904f938:
+
+lock: 0x10904f860:
+
+lock: 0x10904f500:
+
+lock: 0x10904f788:
+
+lock: 0x10904f6b0:
+
+lock: 0x10904f428:
+
+lock: 0x10904f5d8:
+
+lock: 0x10904f350:
+
+
+Key caches:
+default
+Buffer_size:       8388608
+Block_size:           1024
+Division_limit:        100
+Age_limit:             300
+blocks used:             0
+not flushed:             0
+w_requests:              0
+writes:                  0
+r_requests:              0
+reads:                   0
+
+
+handler status:
+read_key:        11867
+read_next:       14322
+read_rnd           718
+read_first:       2091
+write:           34028
+delete              10
+update:            344
+
+Table status:
+Opened tables:        753
+Open tables:            0
+Open files:             2
+Open streams:           0
+
+
+
+Events status:
+LLA = Last Locked At  LUA = Last Unlocked At
+WOC = Waiting On Condition  DL = Data Locked
+
+Event scheduler status:
+State      : RUNNING
+Thread id  : 4
+LLA        : is_running:647
+LUA        : is_running:649
+WOC        : NO
+Workers    : 0
+Executed   : 0
+Data locked: NO
+
+Event queue status:
+Element count   : 0
+Data locked     : NO
+Attempting lock : NO
+LLA             : get_top_for_execution_if_time:538
+LUA             : get_top_for_execution_if_time:557
+WOC             : YES
+Next activation : never
+2020-01-08T22:51:13.569879Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2020-01-08T22:51:13.6NZ mysqld_safe mysqld from pid file /usr/local/var/mysql/usseinstein.aecom.yu.edu.pid ended
+2020-01-08T22:51:13.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-08T22:51:13.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-08T22:51:14.272223Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 89979
+2020-01-08T22:51:14.279759Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-08T22:51:15.126744Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-08T22:51:15.154632Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-08T22:51:15.283434Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-08T22:52:24.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-08T22:52:24.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-08T22:52:24.956245Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 90111
+2020-01-08T22:52:24.961935Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-08T22:52:25.923557Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-08T22:52:25.934370Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-08T22:52:26.074669Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-08T22:52:26.129457Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-08T22:52:26.230897Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-08T22:57:42.657117Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2020-01-08T22:59:17.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-08T22:59:17.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-08T22:59:17.894558Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 90399
+2020-01-08T22:59:17.919585Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-08T22:59:19.349245Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-08T22:59:19.369500Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-08T22:59:19.393309Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-12T06:55:12.694828Z 0 [Warning] [MY-010909] [Server] /usr/local/opt/mysql/bin/mysqld: Forcing close of thread 1714  user: 'root'.
+2020-01-12T06:55:12.732657Z 0 [Warning] [MY-010909] [Server] /usr/local/opt/mysql/bin/mysqld: Forcing close of thread 1706  user: 'root'.
+2020-01-12T06:55:12.732870Z 0 [Warning] [MY-010909] [Server] /usr/local/opt/mysql/bin/mysqld: Forcing close of thread 1707  user: 'root'.
+2020-01-12T06:55:12.733117Z 0 [Warning] [MY-010909] [Server] /usr/local/opt/mysql/bin/mysqld: Forcing close of thread 1715  user: 'root'.
+2020-01-12T06:56:24.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:56:25.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:56:33.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:56:34.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:56:44.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:56:44.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:56:54.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:56:54.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:07.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:08.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:15.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:16.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:26.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:26.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:36.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:36.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:47.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:47.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:57:57.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:57:57.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:07.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:07.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:17.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:17.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:27.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:28.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:38.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:38.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:48.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:48.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:58:58.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:58:58.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:59:08.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:59:08.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:59:19.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:59:19.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:59:29.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:59:29.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:59:39.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:59:39.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T06:59:49.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T06:59:49.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:00.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:00.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:10.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:10.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:20.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:20.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:30.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:30.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:40.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:40.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:00:51.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:00:51.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:01.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:01.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:11.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:11.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:21.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:21.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:31.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:31.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:41.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:41.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:01:51.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:01:51.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:02.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:02.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:12.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:12.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:22.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:22.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:32.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:32.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:42.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:42.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:02:52.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:02:52.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:02.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:02.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:13.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:13.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:23.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:23.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:33.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:33.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:43.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:43.6NZ mysqld_safe A mysqld process already exists
+2020-01-12T07:03:54.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:03:54.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-12T07:03:54.460062Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 70566
+2020-01-12T07:03:54.474419Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-12T07:03:56.990511Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-12T07:03:56.999028Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-12T07:03:57.438110Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-12T07:03:57.458780Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-12T07:03:57.587925Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-12T07:11:25.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-12T07:11:25.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-12T07:11:26.686628Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1207
+2020-01-12T07:11:26.704586Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-12T07:11:42.989733Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-12T07:11:42.998432Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-12T07:11:44.456286Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-12T07:11:44.523957Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-12T07:11:44.540112Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-16T18:10:10.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-16T18:10:10.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-16T18:10:11.037619Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1186
+2020-01-16T18:10:11.051289Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-16T18:10:21.474474Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-16T18:10:21.483000Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-16T18:10:22.314869Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-16T18:10:22.367125Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-16T18:10:22.649649Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-16T18:56:32.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-16T18:56:33.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-16T18:56:37.870567Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1270
+2020-01-16T18:56:37.977362Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-16T18:57:10.585360Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-16T18:57:10.593721Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-16T18:57:12.578220Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-16T18:57:12.688949Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-16T18:57:12.798118Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-16T19:17:41.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-16T19:17:42.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-16T19:17:43.014071Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1560
+2020-01-16T19:17:43.106334Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-16T19:17:59.296694Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-16T19:17:59.304721Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-16T19:18:00.444254Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-16T19:18:00.547077Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-16T19:18:00.850110Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-17T17:10:06.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-17T17:10:06.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-17T17:10:06.807100Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1211
+2020-01-17T17:10:06.822668Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-17T17:10:12.563277Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-01-17T17:10:12.574570Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-01-17T17:10:13.027527Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-17T17:10:13.062546Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-17T17:10:13.147863Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-01-27T19:28:58.288762Z 0 [System] [MY-010910] [Server] /usr/local/opt/mysql/bin/mysqld: Shutdown complete (mysqld 8.0.18)  Homebrew.
+2020-01-27T19:32:26.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-01-27T19:32:26.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-01-27T19:32:27.759910Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1144
+2020-01-27T19:32:27.782185Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-01-27T19:32:37.575885Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-01-27T19:32:37.610762Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-01-27T19:32:37.710383Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-03T20:23:15.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-03T20:23:15.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-03T20:23:16.377426Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1273
+2020-02-03T20:23:16.424256Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-03T20:23:31.280636Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-03T20:23:31.291460Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-03T20:23:32.832849Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-03T20:23:32.912049Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-03T20:23:32.954199Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-14T16:05:28.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-14T16:05:28.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-14T16:05:31.288865Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1308
+2020-02-14T16:05:32.314352Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-14T16:05:40.853314Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-14T16:05:40.862726Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-14T16:05:41.286047Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-14T16:05:41.311834Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-14T16:05:41.431911Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-20T15:39:32.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-20T15:39:32.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-20T15:39:32.909814Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1205
+2020-02-20T15:39:33.067032Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-20T15:39:49.739139Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-20T15:39:49.747505Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-20T15:39:50.586927Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-20T15:39:50.650197Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-20T15:39:50.870443Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-20T15:51:33.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-20T15:51:34.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-20T15:51:35.234244Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1078
+2020-02-20T15:51:35.250094Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-20T15:51:47.190716Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-20T15:51:47.213009Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-20T15:51:47.433705Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-24T16:46:19.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-24T16:46:19.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-24T16:46:20.119395Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1406
+2020-02-24T16:46:20.135770Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-24T16:46:44.795439Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-24T16:46:44.803330Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-24T16:46:45.160865Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-24T16:46:45.182238Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-24T16:46:45.404202Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-25T16:57:30.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-25T16:57:30.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-25T16:57:31.020174Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1265
+2020-02-25T16:57:31.033925Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-25T16:57:39.386923Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-25T16:57:39.394876Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-25T16:57:39.713520Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-25T16:57:39.735814Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-25T16:57:40.000439Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-02-25T17:10:33.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-02-25T17:10:33.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-02-25T17:10:34.649942Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1159
+2020-02-25T17:10:34.730432Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-02-25T17:10:42.048986Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-02-25T17:10:42.058699Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-02-25T17:10:42.531575Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-02-25T17:10:42.609088Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-02-25T17:10:42.637758Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-03-05T16:50:44.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-03-05T16:50:44.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-03-05T16:50:44.822492Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1296
+2020-03-05T16:50:44.880488Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-03-05T16:50:55.612532Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-03-05T16:50:55.621671Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-03-05T16:50:56.327960Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-03-05T16:50:56.350836Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-03-05T16:50:56.519990Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-03-12T14:46:46.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-03-12T14:46:46.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-03-12T14:46:47.026351Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1131
+2020-03-12T14:46:47.090851Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-03-12T14:46:54.706503Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-03-12T14:46:54.715071Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-03-12T14:46:55.049757Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-03-12T14:46:55.111264Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-03-12T14:46:55.337123Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-03-17T13:09:24.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-03-17T13:09:25.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-03-17T13:09:26.229997Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1155
+2020-03-17T13:09:26.345705Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-03-17T13:09:36.840955Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-03-17T13:09:36.849982Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-03-17T13:09:37.777119Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-03-17T13:09:37.880375Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-03-17T13:09:38.152148Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-03-19T14:27:38.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-03-19T14:27:38.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-03-19T14:27:39.337750Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1173
+2020-03-19T14:27:39.379371Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-03-19T14:27:51.492174Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-03-19T14:27:51.500457Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-03-19T14:27:52.055857Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-03-19T14:27:52.078940Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-03-19T14:27:52.393915Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060
+2020-03-20T14:36:19.6NZ mysqld_safe Logging to '/usr/local/var/mysql/usseinstein.aecom.yu.edu.err'.
+2020-03-20T14:36:19.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2020-03-20T14:36:20.900862Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.18) starting as process 1180
+2020-03-20T14:36:20.968061Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2020-03-20T14:36:41.288710Z 0 [System] [MY-010229] [Server] Starting crash recovery...
+2020-03-20T14:36:41.298263Z 0 [System] [MY-010232] [Server] Crash recovery finished.
+2020-03-20T14:36:43.190487Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2020-03-20T14:36:44.576673Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.18'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2020-03-20T14:36:45.105427Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: '/tmp/mysqlx.sock' bind-address: '127.0.0.1' port: 33060

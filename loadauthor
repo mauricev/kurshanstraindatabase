@@ -1,0 +1,1 @@
+1) change enter/edit plasmid to have the new gene promoter display instead of what's there now2) change search to show the new gene promoter and to ensure the search works for them.we should have a plasmid with a promoter and a gene and search for them both to see if that finds it in the new search

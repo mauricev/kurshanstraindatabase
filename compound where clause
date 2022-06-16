@@ -1,0 +1,76 @@
+SELECT pt.plasmidName_col FROM plasmid_table  ptINNER JOIN plasmid_to_antibiotic_table ON plasmid_table.plasmid_id = plasmid_to_antibiotic_table.plasmid_fk INNER JOIN antibiotic_table ON plasmid_to_antibiotic_table.antibiotic_fk = antibiotic_table.antibiotic_id WHERE antibiotic_table.antibiotic_id IN (4,5)Group BY pt.plasmidName_colhaving count(distinct antibiotic_table.antibiotic_id) = 2current searchis and across items and or among the same of each itemif i search for a transgene and an allele, both must be presentif I search for two transgenes and an allele, the allele must be present and either of the two transgenes.but what if I want an and search for the two transgenes so thenif I search for two transgenes and an allele with an AND on transgenes, the allele must be present and BOTH of the two transgenes.consider PTK5 it has allele wy1155 and two transgenes kurEx5 and wyIs685. either search will find this result. we need one where it has the allele and just one of these transgenes to distinguish the two different searchesPTK4 has this allele and transgene wyIs685, but not transgene kurEx5, so it should fail the AND search, but suceed in the OR search.confirmed the OR search worked for bothwith OR searchSELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table INNER JOIN strain_to_allele_table ON truestrain_table.strain_ID = strain_to_allele_table.strain_fk INNER JOIN allele_table ON strain_to_allele_table.allele_fk = allele_table.allele_id INNER JOIN strain_to_transgene_table ON truestrain_table.strain_ID = strain_to_transgene_table.strain_fk INNER JOIN transgene_table ON strain_to_transgene_table.transgene_fk = transgene_table.transgene_id WHERE allele_table.allele_ID = 1 AND ( transgene_table.transgene_id = 6 OR transgene_table.transgene_id = 1 ) ORDER BY truestrain_table.strainName_colSELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table INNER JOIN strain_to_allele_table ON truestrain_table.strain_ID = strain_to_allele_table.strain_fk INNER JOIN allele_table ON strain_to_allele_table.allele_fk = allele_table.allele_id INNER JOIN strain_to_transgene_table ON truestrain_table.strain_ID = strain_to_transgene_table.strain_fk INNER JOIN transgene_table ON strain_to_transgene_table.transgene_fk = transgene_table.transgene_id WHERE allele_table.allele_ID = 1 AND ( transgene_table.transgene_id in (6,1 )) Group BY truestrain_table.strain_id  having count(distinct transgene_table.transgene_id) = 2ORDER BY truestrain_table.strainName_colthis works; now can we build it? what we need to do1) transgene_table.transgene_id = 6 OR transgene_table.transgene_id = 1 needs to become transgene_table.transgene_id in (6,1 )to do this when the table is ANded we write out the clause as in clause with each item2) group by needs to tagged onto the where clausethis is more difficult because we need to append a having clause with the count of of anded itemsnow it gets infinitely more difficult if we have MULTIPLE ANDs. we need another strain which meets the criteria of above and it has a second allele too so we can search BOTH simultaneously I added kur4 (11) to PTK61) SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table INNER JOIN strain_to_allele_table ON truestrain_table.strain_ID = strain_to_allele_table.strain_fk 
+2a) INNER JOIN allele_table ON strain_to_allele_table.allele_fk = allele_table.allele_id 
+2b) INNER JOIN strain_to_transgene_table ON truestrain_table.strain_ID = strain_to_transgene_table.strain_fk 
+2c) INNER JOIN transgene_table ON strain_to_transgene_table.transgene_fk = transgene_table.transgene_id 
+3) WHERE allele_table.allele_ID in (11,1) AND  transgene_table.transgene_id in (6,1 )
+ 4) Group BY truestrain_table.strain_id  
+5) Having (count(distinct transgene_table.transgene_id) = 2 AND count(distinct allele_table.allele_ID) = 2)
+6) ORDER BY truestrain_table.strainName_col
+
+INSTRUCTIONS 
+
+When the user picks AND for each specific element. In the example above, strain must be associated with allele 11 AND allele 1 AND also transgene 6 and transgene 1.
+
+So when "and" is set and there is more than one element, we set up an "in" construct .
+
+But we also need to setup the having clause, it needs two pieces of info. 
+1) the element name
+and
+2) the count
+
+Array is a list of items 
+A 2d array is a grid. One array is the list of element names and the 2nd is the count
+
+transgene_table.transgene_id	allele_table.allele_ID
+2				2
+
+We also need group by when having clause array has one or more elements
+
+$this->IsItORSearch_prop = $isItORSearch_param;
+
+alleleName_chkbox_htmlName
+geneName_chkbox_htmlName
+balancerName_chkbox_htmlName
+transgeneName_chkbox_htmlName
+transGenePlasmids_chkbox_htmlName
+$this->IsItORSearch_prop = $_POST['parent_chkbox_htmlName'];
+when we are doing two AND searches we need to make HAVING a compound search 1) make the where clause a compound IN clause2) add a having count distinct clause3) when there is more than one compound where in clause there must be a corresponding compound HAVING clause 4) it sounds like we need another array buildtheHavingClause thewhereclause can contain both the where clause, the group by clause and the having clause without adding anything else to the final search string5) somewhere there needs to be a bit flipped when there's a compound where clause to trigger that group by gets added 6) for each compound where clause that we build, we need a count distinct clause if this array contains more than one item we concatenate with AND. There is only one HAVING clause. if there is anything in the having clause it gets "having" added 
+
+1)
+On the other side of the buildElementWhereClause where it's for AND and not OR,
+We will build instead an "in" clause like so it comes out like allele_table.allele_ID in (?,?)
+
+2) we need to call another method that adds to the buddingHavingArray
+we add in this array for the example above 11 and 1. And for the second entry, 6 and 1. 
+So first in the literal clause we should end up with allele_table.allele_ID in (?,?)
+Problem is this. We have allele_table.allele_ID  = ? as the element, but now we can't do that, we need just
+allele_table.allele_ID and then we have to append question mark and then on the subsequent iteration, a comma and another ? 
+We should have the element as allele_table.allele_ID and then for the OR, we have saved 
+= ?
+We append the " = ?" for the OR.
+We only check for AND if the array has more than 1 element:
+if it has two elements
+We start with "allele_table.allele_ID in ("
+We can just append " in (" to allele_table.allele_ID as opposed to " = ?"
+For each array loop, add in a "?". 
+If the number of elements is more than the current count, append comma
+At the end of the array loop, append ")". 
+
+At some point we need a method that looks at the buddingHavingArray and its size is greater than 0, we append " having " to the master where clause
+Updateourentry can header go in here (is it always header to start/update pages?)
+
+
+
+We have a map of functions 
+Integratedstate corresponds to extra-chromosomal, integrated and single insertion
+That corresponds to lablabeltextexnumber, lablabelkurisnumber)
+
+You pass transGeneStateObject.integratedState to lablabeltext and that maps to corresponding lablabeltext
+
+We have 
+var transGeneStateObject = {integratedState:'no-state', labProducedState:'no-state'};
+Can we expand this to include another array and with all the different states
+
+
+
+

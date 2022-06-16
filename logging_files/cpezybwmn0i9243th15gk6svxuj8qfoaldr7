@@ -1,0 +1,8 @@
+added allele: kur25; with comment 'kur25 starts with 1'; and gene ert-101; sequenceFile: 1.ape
+updated allele: kur25; with comment 'kur25 starts with 1; then 2'; and gene ert-101; sequenceFile: 2.ape
+updated allele: oiy845; with comment 'kur25 starts with 1; then 2; becomes oiy845 with 3'; and gene ert-101; sequenceFile: 3.ape
+updated allele: oiy847; with comment 'kur25 starts with 1; then 2; becomes oiy845 with 3; 847 with 4'; and gene ert-101; sequenceFile: 4.ape
+updated allele: kur26; with comment 'kur25 starts with 1; then 2; becomes oiy845 with 3; 847 with 4; 26 with 5'; and gene ert-101; sequenceFile: 5.ape
+added plasmid: jump for joy; with comment 'now with 6'; cDNA: ; location: ; promoter: P; gene: ; with fluorotags: GFP; sequenceFile: 6.ape
+updated plasmid: jump for joy; with comment 'now with 6'; cDNA: ; location: ; promoter: P; gene: ; with fluorotags: GFP; sequenceFile: 4.ape
+created antibiotic: sida acuta

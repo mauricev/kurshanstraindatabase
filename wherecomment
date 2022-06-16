@@ -1,0 +1,15 @@
+public function buildWhereString($thePrimaryWhereClause_param) {
+
+	$incomingWhereString1 = $thePrimaryWhereClause_param;
+	$incomingWhereString2 = $this->theWhereClauseString_prop;
+
+	$theOutGoingWhereString = "";
+	if (($incomingWhereString1 != "" ) && ($incomingWhereString2 != "" )) {
+		$theOutGoingWhereString = $incomingWhereString1 . ' OR ' . $incomingWhereString2;
+	} else if ($incomingWhereString1 != "" ) {
+		$theOutGoingWhereString = $incomingWhereString1;
+	} else {
+		$theOutGoingWhereString = $incomingWhereString2;
+	}
+	return $theOutGoingWhereString;
+}

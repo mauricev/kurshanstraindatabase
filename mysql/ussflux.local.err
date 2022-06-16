@@ -1,0 +1,24 @@
+2017-01-27T03:25:48.6NZ mysqld_safe Logging to '/usr/local/var/mysql/ussflux.local.err'.
+2017-01-27T03:25:48.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2017-01-27T03:25:52.913993Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.22) starting as process 1099
+2017-01-27T03:25:53.097641Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2017-01-27T03:25:53.146826Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2017-01-27T03:25:56.934580Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2017-01-27T03:25:57.768755Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '127.0.0.1' port: 33060, socket: /tmp/mysqlx.sock
+2017-01-27T03:25:58.042013Z 0 [Warning] [MY-013414] [Server] Server SSL certificate doesn't verify: certificate is not yet valid
+2017-01-27T03:25:58.042767Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2017-01-27T03:25:58.043275Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2017-01-27T03:25:58.094613Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.22'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2017-01-02T04:09:05.6NZ mysqld_safe Logging to '/usr/local/var/mysql/ussflux.local.err'.
+2017-01-02T04:09:05.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2017-01-02T04:09:10.329207Z 0 [System] [MY-010116] [Server] /usr/local/opt/mysql/bin/mysqld (mysqld 8.0.22) starting as process 1412
+2017-01-02T04:09:10.352120Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2017-01-02T04:09:10.442478Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2017-01-02T04:09:13.347516Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2017-01-02T04:09:13.860140Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '127.0.0.1' port: 33060, socket: /tmp/mysqlx.sock
+2017-01-02T04:09:13.966223Z 0 [System] [MY-010229] [Server] Starting XA crash recovery...
+2017-01-02T04:09:13.979551Z 0 [System] [MY-010232] [Server] XA crash recovery finished.
+2017-01-02T04:09:14.055606Z 0 [Warning] [MY-013414] [Server] Server SSL certificate doesn't verify: certificate is not yet valid
+2017-01-02T04:09:14.056561Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2017-01-02T04:09:14.057107Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2017-01-02T04:09:14.374390Z 0 [System] [MY-010931] [Server] /usr/local/opt/mysql/bin/mysqld: ready for connections. Version: '8.0.22'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.

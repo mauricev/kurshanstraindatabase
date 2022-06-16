@@ -1,0 +1,15 @@
+added balancer: rte[nsEx23]; with no comment given ; on chromosome IV; no secondary chromosome given 
+added strain: PTK12; with no isolation name given ; with no comment given ', frozen on 2021-05-11; thawed on ; located at F-0001, E4-6, N-001, B5
+added strain: PTK13; with no isolation name given ; with no comment given ', frozen on 2021-05-11; thawed on ; located at F-0001, E7-9, N-001, B6
+added strain: PTK14; with no isolation name given ; with no comment given ', frozen on 2021-05-11; thawed on ; located at F-0001, F1-3, N-001, B7
+added strain: PTK15; with no isolation name given ; with no comment given ', frozen on 2021-05-11; thawed on ; located at F-0001, F4-6, N-001, B8 with allelesok943, ju82 with transgeneskurEx5, kurSi1
+added strain: PTK16; with no isolation name given ; with no comment given ', frozen on 2021-05-17; thawed on ; located at F-0001, F7-9, N-001, B9 with alleles kur4, kur3 with transgenes kurEx5, kurSi1, wyIs685 with balancers neato[wyIs96], good[trEx34]
+updated strain: PTK16; with no isolation name given ; with no comment given ; frozen on 2021-05-17; thawed on ; located at F-0001, F7-9, N-001, B9 with parent strains PTK11, PTK8 with alleles kur3, kur4 with transgenes wyIs685, kurEx5, kurSi1 with balancers neato[wyIs96], good[trEx34]
+added plasmid: wild plasmid; with no comment given ; cDNA: erty; location: ; promoter: Pmig-13; gene: nrx-1; with fluorotags: RFP, GFP; sequenceFile: 
+updated strain: PTK16; with no isolation name given ; with no comment given ; frozen on 2021-05-17; thawed on ; located at F-0001, F7-9, N-001, B9 with parent strains PTK8, ere463 with alleles kur3, kur4 with transgenes wyIs685, kurEx5, kurSi1 with balancers neato[wyIs96], good[trEx34]
+updated strain: PTK16; with no isolation name given ; with no comment given ; frozen on 2021-05-17; thawed on ; located at F-0001, F7-9, N-001, B9 with parent strains PTK8, ere463 with alleles kur3, kur4 with transgenes wyIs685, kurEx5, kurSi1 with balancers good[trEx34]
+added plasmid: d3r3r; with no comment given ; cDNA: ; location: ; promoter: P; gene: ; with fluorotags:  none; sequenceFile: 
+added plasmid: one more time; with no comment given ; cDNA: ; location: ; promoter: P; gene: ; with fluorotags:  none; sequenceFile: 
+added plasmid: another time; with no comment given ; cDNA: ; location: ; promoter: Pcla-1; gene: ; with fluorotags:  none; sequenceFile: 
+added plasmid: third time; with no comment given ; cDNA: ; location: ; promoter: Pepo-303; gene: epo-303; with fluorotags:  none; sequenceFile: 
+added plasmid: fifth time; with no comment given ; cDNA: ; location: ; promoter: Punc-13; gene: unc-13; with antibiotic: Ampicillin; with fluorotags: GFP, RFP, GFP; sequenceFile: 

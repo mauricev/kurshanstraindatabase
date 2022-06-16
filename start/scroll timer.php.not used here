@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+    <script>
+      $(function() {
+        setTimeout(function() {
+          var jumpPos = $('#jump').offset().top;
+          if ($(document).scrollTop() <= jumpPos)
+            $('html, body').animate({
+              scrollTop: jumpPos
+            }, 1000);
+        }, 18000);
+      });
+    </script>
+  </head>
+  <body>
+    <div id=jump>
+
+    </div>
+  </body>
+</html>

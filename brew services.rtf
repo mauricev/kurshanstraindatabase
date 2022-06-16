@@ -1,0 +1,42 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red64\green11\blue217;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c32309\c18666\c88229;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 /usr/local/opt/mysql/bin/mysqld_safe --datadir=/usr/local/var/mysql\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ==>\cf2  
+\f1\b php
+\f0\b0 \
+To enable PHP in Apache add the following to httpd.conf and restart Apache:\
+    LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so\
+\
+    <FilesMatch \\.php$>\
+        SetHandler application/x-httpd-php\
+    </FilesMatch>\
+\
+Finally, check DirectoryIndex includes index.php\
+    DirectoryIndex index.php index.html\
+\
+The php.ini and php-fpm.ini file can be found in:\
+    /usr/local/etc/php/8.1/\
+\
+To restart php after an upgrade:\
+  brew services restart php\
+Or, if you don't want/need a background service you can just run:\
+  /usr/local/opt/php/sbin/php-fpm --nodaemonize\
+\cf3 ==>\cf2  
+\f1\b httpd
+\f0\b0 \
+DocumentRoot is /usr/local/var/www.\
+\
+The default ports have been set in /usr/local/etc/httpd/httpd.conf to 8080 and in\
+/usr/local/etc/httpd/extra/httpd-ssl.conf to 8443 so that httpd can run without sudo.\
+\
+To restart httpd after an upgrade:\
+  brew services restart httpd\
+Or, if you don't want/need a background service you can just run:\
+  /usr/local/opt/httpd/bin/httpd -D FOREGROUND\
+}
