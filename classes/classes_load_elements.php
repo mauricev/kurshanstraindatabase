@@ -574,6 +574,43 @@
 			echo "</select>";
 		}
 
+		// needs to display both the allele and the associated gene
+		public function buildSelectedTablesWithMultipleEntries($arrayToSelect_param) {
+			$theEntireArray = $this->returnAll();
+			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\"  class='selectized' placeholder=\"$this->placeholder_multiple_prop\" multiple>";
+			// speed up our searches
+			sort($theEntireArray);
+			sort($arrayToSelect_param);
+			foreach ($theEntireArray as $theEntireArrayItem)
+			{
+				$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
+				$id = $theEntireArrayItem[$this->elementIDColumn_prop];
+				$selected = false;
+				foreach ($arrayToSelect_param as $theMarkedArrayItem)
+				{
+					if ($theMarkedArrayItem == $id) {
+						$selected = true;
+						break;
+					}
+				}
+
+				// previously, this method just populated the alleles without the corresponding gene
+				$theAlleleObject = new LoadAllele();
+				$alleleElementArrayToEdit = $theAlleleObject->returnSpecificRecord($id);
+
+				$theGeneObject = new LoadGene();
+				$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
+				$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+
+				if ($selected) {
+					echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
+				} else {
+					echo "<option value=\"$id\">$geneToAdd ($name)</option>";
+				}
+			}
+			echo "</select>";
+		}
+
 		// allele related search
 		public function searchRelatedToStrain($strainToSearchFor_param) {
 
