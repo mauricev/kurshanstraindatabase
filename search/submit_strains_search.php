@@ -69,6 +69,9 @@
 
           $theStrainClass = new LoadParentStrains();
 
+          //var_dump($_POST);
+          //echo "<br>";
+
           echo "<table class='table table-striped table-hover table-bordered'>";
 
 // SECTION 1 first row is the heading colunn row
@@ -111,16 +114,24 @@
 
 // SECTION 2
 // placeholder for the strain id
-              $theTableOutputClass->appendTableHeader('strain id');
+              $theTableOutputClass->appendTableHeader('');
 // strain name
               // we need to test element 0 of the array
+
+              //$_POST['trueStrainsArray_htmlName'] is the strain id. We will need to extract every element of the search parameters
+
               if ((isset($_POST['trueStrainsArray_htmlName'])) && $_POST['trueStrainsArray_htmlName'][0] != "") {
-                $header = $_POST['trueStrainsArray_htmlName'][0] . "blank";
+                $theStrainID = $theStrainClass->returnSpecificRecord($_POST['trueStrainsArray_htmlName'][0]);
+                $header = htmlspecialchars($theStrainID['strainName_col'],ENT_QUOTES);
+
                 $theTableOutputClass->appendTableHeader($header);
+
               } else if (isset($_POST['allStrains_chkbox_htmlName'])) {
+
                 $theTableOutputClass->appendTableHeader('all strains');
+
               } else {
-                $theTableOutputClass->appendTableHeader('no strain name');
+                $theTableOutputClass->appendTableHeader('');
               }
 
 // genotype
@@ -137,7 +148,6 @@
 
                   if ($theCount == $theArraySize) {
                     $theAlleleString = "(" . $theAlleleString . htmlspecialchars($theAlleleRecord['alleleName_col'],ENT_QUOTES) . ")";
-
                   } else {
                     $theAlleleString = "(" . $theAlleleString . htmlspecialchars($theAlleleRecord['alleleName_col'],ENT_QUOTES) . ")" . ", ";
                   }
@@ -248,16 +258,21 @@
               }
 // still section 2
               $theTableOutputClass->appendTableHeader($theGeneAlleleTransGeneLine);
-// placeholder for isolation name
-              $theTableOutputClass->appendTableHeader('isolation name');
+
+// placeholder for isolation name (we can’t yet search for these)
+              $theTableOutputClass->appendTableHeader('');
+
 // strain comment
               if ((isset($_POST['comment_htmlName'])) && $_POST['comment_htmlName'] != "") {
+
                 $theTableOutputClass->appendTableHeader(htmlspecialchars($_POST['comment_htmlName'],ENT_QUOTES));
               } else {
-                $theTableOutputClass->appendTableHeader('no strain comment');
+                $theTableOutputClass->appendTableHeader('');
               }
+
 //genotype comments are the same as strain comments; nothing goes here
               $theTableOutputClass->appendTableHeader('');
+
 //transgene info
               // transgenes were already listed under genotype
               // here we list coinjection markers and plasmids
@@ -323,6 +338,7 @@
                 }
               }
               $theTableOutputClass->appendTableHeader($theParentStrainString);
+
 // still section 2
 // contributor
               if ( (isset($_POST['contributorArray_htmlName'])) && ($_POST['contributorArray_htmlName'][0] != "")) {
@@ -332,18 +348,21 @@
               } else {
                 $theTableOutputClass->appendTableHeader('');
               }
+
 // freezer
-              if ( (isset($_POST['freezer_htmlName'])) && $_POST['freezer_htmlName'] != "") {
-                  $theTableOutputClass->appendTableHeader($_POST['freezer_htmlName']);
+              if ( (isset($_POST['freezerArray_htmlName'])) && $_POST['freezerArray_htmlName'][0] != "") {
+                  $theTableOutputClass->appendTableHeader($_POST['freezerArray_htmlName'][0]);
                 } else {
                   $theTableOutputClass->appendTableHeader('');
                 }
+
 // nitrogen
-              if ((isset($_POST['nitrogen_htmlName'])) && $_POST['nitrogen_htmlName'] != "") {
-                $theTableOutputClass->appendTableHeader($_POST['nitrogen_htmlName']);
+              if ((isset($_POST['nitrogenArray_htmlName'])) && $_POST['nitrogenArray_htmlName'][0] != "") {
+                $theTableOutputClass->appendTableHeader($_POST['nitrogenArray_htmlName'][0]);
               } else {
                 $theTableOutputClass->appendTableHeader('');
               }
+
 // date frozen
               if ( (isset($_POST['dateFrozenBeginning_htmlName'])) && ($_POST['dateFrozenBeginning_htmlName'] != "") && ($_POST['dateFrozenEnding_htmlName'] != "") ) {
                 $header = htmlspecialchars($_POST['dateFrozenBeginning_htmlName'],ENT_QUOTES) . "–" . htmlspecialchars($_POST['dateFrozenEnding_htmlName'],ENT_QUOTES);
