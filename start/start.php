@@ -9,6 +9,12 @@
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/bootstrap/js/bootstrap.min.js"></script>
 
+	<style>
+		h6 {
+			margin-bottom:-10px;
+		}
+	</style>
+
  </head>
  <body class="bg-light">
 	 <div class="container">
@@ -22,64 +28,78 @@
 
 			<div class="row">
 				<div class="col-md-2 mb-3">
-					<label for="newStrain_htmlName">main stuff</label>
+					<h6>main stuff</h6>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-2 mb-3">
 					<input type="submit" name='newStrain_htmlName' class="btn btn-primary btn-block form-control" value="Add Strain" formaction="../strains/edit_strain.php" alt="Add Strain"/>
 				</div>
 
 				<div class="col-md-2 mb-3">
-					<label for="newPlasmid_htmlName" class="hidden">more stuff</label>
 					<input type="submit" name='newPlasmid_htmlName' class="btn btn-primary btn-block" formaction="../plasmids/edit_plasmid.php"value="Add Plasmid" alt="Add Plasmid"/>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-2 mb-3">
+					<h6>foundational stuff</h6>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-2 mb-3">
-					<label for="newGene_htmlName">foundational stuff</label>
 					<input type="submit" name='newGene_htmlName' class="btn btn-primary btn-block form-control" formaction="../genes/edit_gene.php" value="Add Gene" alt="Gene"/>
 				</div>
 
 				<div class="col-md-2 mb-3">
-					<label for="newAllele_htmlName" class="hidden">main stuff</label>
 					<input type="submit" name='newAllele_htmlName' class="btn btn-primary btn-block form-control" formaction="../alleles/edit_allele.php" value="Add Allele" alt="Add Allele"/>
 				</div>
 
 				<div class="col-md-2 mb-3">
-					<label for="newTransgene_htmlName" class="hidden">main stuff</label>
 					<input type="submit" name='newTransgene_htmlName' class="btn btn-primary btn-block form-control" formaction="../transgenes/edit_transgene.php" value="Add Transgene" alt="Add Transgene"/>
 				</div>
 
 				<div class="col-md-2 mb-3">
-					<label for="newBalancer_htmlName" class="hidden">main stuff</label>
 					<input type="submit" name='newBalancer_htmlName' class="btn btn-primary btn-block form-control" formaction="../balancers/edit_balancer.php" value="Add Balancer" alt="Add Balancer"/>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-2 mb-3">
-					<label for="newContributor_htmlName">more stuff</label>
+					<h6>more stuff</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-2 mb-3">
 					<input type="submit" name='newContributor_htmlName' class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add Contributor" alt="Add Contributor"/>
 				</div>
 				<div class="col-md-3 mb-3">
-					<label for="newCoInjection_htmlName" class="hidden">more stuff</label>
 					<input type="submit" name='newCoInjection_htmlName' class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add Co-injection Marker" alt="Add CoInjection Marker"/>
 				</div>
-				<div class="col-md-2 mb-3" style="margin-left:-50px">
-					<label for="newAntibioticResistance_htmlName" class="hidden">more stuff</label>
+				<div class="col-md-2 mb-3" style="margin-left:-70px">
 					<input type="submit" name='newAntibioticResistance_htmlName' class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add Antibiotic" alt="Add Antibiotic"/>
 				</div>
-				<div class="col-md-2 mb-3" style="margin-left:-30px">
-					<label for="newFluoro_htmlName" class="hidden">more stuff</label>
+				<div class="col-md-2 mb-3" style="margin-left:-20px">
 					<input type="submit" name='newFluoro_htmlName'class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add Fluor/Tag" alt="Add Fluor/Tag"/>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-2 mb-3">
-					<label for="search_htmlName">search</label>
+					<h6>search</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-2 mb-3">
 					<input type="submit" name='search_htmlName' class="btn btn-primary btn-block" formaction="../search/search_strains.php" value="Search Strains" alt="Search Strains"/>
 				</div>
 				<div class="col-md-2 mb-3">
-					<label for="searchPlasmids_htmlName" class="hidden"">search</label>
 					<input type="submit" name='searchPlasmids_htmlName' class="btn btn-primary btn-block" formaction="../search/search_plasmids.php" value="Search Plasmids" alt="Search Plasmids"/>
 				</div>
 			</div>
@@ -90,7 +110,12 @@
 				if ($userObject->IsCurrentUserAnEditor()) {
 					echo "<div class='row'>";
 						echo "<div class='col-md-2 mb-3'>";
-							echo "<label for='edit_htmlName'>edit</label>";
+							echo "<h6>edit</h6>";
+						echo "</div>";
+					echo "</div>";
+
+					echo "<div class='row'>";
+						echo "<div class='col-md-2 mb-3'>";
 							echo "<input type='submit' name='edit_htmlName' class='form-control btn btn-primary btn-block' formaction='lister.php' value='Edit Entries' alt='Edit Entries'/>";
 						echo "</div>";
 					echo "</div>";
