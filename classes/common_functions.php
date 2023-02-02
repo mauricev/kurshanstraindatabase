@@ -37,8 +37,8 @@
     	function createStrainPlaceHolder() {
     		$name="";
     		$isolationName="";
-    		$dateFrozen=NULL;
-    		$dateThawed=NULL;
+    		$dateFrozen=""; // changed in PHP 8.2
+    		$dateThawed=""; // changed in PHP 8.2
     		$comments="";
     		$setOfParentStrains=NULL;
     		$setOfAlleles=NULL;
@@ -60,7 +60,7 @@
         $parentTransGene=NULL;
         $coinjectionMarker=NULL;
         $plasmids=NULL;
-        $contributor=NULL;
+        $contributor=""; // changed in PHP 8.2
     		return new TransGene($name,$theChromosome,$comments,$transGeneLocation_param,$parentTransGene,$coinjectionMarker,$plasmids,$contributor);
     	}
 

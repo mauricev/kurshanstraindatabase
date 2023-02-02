@@ -14,6 +14,9 @@
 		protected $columnWithCommentName_prop = "comments_col";
 		protected $actualLoggingObject;
 
+		//added for PHP 8.2
+		protected String $columnNameForElement_prop;
+
 		public function __construct($name_param,$chromosome_param,$comments_param) {
 			parent::__construct();
 			$this->actualElementName_prop = $name_param;
@@ -155,6 +158,11 @@
 	class SubGene extends Gene {
 		protected $columnNameForGene_prop;
 		protected $prefixForNamingSubGenes_prop;
+
+		//added for PHP 8.2
+		protected String $integratedOrExString_prop;
+		protected String $columnNameForCounterTable_prop;
+		protected String $actualContributorID_prop;
 
 		public function __construct($name_param, $theChromosome_param, $comments_param,$location_param) {
 			// to be fair, subgene should probably not inherit here
@@ -552,9 +560,17 @@
 		protected $nitrogenSpots_prop;
 		protected $actualFullFreezerNumber;
 		protected $actualFullNitrogenNumber;
-		protected $actualContributorID_prop;
+		//protected String $actualContributorID_prop; //moved up to subgene in PHP 8.2
 		protected $actualIsLastVial_prop;
 		protected $actualLastVialer_prop;
+
+		//added for PHP 8.2
+		protected String $columnIsolationName_prop;
+		protected String $actualIsolationName_prop;
+		protected String $columnDateFrozen_prop;
+		protected String $actualDateFrozen_prop;
+		protected String $columnDateThawed_prop;
+		protected String $actualDateThawed_prop;
 
 		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param) {
 			// pass empty string for location param. That's used to build the strain name.

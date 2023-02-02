@@ -2,6 +2,7 @@
 
 	require_once('classes_database.php');
 	require_once('common_functions.php');
+	require_once('../classes/classes_gene_elements.php');
 
 	class LoadGeneticElement extends Peri_Database {
 		public $tableName_prop;
@@ -16,6 +17,8 @@
 		protected $elementHTMLName;
 		protected $elementString;
 		protected $elementStringLC;
+
+		protected Strain $strainPlaceholder_prop; // added in PHP 8.2
 
 
 		public function __construct() {
@@ -157,7 +160,6 @@
 			$this->selectID_prop = "select-nitrogen";
 			$this->selectName_prop = "nitrogenArray_htmlName[]";
 			$this->placeholder_prop = "nitrogen location...";
-			require_once('../classes/classes_gene_elements.php');
 			$this->strainPlaceholder_prop = createStrainPlaceHolder();
 		}
 
@@ -715,6 +717,9 @@
 		protected $itemToBeSelected_prop;
 		protected $hiddenArrayName_prop;
 		protected $arrayOfItems_prop;
+
+		//added in PHP 8.2
+		protected String $itemToBeReturned_prop;
 
 		public function __construct($selectOnThisID_param) {
 			parent::__construct();

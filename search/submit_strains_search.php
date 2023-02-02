@@ -404,8 +404,8 @@
               $theTableOutputClass->appendTableData($data);
 
               $data = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-            //  $theTableOutputClass->appendTableDataWithClass($data,'strain'); // what class is this?
-              $theTableOutputClass->appendTableData($data); // what class is this?
+              $theTableOutputClass->appendTableDataWithClass($data,'strain'); // what class is this?
+              //$theTableOutputClass->appendTableData($data); // what class is this?
 
 // this is the genotype cell
 // we display the allele and transgene for each chromosome with the chromosome number
@@ -547,7 +547,8 @@
               $data = htmlspecialchars($theStrainArray['isolationName_col'],ENT_QUOTES);
               $theTableOutputClass->appendTableData($data);
 
-              $theTableOutputClass->appendTableData($theStrainArray['comments_col']);
+              //$theTableOutputClass->appendTableData($theStrainArray['comments_col']); // BUG; there is some character here causing a hidden field to become unhidden
+              $theTableOutputClass->appendTableData(htmlspecialchars($theStrainArray['comments_col'],ENT_QUOTES));
 
               // we may change this: put chromosome at beginning and bold it, put in a return
               // IV:
@@ -715,7 +716,6 @@
               $theTableOutputClass->appendTableData($data);
 
 // SECTION 3
-
               // this needs to do a lookup
               $data = "";
               $theAuthor = new LoadAuthors();
