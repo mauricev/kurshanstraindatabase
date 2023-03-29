@@ -629,7 +629,24 @@
 			$existingElement = $this->preparedSQLQuery_prop->fetchAll();
 			return($existingElement);
 		}
+
+		public function searchRelatedToStrainForSequenceData($strainToSearchFor_param) {
+
+			$theSelectString = "SELECT sequenceDataName_col,sequence_data_col  FROM allele_table ";
+			// not every allele has an asociated gene, so it needs to be left JOIN
+			$theSelectString = $theSelectString . "INNER JOIN strain_to_allele_table ON allele_table.allele_id = strain_to_allele_table.allele_fk ";
+			$theSelectString = $theSelectString . "INNER JOIN strain_table ON strain_to_allele_table.strain_fk = strain_table.strain_id ";
+			$theSelectString = $theSelectString . "WHERE strain_table.strain_id = ? AND allele_table.sequenceDataName_col != ?"; // not equal
+
+			$this->preparedSQLQuery_prop = $this->sqlPrepare($theSelectString);
+			$this->preparedSQLQuery_prop->execute([$strainToSearchFor_param,""]);
+
+			$existingElement = $this->preparedSQLQuery_prop->fetchAll();
+			return($existingElement);
+		}
 	}
+
+
 
 	class LoadBalancer extends LoadGeneticElement {
 		public function __construct() {
@@ -814,6 +831,9 @@
 	class LoadFluoroTagsToPlasmid extends LoadManyToManyTables {
 		// must be assigned by subclass
 		protected $in_c_internal_actualValue_prop = "";
+
+		//added in 8.2
+		protected String $in_c_internal_prop;
 
 		public function __construct($selectOnThisID_param) {
 			$this->tableName_prop = 'plasmid_to_fluoro_tag_table';

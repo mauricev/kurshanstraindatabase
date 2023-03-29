@@ -103,6 +103,9 @@
               $theTableOutputClass->appendTableHeader('thawed on');
               // when searching for comments in genes/alleles/transgenes, this field will be populated for the second header
 
+              // added 5th revision, 2/2/23
+              $theTableOutputClass->appendTableHeader('allele sequence data');
+
               $theTableOutputClass->appendTableHeader('authored by');
 
               $theTableOutputClass->appendTableHeader('most recently edited by');
@@ -374,6 +377,9 @@
 // date thawed is not a search term
               $theTableOutputClass->appendTableHeader('');
 
+// sequence data is not a search term
+              $theTableOutputClass->appendTableHeader('');
+
 // author header
               if ( (isset($_POST['authorArray_htmlName'])) && ($_POST['authorArray_htmlName'][0] != "")) {
                 $theAuthor = new LoadAuthors();
@@ -405,7 +411,6 @@
 
               $data = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
               $theTableOutputClass->appendTableDataWithClass($data,'strain'); // what class is this?
-              //$theTableOutputClass->appendTableData($data); // what class is this?
 
 // this is the genotype cell
 // we display the allele and transgene for each chromosome with the chromosome number
@@ -546,6 +551,7 @@
 // isolation name
               $data = htmlspecialchars($theStrainArray['isolationName_col'],ENT_QUOTES);
               $theTableOutputClass->appendTableData($data);
+
 
               //$theTableOutputClass->appendTableData($theStrainArray['comments_col']); // BUG; there is some character here causing a hidden field to become unhidden
               $theTableOutputClass->appendTableData(htmlspecialchars($theStrainArray['comments_col'],ENT_QUOTES));
@@ -715,6 +721,31 @@
               }
               $theTableOutputClass->appendTableData($data);
 
+
+              $theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
+              $theTableOutputClass->appendTableData($data); // dummy placeholder
+
+/*
+              $theAlleleObject = new LoadAllele();
+              $theAlleleArray = $theAlleleObject->searchRelatedToStrain($theStrainID['strain_id']);
+
+              // we have a second related search that gets us the name of sequence data for each allele and put that into
+              the array
+              // we can then display here the sequence file name
+              // it returns an array which consists of sequence file names and the sequence data
+              // this might be helpful because
+              // multiple alleles per strain
+              select sequenceDataName_col,sequence_data_col from table alleles where strain_table.strain_id = this strain’s id AND WHERE sequenceDataName_col != ""
+              this will return an array of
+
+              $theAlleleObject = new LoadAllele();
+              $theAlleleArray = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
+
+
+
+
+
+*/
 // SECTION 3
               // this needs to do a lookup
               $data = "";
