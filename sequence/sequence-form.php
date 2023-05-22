@@ -23,6 +23,10 @@
   <div class="col-md-5 mb-3">
     <!-- there can't be any returns or spaces in this textarea; otherwise, it counts as an entry -->
     <textarea class="form-control" id="sequenceFileData" readonly name="sequenceFileData_htmlName"><?php
+    // after we fill the file, we should be displaying this, but right now, it's only
+    // after it's being edited.
+    // shouldn't we just check if it's not null or empty?
+    // how do we fill this variable in the javascript?
       if ($isEntityBeingEdited) {
         echo "$theOriginalSequenceData";
       }

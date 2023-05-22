@@ -235,6 +235,8 @@
 
         <?php
           // common sequence code for plasmids and alleles
+          // choose file
+          // choose sequence file
           require_once("../sequence/sequence-form.php");
         ?>
 

@@ -632,18 +632,33 @@
 
 		public function searchRelatedToStrainForSequenceData($strainToSearchFor_param) {
 
-			$theSelectString = "SELECT sequenceDataName_col,sequence_data_col  FROM allele_table ";
+			$theSelectString = "SELECT alleleName_col,sequenceDataName_col,sequence_data_col  FROM allele_table ";
 			// not every allele has an asociated gene, so it needs to be left JOIN
 			$theSelectString = $theSelectString . "INNER JOIN strain_to_allele_table ON allele_table.allele_id = strain_to_allele_table.allele_fk ";
 			$theSelectString = $theSelectString . "INNER JOIN strain_table ON strain_to_allele_table.strain_fk = strain_table.strain_id ";
-			$theSelectString = $theSelectString . "WHERE strain_table.strain_id = ? AND allele_table.sequenceDataName_col != ?"; // not equal
+			$theSelectString = $theSelectString . "WHERE strain_table.strain_id = ? AND allele_table.sequenceDataName_col != ?"; // not equal to empty string
 
 			$this->preparedSQLQuery_prop = $this->sqlPrepare($theSelectString);
 			$this->preparedSQLQuery_prop->execute([$strainToSearchFor_param,""]);
+			//echo $strainToSearchFor_param;
 
 			$existingElement = $this->preparedSQLQuery_prop->fetchAll();
 			return($existingElement);
 		}
+		// public function searchRelatedToStrainForSequenceData($strainToSearchFor_param) {
+		//
+		// 	$theSelectString = "SELECT alleleName_col,sequenceDataName_col,sequence_data_col  FROM allele_table ";
+		// 	// not every allele has an asociated gene, so it needs to be left JOIN
+		// 	$theSelectString = $theSelectString . "INNER JOIN strain_to_allele_table ON allele_table.allele_id = strain_to_allele_table.allele_fk ";
+		// 	$theSelectString = $theSelectString . "INNER JOIN strain_table ON strain_to_allele_table.strain_fk = strain_table.strain_id ";
+		// 	$theSelectString = $theSelectString . "WHERE strain_table.strain_id = ? AND allele_table.sequenceDataName_col != ?"; // not equal to empty string
+		//
+		// 	$this->preparedSQLQuery_prop = $this->sqlPrepare($theSelectString);
+		// 	$this->preparedSQLQuery_prop->execute([$strainToSearchFor_param,""]);
+		//
+		// 	$existingElement = $this->preparedSQLQuery_prop->fetchAll();
+		// 	return($existingElement);
+		// }
 	}
 
 

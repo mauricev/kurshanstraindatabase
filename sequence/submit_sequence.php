@@ -1,5 +1,7 @@
 <?php
   // we start off by assuming nothing for the sequence stuff and then adding the filename the sequencefilename
+  // the actual sequence data is indepdenently being saved to disk by separate javascript/php code.
+  // we are just leaving thiis code here so as not to break anything with the saving code.
   $theSequenceFileName = "";
   $theSequenceFileData = "";
   echo "files<br>";

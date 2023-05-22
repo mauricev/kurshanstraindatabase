@@ -162,7 +162,8 @@
 		//added for PHP 8.2
 		protected String $integratedOrExString_prop;
 		protected String $columnNameForCounterTable_prop;
-		protected String $actualContributorID_prop;
+		//BUG the following variable needs to be nullable
+		protected ?String $actualContributorID_prop;
 
 		public function __construct($name_param, $theChromosome_param, $comments_param,$location_param) {
 			// to be fair, subgene should probably not inherit here
@@ -570,7 +571,8 @@
 		protected String $columnDateFrozen_prop;
 		protected String $actualDateFrozen_prop;
 		protected String $columnDateThawed_prop;
-		protected String $actualDateThawed_prop;
+		//BUG the following variable needs to be nullable
+		protected ?String $actualDateThawed_prop;
 
 		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param) {
 			// pass empty string for location param. That's used to build the strain name.

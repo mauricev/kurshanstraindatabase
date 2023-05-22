@@ -154,32 +154,105 @@ function data2blob(data) {
   return theBlob;
 }
 
+//saveAs(data2blob(theSequenceData),theSequenceFileName);
+//'../sequence/fetch_sequence_file.php'
+// function fetchSequenceFileContents(filename) {
+//   var formData = new FormData();
+//   formData.append('filename', filename);
+//
+//   fetch('../sequence/fetch_sequence_file.php', {
+//     method: 'POST',
+//     body: formData
+//   })
+//   .then(response => {
+//     var returnedFilename = response.headers.get('X-File-Name');
+//     console.log('Returned filename:', returnedFilename);
+//     return response.blob();
+//   })
+//   .then(blob => {
+//     saveAs(blob, filename);
+//   })
+//   .catch(error => {
+//     console.error('Error:', error);
+//   });
+// }
+
+function fetchSequenceFileContents(filename) {
+  var formData = new FormData();
+  formData.append('filename', filename);
+
+  fetch('../sequence/fetch_sequence_file.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.blob())
+  .then(blob => {
+    saveAs(blob, filename);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+
+// Function to extract filename from Content-Disposition header
+// function getFilenameFromContentDisposition(contentDisposition) {
+//   var filename = "";
+//   if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+//     var matches = contentDisposition.match(/filename=([^;]+)/);
+//     if (matches && matches.length > 1) {
+//       filename = matches[1].trim();
+//     }
+//   }
+//   return filename;
+// }
+
+
+// function fetchSequenceFileContents(filename) {
+//   var formData = new FormData();
+//   formData.append('filename', filename);
+//
+//   fetch('../sequence/fetch_sequence_file.php', {
+//     method: 'POST',
+//     body: formData
+//   })
+//   .then(response => response.blob())
+//   .then(blob => {
+//     var fileURL = URL.createObjectURL(blob);
+//     window.location.href = fileURL;
+//     URL.revokeObjectURL(fileURL);
+//   })
+//   .catch(error => {
+//     console.error('Error:', error);
+//   });
+// }
+
 // attaches an event listener to every download button and retrieves which file they're associated with
 // through hidden variables
-function downloadPlasmidSequenceButton() {
-	var theDownloadButtons = document.querySelectorAll('.download');
-	var theLength = theDownloadButtons.length;
 
-	for (var theIndex = 0; theIndex < theLength; theIndex++) {
+function downloadSequenceButton() {
+ var theDownloadButtons = document.querySelectorAll('.download'); // look for every button with the download class
+ var theLength = theDownloadButtons.length;
 
-		function handleDownloadButtonClick(inEvent_param) {
-			var theButtonID = inEvent_param.target.id;
+ for (var theIndex = 0; theIndex < theLength; theIndex++) {
 
-			// // 7th character is the start of id in, for example, button-50
-			var thePlasmidID = theButtonID.substring(7);
-			var theHiddenFieldID = "hidden-";
-			theHiddenFieldID = theHiddenFieldID.concat(thePlasmidID);
-			//
-			// // name contains the plasmid name
-			var thePlasmidName = document.getElementById(theHiddenFieldID).name;
+	 function handleDownloadButtonClick(inEvent_param) {
+		 var theButtonID = inEvent_param.target.id;
 
-			var theSequenceData = document.getElementById(theHiddenFieldID).value;
-			saveAs(data2blob(theSequenceData),thePlasmidName);
-			//the above can be window.saveAs(blob, filename)
-		}
-		theDownloadButtons[theIndex].addEventListener('click',handleDownloadButtonClick);
-	}
+		 // // 7th character is the start of id in, for example, button-50
+		 // this will copy the strainID following by the index, so it AUTOMATICALLY finds the the correct hidden field; they match after the word hidden.
+		 var theItemID = theButtonID.substring(7);
+		 var theHiddenFieldID = "hidden-";
+		 theHiddenFieldID = theHiddenFieldID.concat(theItemID);
+		 //
+		 // // name contains the plasmid name
+		 var theSequenceFileName = document.getElementById(theHiddenFieldID).name;
+
+		 fetchSequenceFileContents(theSequenceFileName);
+	 }
+	 theDownloadButtons[theIndex].addEventListener('click',handleDownloadButtonClick);
  }
+}
 
  function downloadSearchAsExcelButton() {
  	var theDownloadButton = document.getElementById('excelDownloadBtn');

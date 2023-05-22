@@ -106,6 +106,7 @@
 			<?php
 				//this field will show only for users designated as editors
 				require_once('../classes/classes_database.php');
+
 				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
 				if ($userObject->IsCurrentUserAnEditor()) {
 					echo "<div class='row'>";
@@ -134,8 +135,8 @@
 						$theQueryArray = [1]; // this is the ? above. If it’s 1, it’s true
 						$preparedSQLQuery_prop->execute($theQueryArray);
 						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
-
 						if (count($theSearchResult) > 0 ) {
+
 							echo "<label>table of thawed strains</label>";
 							echo "<table class='table table-striped table-hover table-bordered twelvepoints'>";
 								echo "<th class='font-weight-bold'>strain name</th>";
@@ -146,7 +147,7 @@
 								$theStrainClass = new LoadParentStrains();
 
 								foreach ($theSearchResult as $theStrainID) {
-									echo "<tr>";
+
 										$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
 										$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
 										echo "<td>$theStrainName</td>";
@@ -167,9 +168,12 @@
 											$theContributorString = htmlspecialchars($theContributorArray['contributorName_col'],ENT_QUOTES);
 										}
 										echo "<td>$theContributorString</td>";
+
 									echo "</tr>";
+
 								}
 							echo "</table>";
+							
 						} else {
 							echo "<label>there are no thawed strains</label>";
 						}

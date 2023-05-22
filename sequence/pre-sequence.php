@@ -6,5 +6,11 @@
     $theOriginalSequenceDataFileName = htmlspecialchars($geneElementArrayToEdit['sequenceDataName_col'],ENT_QUOTES);
   }
   //BUG: some html sequence was escaping the hidden function; putting this entry in htmlspecialchars fixed it.
+
+  // Second BUG, htmlspecialchars can’t accept NULL
+
+  if ($geneElementArrayToEdit['sequence_data_col'] == NULL) {
+    $geneElementArrayToEdit['sequence_data_col'] = "";
+  }
   $theOriginalSequenceData = htmlspecialchars($geneElementArrayToEdit['sequence_data_col'],ENT_QUOTES);
 ?>

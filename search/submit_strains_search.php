@@ -21,6 +21,7 @@
     <script>
       $( document ).ready(function()
       {
+        downloadSequenceButton();
         downloadSearchAsExcelButton();
         cancelButton();
       });
@@ -721,10 +722,35 @@
               }
               $theTableOutputClass->appendTableData($data);
 
-
+              $theAlleleObject = new LoadAllele();
+              //$theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
               $theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
-              $theTableOutputClass->appendTableData($data); // dummy placeholder
 
+              echo "<td>";
+
+              $theSequenceFileName = "";
+              $theNumberOfAlleles = 0;
+
+              foreach ($theAlleleArray2 as $theAllele) {
+                if (isset($theAllele['sequenceDataName_col'])) {
+  	              $theSequenceFileName = htmlspecialchars($theAllele['sequenceDataName_col'],ENT_QUOTES);
+                  echo "<div>\"$theSequenceFileName\" </div>";
+    		          $theSequenceData = htmlspecialchars($theAllele['sequence_data_col'],ENT_QUOTES);
+
+  		            $theNumberOfAlleles = $theNumberOfAlleles + 1;
+  		            $theHiddenID = "hidden-" . $theStrainArray['strainName_col'] . "_" . $theNumberOfAlleles; // where x is the number in the loop of alleles
+
+  		            $theButtonID = "button-" . $theStrainArray['strainName_col']  . "_" . $theNumberOfAlleles;
+
+  		            echo "<input type='hidden' id=$theHiddenID name=\"$theSequenceFileName\" value=\"$theSequenceData\">";
+                  // download button is here
+  		            echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm download'>download for " . $theAllele['alleleName_col']. "</button>";
+  	            }
+              }
+              //echo "number of alleles" . $theNumberOfAlleles ;
+              //echo "<input type='hidden' id='numberOfAlleles' value=\"$theNumberOfAlleles\">";
+              echo "</td>";
+              $theTableOutputClass->appendExportedTableData($theSequenceFileName);
 /*
               $theAlleleObject = new LoadAllele();
               $theAlleleArray = $theAlleleObject->searchRelatedToStrain($theStrainID['strain_id']);

@@ -396,30 +396,30 @@ function data2blob(data) {
 
 // attaches an event listener to every download button and retrieves which file they're associated with
 // through hidden variables
-function downloadPlasmidSequenceButton() {
-	var theDownloadButtons = document.querySelectorAll('.download');
-	var theLength = theDownloadButtons.length;
-
-	for (var theIndex = 0; theIndex < theLength; theIndex++) {
-
-		function handleDownloadButtonClick(inEvent_param) {
-			var theButtonID = inEvent_param.target.id;
-
-			// // 7th character is the start of id in, for example, button-50
-			var thePlasmidID = theButtonID.substring(7);
-			var theHiddenFieldID = "hidden-";
-			theHiddenFieldID = theHiddenFieldID.concat(thePlasmidID);
-			//
-			// // name contains the plasmid name
-			var thePlasmidName = document.getElementById(theHiddenFieldID).name;
-
-			var theSequenceData = document.getElementById(theHiddenFieldID).value;
-			saveAs(data2blob(theSequenceData),thePlasmidName);
-			//the above can be window.saveAs(blob, filename)
-		}
-		theDownloadButtons[theIndex].addEventListener('click',handleDownloadButtonClick);
-	}
- }
+// function downloadPlasmidSequenceButton() {
+// 	var theDownloadButtons = document.querySelectorAll('.download');
+// 	var theLength = theDownloadButtons.length;
+// 
+// 	for (var theIndex = 0; theIndex < theLength; theIndex++) {
+//
+// 		function handleDownloadButtonClick(inEvent_param) {
+// 			var theButtonID = inEvent_param.target.id;
+//
+// 			// // 7th character is the start of id in, for example, button-50
+// 			var thePlasmidID = theButtonID.substring(7);
+// 			var theHiddenFieldID = "hidden-";
+// 			theHiddenFieldID = theHiddenFieldID.concat(thePlasmidID);
+// 			//
+// 			// // name contains the plasmid name
+// 			var thePlasmidName = document.getElementById(theHiddenFieldID).name;
+//
+// 			var theSequenceData = document.getElementById(theHiddenFieldID).value;
+// 			saveAs(data2blob(theSequenceData),thePlasmidName);
+// 			//the above can be window.saveAs(blob, filename)
+// 		}
+// 		theDownloadButtons[theIndex].addEventListener('click',handleDownloadButtonClick);
+// 	}
+//  }
 
  function downloadSearchAsExcelButton() {
  	var theDownloadButton = document.getElementById('excelDownloadBtn');
