@@ -549,7 +549,7 @@
 		}
 
 		// building select table with alleles
-		// will need to look up gene id and then get gene name and then populate list with gene name (allele name)
+		// will need to look up gene id and then get the gene name and then populate list with gene name (allele name)
 
 		public function buildSelectTable ($isMultiple_param) {
 			$theArray = $this->returnAll();
@@ -567,6 +567,7 @@
 					$theAlleleObject = new LoadAllele();
 					$alleleElementArrayToEdit = $theAlleleObject->returnSpecificRecord($id);
 
+					// if the allele has no associated gene, this will trigger a PHP warning
 					$theGeneObject = new LoadGene();
 					$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
 

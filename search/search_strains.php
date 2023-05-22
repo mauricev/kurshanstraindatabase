@@ -234,9 +234,7 @@
               require_once("../classes/classes_load_elements.php");
               $theAlleleListing = new LoadAllele();
               $isMultiple = true;
-
               $theAlleleListing->buildSelectTable($isMultiple);
-              
             ?>
           </div>
 
