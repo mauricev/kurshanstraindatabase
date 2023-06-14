@@ -12,8 +12,11 @@ class Logger {
       $_SESSION['loggerFileName'] = str_shuffle($permitted_chars);
       // create the file initially
       $theFileName = $_SESSION['loggerFileName'];
-      $theFileReference = fopen("../logging_files/$theFileName", 'a+');
-      fclose($theFileReference);
+      // possible BUG, was using a relative reference, now uses document root
+      $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
+      if ($theFileReference !== false) {
+        fclose($theFileReference);
+      }
     }
 
     public function returnLogFileName() {
@@ -30,33 +33,39 @@ class Logger {
   public function appendToLog ($stringToAppend_param) {
 
     $theFileName = $this->returnLogFileName();
-    $theFileReference = fopen("../logging_files/$theFileName", 'a+');
-    $theWriteResult = fwrite($theFileReference, $stringToAppend_param . "\n");
-    fclose($theFileReference);
+    $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
+    if ($theFileReference !== false) {
+      $theWriteResult = fwrite($theFileReference, $stringToAppend_param . "\n");
+      fclose($theFileReference);
+    }
   }
 
   public function returnLog () {
 
     $theFileName = $this->returnLogFileName();
-    $theFileArray = file("../logging_files/$theFileName", FILE_IGNORE_NEW_LINES);
-    // the last entries are the first ones done, so we need reverse the array
-    $theFileArrayReversed = array_reverse($theFileArray);
-    $theLogString = "";
-    $theCounter = 1;
-    // the counter contains the count for each line and we prepend spaces to accommodate for up to 3 digits worth of space
-    // to line up the entries
-    // that is, up to 999 entries per session
-    foreach ($theFileArrayReversed as $theLine) {
-      if ($theCounter < 100) {
-        $theCounter = "  " . $theCounter;
-        if ($theCounter < 10) {
+    $theFileArray = file($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", FILE_IGNORE_NEW_LINES);
+    if ($theFileArray !== false) {
+      // the last entries are the first ones done, so we need reverse the array
+      $theFileArrayReversed = array_reverse($theFileArray);
+      $theLogString = "";
+      $theCounter = 1;
+      // the counter contains the count for each line and we prepend spaces to accommodate for up to 3 digits worth of space
+      // to line up the entries
+      // that is, up to 999 entries per session
+      foreach ($theFileArrayReversed as $theLine) {
+        if ($theCounter < 100) {
           $theCounter = "  " . $theCounter;
+          if ($theCounter < 10) {
+            $theCounter = "  " . $theCounter;
+          }
         }
+        $theLogString = $theLogString . $theCounter . " " . $theLine . "\n";
+        $theCounter++;
       }
-      $theLogString = $theLogString . $theCounter . " " . $theLine . "\n";
-      $theCounter++;
+      return htmlspecialchars($theLogString,ENT_QUOTES);
+    } else {
+      return "The log couldn't be opened.";
     }
-    return htmlspecialchars($theLogString,ENT_QUOTES);
   }
 }
 ?>
