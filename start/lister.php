@@ -106,7 +106,7 @@
 <body class="bg-light">
 	<div class="container">
 		<div class="py-5 text-center">
-      <img class="d-block mx-auto mb-4" alt="" width="72" height="72">
+      <img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
       <h2>KurshanLab Strain Database</h2>
       <p class="lead">Edit Items</p>
     </div>

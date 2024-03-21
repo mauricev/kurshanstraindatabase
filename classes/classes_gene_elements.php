@@ -569,12 +569,19 @@
 		protected String $columnIsolationName_prop;
 		protected String $actualIsolationName_prop;
 		protected String $columnDateFrozen_prop;
-		protected String $actualDateFrozen_prop;
+		protected ?String $actualDateFrozen_prop;
 		protected String $columnDateThawed_prop;
+		protected String $columnDateHandedOff_prop;
+		protected String $columnDateSurvived_prop;
+		protected String $columnDateMoved_prop;
+
 		//BUG the following variable needs to be nullable
 		protected ?String $actualDateThawed_prop;
+		protected ?String $actualDateHandedOff_prop;
+		protected ?String $actualDateSurvived_prop;
+		protected ?String $actualDateMoved_prop;
 
-		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param) {
+		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param, $handedOffDate_param, $survivalDate_param, $finalDestinationDate_param) {
 			// pass empty string for location param. That's used to build the strain name.
 			parent::__construct($name_param,"",$comments_param,"");
 			$this->tableName_prop = "strain_table";
@@ -611,6 +618,16 @@
 			$this->actualFullNitrogenNumber = $unsavedNitrogenLocation_param;
 			$this->actualIsLastVial_prop = $isLastVial_param;
 			$this->actualLastVialer_prop = $lastVialer_param;
+
+			// below added 2024_03_14/15
+			$this->columnDateHandedOff_prop = "dateHandedOff_col";
+			$this->actualDateHandedOff_prop = $handedOffDate_param;
+
+			$this->columnDateSurvived_prop = "dateSurvived_col";
+			$this->actualDateSurvived_prop = $survivalDate_param;
+
+			$this->columnDateMoved_prop = "dateMoved_col";
+			$this->actualDateMoved_prop = $finalDestinationDate_param;
 
 		}
 
@@ -813,250 +830,299 @@
 		} else return 0;
 	}
 
-		// strain
-		protected function deleteStrainRelated($relatedTable_param, $existingGeneElementID_param) {
-			$preparedSQLQuery = $this->sqlPrepare("DELETE FROM $relatedTable_param WHERE strain_fk = ?");
-			$preparedSQLQuery->execute([$existingGeneElementID_param]);
+	// strain
+	protected function deleteStrainRelated($relatedTable_param, $existingGeneElementID_param) {
+		$preparedSQLQuery = $this->sqlPrepare("DELETE FROM $relatedTable_param WHERE strain_fk = ?");
+		$preparedSQLQuery->execute([$existingGeneElementID_param]);
+	}
+	// strain
+	public function updateOurEntry ($existingGeneElementID_param) {
+
+		try {
+			$this->beginTransaction();
+
+			$this->deleteStrainRelated("strain_to_parent_strain_table", $existingGeneElementID_param);
+			$this->deleteStrainRelated("strain_to_allele_table", $existingGeneElementID_param);
+			$this->deleteStrainRelated("strain_to_transgene_table", $existingGeneElementID_param);
+			$this->deleteStrainRelated("strain_to_balancer_table", $existingGeneElementID_param);
+
+			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? WHERE strain_id = ?");
+
+			$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $existingGeneElementID_param,);
+
+			$preparedSQLUpdate->execute($itemstoInsert);
+
+			$this->insertStrainAlleles($existingGeneElementID_param, $allelesAndTransGenesForStrainString);
+			$this->fillCommentString($theComment);
+			$this->fillIsolationNameString($theIsolationName);
+			$this->fillLastVialerString($theLastVialString);
+
+			$theStrainLog = "updated strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString;
+			$this->actualLoggingObject->appendToLog($theStrainLog);
+
+			$this->commit();
 		}
-		// strain
+		catch(Exception $e) {
+			$this->actualLoggingObject->appendToLog($e->getMessage());
+		$this->rollback();
+		}
+	}
+
+	//strain
+	public function updateEntryAfterCounterTableUpdate($theSubGeneName,$existingGeneElementID_param) {
+
+			// blow away all the intermediate entries for this strain
+			// then add the new ones (if any) back in
+			$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_parent_strain_table WHERE strain_fk = ?");
+			$preparedSQLQuery->execute([$existingGeneElementID_param]);
+
+			$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_allele_table WHERE strain_fk = ?");
+			$preparedSQLQuery->execute([$existingGeneElementID_param]);
+
+			$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_transgene_table WHERE strain_fk = ?");
+			$preparedSQLQuery->execute([$existingGeneElementID_param]);
+
+			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?WHERE strain_id = ?");
+
+			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $existingGeneElementID_param);
+
+			// $this->actualElementName_prop = actual strain name
+			// $this->actualComments_prop = actual strain comment
+			// $this->actualParentTransGeneID_prop = parent transgene
+			// $existingGeneElementID_param = strain id
+			$preparedSQLUpdate->execute($itemstoInsert);
+
+			$this->insertStrainAlleles($existingGeneElementID_param, $allelesAndTransGenesForStrainString);
+
+			// $this->actualElementName_prop doesn't have an entry for lab-produced strains; we used what's passed
+			$theStrainLog = "updated strain: " . $theSubGeneName . " with comment " . $this->actualComments_prop . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString;
+			$this->actualLoggingObject->appendToLog($theStrainLog);
+		}
+
+	public function processStrainStatus($existingGeneElementID_param, $whichProcess_param) {
+		try {
+			switch($whichProcess_param) {
+		      case "handoff":
+		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateHandedOff_prop = ? WHERE strain_id = ?");
+				$itemstoUpdate = array($this->actualDateHandedOff_prop,$existingGeneElementID_param);
+
+				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+				if ($userObject->IsCurrentUserAnEditor()) {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed off to me";
+				} else {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed off to strain manager";
+				}
+		        break;
+		      case "frozen":
+		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateFrozen_prop = ? WHERE strain_id = ?");
+				$itemstoUpdate = array($this->actualDateFrozen_prop,$existingGeneElementID_param);
+				if ($this->actualDateFrozen_prop == null) {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: unfrozen";
+				} else {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: frozen";
+				}
+		        break;
+		      case "survival":
+		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateSurvived_prop = ? WHERE strain_id = ?");
+				$itemstoUpdate = array($this->actualDateSurvived_prop,$existingGeneElementID_param);
+				if ($this->actualDateSurvived_prop == null) {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: did not survive";
+				} else {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: survived";
+				}
+		        break;
+		      case "finaldestination":
+		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateMoved_prop = ? WHERE strain_id = ?");
+				$itemstoUpdate = array($this->actualDateMoved_prop,$existingGeneElementID_param);
+				$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: moved to final destination";
+		        break;
+		    }
+			$preparedSQLUpdate->execute($itemstoUpdate);
+			
+			$this->actualLoggingObject->appendToLog($theStrainLog);
+		}
+		catch(Exception $e) {
+			error_log("exception");
+			$this->actualLoggingObject->appendToLog($e->getMessage());
+		}
+	}
+
+	}
+
+	class Plasmid extends Gene {
+		//protected $actualSetOfParentStrains_prop;
+		protected $actualAntibiotics_prop;
+		protected $actualLocation_prop;
+		protected $actualSetOfNTags_prop;
+		protected $actualSetOfCTags_prop;
+		protected $actualSetOfInternalTags_prop;
+		protected $actualPromoter_prop;
+		protected $actualGene_prop;
+		protected $actualOthercDNA_prop;
+		protected $actualContributorID_prop;
+		protected $actualSequenceDataFileName_prop;
+		protected $actualSequenceData;
+
+		public function __construct($name_param, $othercDNA_param, $location_param, $comments_param,$setOfAntibiotics_param,$setOfNTags_param,$setOfCTags_param,$setOfInternalTags_param, $promoter_param,$gene_param,$contributorID_param,$sequenceDataFileName_param,$selectedSequenceData) {
+			// pass empty string for chromosome.
+			parent::__construct($name_param,"",$comments_param);
+
+			$this->tableName_prop = "plasmid_table";
+			$this->columnNameForElement_prop = "plasmidName_col";
+
+			$this->columnNameForGene_prop = "plasmid_id";
+
+			$this->actualOthercDNA_prop = $othercDNA_param;
+
+			$this->actualLocation_prop = $location_param;
+
+			$this->actualAntibiotics_prop = $setOfAntibiotics_param;
+
+			$this->actualPromoter_prop = $promoter_param;
+
+			$this->actualGene_prop = $gene_param;
+
+			$this->actualSetOfNTags_prop = $setOfNTags_param;
+			$this->actualSetOfCTags_prop = $setOfCTags_param;
+			$this->actualSetOfInternalTags_prop = $setOfInternalTags_param;
+
+			// this array should contain only one item
+			$this->actualContributorID_prop = $contributorID_param;
+
+			$this->actualSequenceDataFileName_prop = $sequenceDataFileName_param;
+
+			$this->actualSequenceData = $selectedSequenceData;
+
+		}
+
+		// plasmid
+		protected function insertAPlasmidIntermediateTable($theActualTag_param,$lastInsertID_param,$theTagString_param,&$theTagArray_param) {
+			if ($theActualTag_param != NULL) {
+				foreach ($theActualTag_param as $row) {
+					$preparedSQLInsert = $this->sqlPrepare("INSERT INTO plasmid_to_fluoro_tag_table (plasmid_fk,fluoro_tag_fk,n_c_internal_col) VALUES (?,?,?)");
+					$itemstoInsert = array($lastInsertID_param,$row,$theTagString_param);
+					$preparedSQLInsert->execute($itemstoInsert);
+					$theFluoroObject = new LoadFluoroTag();
+					$theFluoroTagName = $theFluoroObject->returnNamedSpecificRecord($row);
+					array_push($theTagArray_param,$theFluoroTagName);
+				}
+			}
+		}
+		// plasmid
+		public function insertPlasmidIntermediateTables($lastInsertID_param, &$plasmidAccessoryEntriesString_param) {
+
+				$plasmidAccessoryEntriesString_param = "";
+				if ($this->actualAntibiotics_prop != NULL) {
+
+					$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . "; with antibiotic: ";
+					$theArraySize = count($this->actualAntibiotics_prop);
+					$theCount = 1;
+
+					foreach ($this->actualAntibiotics_prop as $row) {
+						$preparedSQLInsert = $this->sqlPrepare("INSERT INTO plasmid_to_antibiotic_table (plasmid_fk,antibiotic_fk) VALUES (?,?)");
+						$itemstoInsert = array($lastInsertID_param,$row);
+						$preparedSQLInsert->execute($itemstoInsert);
+
+						$theAntibioticObject = new LoadAntibiotic();
+
+						$theAntibioticName = $theAntibioticObject->returnNamedSpecificRecord($row);
+
+						if($theCount == $theArraySize) {
+							$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $theAntibioticName;
+						} else {
+							$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $theAntibioticName . ", ";
+						}
+						$theCount = $theCount + 1;
+					}
+				}
+// needs to be converted to a function, subroutine, dry
+				$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . "; with fluorotags: ";
+				$plasmid_FluoroTagArray = array();
+				$this->insertAPlasmidIntermediateTable($this->actualSetOfNTags_prop,$lastInsertID_param,'N',$plasmid_FluoroTagArray);
+				$this->insertAPlasmidIntermediateTable($this->actualSetOfCTags_prop,$lastInsertID_param,'C',$plasmid_FluoroTagArray);
+				$this->insertAPlasmidIntermediateTable($this->actualSetOfInternalTags_prop,$lastInsertID_param,'I',$plasmid_FluoroTagArray);
+
+				if (count($plasmid_FluoroTagArray) == 0) {
+					$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . " none";
+				} else {
+					$theArraySize = count($plasmid_FluoroTagArray);
+					$theCount = 1;
+					foreach($plasmid_FluoroTagArray as $row) {
+						if($theCount == $theArraySize) {
+							$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $row;
+						} else {
+							$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $row . ", ";
+						}
+						$theCount = $theCount + 1;
+					}
+				}
+		}
+
+		//plasmid
+		public function insertOurEntry () {
+			try {
+
+				$this->beginTransaction();
+
+				$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnWithCommentName_prop, contributor_fk, other_cDNA_col,plasmidLocation_col, promotorGene_fk,gene_fk,sequenceDataName_col,sequence_data_col, author_fk) VALUES (?,?,?,?,?,?,?,?,?,?)");
+
+				$itemstoInsert = array($this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop, $this->actualSequenceDataFileName_prop, $this->actualSequenceData, $_SESSION['user']);
+				$preparedSQLInsert->execute($itemstoInsert);
+
+				$this->insertPlasmidIntermediateTables($this->lastInsertId(), $plasmidAccessoryEntriesString_param);
+
+				$thePromotorGeneObject = new LoadGene();
+				$thePromotorName = "P" . $thePromotorGeneObject->returnNamedSpecificRecord($this->actualPromoter_prop);
+				$theGeneObject = new LoadGene();
+				$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
+
+				$this->fillCommentString($theComment);
+				$this->actualLoggingObject->appendToLog("added plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
+
+				$this->commit();
+		}
+		catch(Exception $e) {
+			$this->actualLoggingObject->appendToLog($e->getMessage());
+			$this->rollback();
+		}
+
+		}
+
+		// updates an existing entry based on passed id (the class doesn't know about ids because it's ordinarily used to create new records
+
+		// in plasmid
 		public function updateOurEntry ($existingGeneElementID_param) {
 
 			try {
 				$this->beginTransaction();
 
-				$this->deleteStrainRelated("strain_to_parent_strain_table", $existingGeneElementID_param);
-				$this->deleteStrainRelated("strain_to_allele_table", $existingGeneElementID_param);
-				$this->deleteStrainRelated("strain_to_transgene_table", $existingGeneElementID_param);
-				$this->deleteStrainRelated("strain_to_balancer_table", $existingGeneElementID_param);
+				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, other_cDNA_col = ? , plasmidLocation_col = ?,promotorGene_fk = ? ,gene_fk = ?, sequenceDataName_col = ?, sequence_data_col = ?, editor_fk = ? WHERE plasmid_id = ?");
+				$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,  $_SESSION['user'], $existingGeneElementID_param]);
 
-				$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? WHERE strain_id = ?");
+				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM plasmid_to_antibiotic_table WHERE plasmid_fk = ?");
+				$preparedSQLQuery->execute([$existingGeneElementID_param]);
 
-				$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $existingGeneElementID_param,);
+				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM plasmid_to_fluoro_tag_table WHERE plasmid_fk = ?");
+				$preparedSQLQuery->execute([$existingGeneElementID_param]);
 
-				$preparedSQLUpdate->execute($itemstoInsert);
+				$this->insertPlasmidIntermediateTables($existingGeneElementID_param, $plasmidAccessoryEntriesString_param);
 
-				$this->insertStrainAlleles($existingGeneElementID_param, $allelesAndTransGenesForStrainString);
+				$thePromotorGeneObject = new LoadPromoter(); // was loadgene, bug
+				$thePromotorName = "P" . $thePromotorGeneObject->returnNamedSpecificRecord($this->actualPromoter_prop);
+
+				$theGeneObject = new LoadGene();
+				$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
+
 				$this->fillCommentString($theComment);
-				$this->fillIsolationNameString($theIsolationName);
-				$this->fillLastVialerString($theLastVialString);
-
-				$theStrainLog = "updated strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString;
-				$this->actualLoggingObject->appendToLog($theStrainLog);
+				$this->actualLoggingObject->appendToLog("updated plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
 
 				$this->commit();
-			}
-			catch(Exception $e) {
-				$this->actualLoggingObject->appendToLog($e->getMessage());
-    		$this->rollback();
-			}
-		}
 
-		//strain
-		public function updateEntryAfterCounterTableUpdate($theSubGeneName,$existingGeneElementID_param) {
-
-				// blow away all the intermediate entries for this strain
-				// then add the new ones (if any) back in
-				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_parent_strain_table WHERE strain_fk = ?");
-				$preparedSQLQuery->execute([$existingGeneElementID_param]);
-
-				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_allele_table WHERE strain_fk = ?");
-				$preparedSQLQuery->execute([$existingGeneElementID_param]);
-
-				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_transgene_table WHERE strain_fk = ?");
-				$preparedSQLQuery->execute([$existingGeneElementID_param]);
-
-				$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?WHERE strain_id = ?");
-
-				$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $existingGeneElementID_param);
-
-				// $this->actualElementName_prop = actual strain name
-				// $this->actualComments_prop = actual strain comment
-				// $this->actualParentTransGeneID_prop = parent transgene
-				// $existingGeneElementID_param = strain id
-				$preparedSQLUpdate->execute($itemstoInsert);
-
-				$this->insertStrainAlleles($existingGeneElementID_param, $allelesAndTransGenesForStrainString);
-
-				// $this->actualElementName_prop doesn't have an entry for lab-produced strains; we used what's passed
-				$theStrainLog = "updated strain: " . $theSubGeneName . " with comment " . $this->actualComments_prop . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString;
-				$this->actualLoggingObject->appendToLog($theStrainLog);
-			}
-		}
-
-		class Plasmid extends Gene {
-			//protected $actualSetOfParentStrains_prop;
-			protected $actualAntibiotics_prop;
-			protected $actualLocation_prop;
-			protected $actualSetOfNTags_prop;
-			protected $actualSetOfCTags_prop;
-			protected $actualSetOfInternalTags_prop;
-			protected $actualPromoter_prop;
-			protected $actualGene_prop;
-			protected $actualOthercDNA_prop;
-			protected $actualContributorID_prop;
-			protected $actualSequenceDataFileName_prop;
-			protected $actualSequenceData;
-
-			public function __construct($name_param, $othercDNA_param, $location_param, $comments_param,$setOfAntibiotics_param,$setOfNTags_param,$setOfCTags_param,$setOfInternalTags_param, $promoter_param,$gene_param,$contributorID_param,$sequenceDataFileName_param,$selectedSequenceData) {
-				// pass empty string for chromosome.
-				parent::__construct($name_param,"",$comments_param);
-
-				$this->tableName_prop = "plasmid_table";
-				$this->columnNameForElement_prop = "plasmidName_col";
-
-				$this->columnNameForGene_prop = "plasmid_id";
-
-				$this->actualOthercDNA_prop = $othercDNA_param;
-
-				$this->actualLocation_prop = $location_param;
-
-				$this->actualAntibiotics_prop = $setOfAntibiotics_param;
-
-				$this->actualPromoter_prop = $promoter_param;
-
-				$this->actualGene_prop = $gene_param;
-
-				$this->actualSetOfNTags_prop = $setOfNTags_param;
-				$this->actualSetOfCTags_prop = $setOfCTags_param;
-				$this->actualSetOfInternalTags_prop = $setOfInternalTags_param;
-
-				// this array should contain only one item
-				$this->actualContributorID_prop = $contributorID_param;
-
-				$this->actualSequenceDataFileName_prop = $sequenceDataFileName_param;
-
-				$this->actualSequenceData = $selectedSequenceData;
-
-			}
-
-			// plasmid
-			protected function insertAPlasmidIntermediateTable($theActualTag_param,$lastInsertID_param,$theTagString_param,&$theTagArray_param) {
-				if ($theActualTag_param != NULL) {
-					foreach ($theActualTag_param as $row) {
-						$preparedSQLInsert = $this->sqlPrepare("INSERT INTO plasmid_to_fluoro_tag_table (plasmid_fk,fluoro_tag_fk,n_c_internal_col) VALUES (?,?,?)");
-						$itemstoInsert = array($lastInsertID_param,$row,$theTagString_param);
-						$preparedSQLInsert->execute($itemstoInsert);
-						$theFluoroObject = new LoadFluoroTag();
-						$theFluoroTagName = $theFluoroObject->returnNamedSpecificRecord($row);
-						array_push($theTagArray_param,$theFluoroTagName);
-					}
-				}
-			}
-			// plasmid
-			public function insertPlasmidIntermediateTables($lastInsertID_param, &$plasmidAccessoryEntriesString_param) {
-
-					$plasmidAccessoryEntriesString_param = "";
-					if ($this->actualAntibiotics_prop != NULL) {
-
-						$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . "; with antibiotic: ";
-						$theArraySize = count($this->actualAntibiotics_prop);
-						$theCount = 1;
-
-						foreach ($this->actualAntibiotics_prop as $row) {
-							$preparedSQLInsert = $this->sqlPrepare("INSERT INTO plasmid_to_antibiotic_table (plasmid_fk,antibiotic_fk) VALUES (?,?)");
-							$itemstoInsert = array($lastInsertID_param,$row);
-							$preparedSQLInsert->execute($itemstoInsert);
-
-							$theAntibioticObject = new LoadAntibiotic();
-
-							$theAntibioticName = $theAntibioticObject->returnNamedSpecificRecord($row);
-
-							if($theCount == $theArraySize) {
-								$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $theAntibioticName;
-							} else {
-								$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $theAntibioticName . ", ";
-							}
-							$theCount = $theCount + 1;
-						}
-					}
-// needs to be converted to a function, subroutine, dry
-					$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . "; with fluorotags: ";
-					$plasmid_FluoroTagArray = array();
-					$this->insertAPlasmidIntermediateTable($this->actualSetOfNTags_prop,$lastInsertID_param,'N',$plasmid_FluoroTagArray);
-					$this->insertAPlasmidIntermediateTable($this->actualSetOfCTags_prop,$lastInsertID_param,'C',$plasmid_FluoroTagArray);
-					$this->insertAPlasmidIntermediateTable($this->actualSetOfInternalTags_prop,$lastInsertID_param,'I',$plasmid_FluoroTagArray);
-
-					if (count($plasmid_FluoroTagArray) == 0) {
-						$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . " none";
-					} else {
-						$theArraySize = count($plasmid_FluoroTagArray);
-						$theCount = 1;
-						foreach($plasmid_FluoroTagArray as $row) {
-							if($theCount == $theArraySize) {
-								$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $row;
-							} else {
-								$plasmidAccessoryEntriesString_param = $plasmidAccessoryEntriesString_param . $row . ", ";
-							}
-							$theCount = $theCount + 1;
-						}
-					}
-			}
-
-			//plasmid
-			public function insertOurEntry () {
-				try {
-
-					$this->beginTransaction();
-
-					$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnWithCommentName_prop, contributor_fk, other_cDNA_col,plasmidLocation_col, promotorGene_fk,gene_fk,sequenceDataName_col,sequence_data_col, author_fk) VALUES (?,?,?,?,?,?,?,?,?,?)");
-
-					$itemstoInsert = array($this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop, $this->actualSequenceDataFileName_prop, $this->actualSequenceData, $_SESSION['user']);
-					$preparedSQLInsert->execute($itemstoInsert);
-
-					$this->insertPlasmidIntermediateTables($this->lastInsertId(), $plasmidAccessoryEntriesString_param);
-
-					$thePromotorGeneObject = new LoadGene();
-					$thePromotorName = "P" . $thePromotorGeneObject->returnNamedSpecificRecord($this->actualPromoter_prop);
-					$theGeneObject = new LoadGene();
-					$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
-
-					$this->fillCommentString($theComment);
-					$this->actualLoggingObject->appendToLog("added plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
-
-					$this->commit();
 			}
 			catch(Exception $e) {
 				$this->actualLoggingObject->appendToLog($e->getMessage());
 				$this->rollback();
 			}
-
-			}
-
-			// updates an existing entry based on passed id (the class doesn't know about ids because it's ordinarily used to create new records
-
-			// in plasmid
-			public function updateOurEntry ($existingGeneElementID_param) {
-
-				try {
-					$this->beginTransaction();
-
-					$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, other_cDNA_col = ? , plasmidLocation_col = ?,promotorGene_fk = ? ,gene_fk = ?, sequenceDataName_col = ?, sequence_data_col = ?, editor_fk = ? WHERE plasmid_id = ?");
-					$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,  $_SESSION['user'], $existingGeneElementID_param]);
-
-					$preparedSQLQuery = $this->sqlPrepare("DELETE FROM plasmid_to_antibiotic_table WHERE plasmid_fk = ?");
-					$preparedSQLQuery->execute([$existingGeneElementID_param]);
-
-					$preparedSQLQuery = $this->sqlPrepare("DELETE FROM plasmid_to_fluoro_tag_table WHERE plasmid_fk = ?");
-					$preparedSQLQuery->execute([$existingGeneElementID_param]);
-
-					$this->insertPlasmidIntermediateTables($existingGeneElementID_param, $plasmidAccessoryEntriesString_param);
-
-					$thePromotorGeneObject = new LoadPromoter(); // was loadgene, bug
-					$thePromotorName = "P" . $thePromotorGeneObject->returnNamedSpecificRecord($this->actualPromoter_prop);
-
-					$theGeneObject = new LoadGene();
-					$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
-
-					$this->fillCommentString($theComment);
-					$this->actualLoggingObject->appendToLog("updated plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
-
-					$this->commit();
-
-				}
-				catch(Exception $e) {
-					$this->actualLoggingObject->appendToLog($e->getMessage());
-					$this->rollback();
-				}
-			}
 		}
+	}
 ?>

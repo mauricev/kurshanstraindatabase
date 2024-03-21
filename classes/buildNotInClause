@@ -1,0 +1,35 @@
+say we have a new construct
+$theRestrictedTheWhereClause
+
+1) there will be one for alleles and one for transgenes
+
+2) it will have two options
+2a) one for a single entry
+2b) one for a mutliple entries
+
+it also needs to append to the buddingqueryarray, but the question is at what point does it add these values and where does it get them from
+it has to do this after where clause is built, but a problem 
+if i am building alleles and I need to add to buddingqueryarray, i might add in the wrong order
+the way this works for having array we build up the havingcountarray and then it's transferred to budding query array 
+
+buildNotInClause() will use theRestrictedTheWhereClause, one for alleles and one for transgenes
+will build differently for a single allele entry versus multiple allele entries
+same applies to a single transgene entry versus multiple transgene entries
+
+for alleles we have
+
+if (!isset($_POST['alleleName_onlybox_htmlName']) {
+	if ($theArrayCount > 1) {
+		$theRestrictedWhereClause = $theRestrictedWhereClause . "AND truestrain_table.strain_id NOT IN (SELECT strain_fk FROM strain_to_allele_table WHERE allele_fk != ?"
+	} else {
+	// must loop and build up the ? marks
+		$theRestrictedWhereClause = $theRestrictedWhereClause . "AND truestrain_table.strain_id NOT IN (SELECT strain_fk FROM strain_to_allele_table WHERE allele_fk NOT IN ("
+	}
+}
+enter loop if needed and then append ?,? 
+
+and end with )
+
+could it go inside TransGenesSearchForStrains, the construct $this->searchParameter_prop contains the transgene reference
+
+

@@ -93,7 +93,7 @@
   <body class="bg-light">
   	<div class="container">
   		<div class="py-5 text-center">
-        <img class="d-block mx-auto mb-4" alt="" width="72" height="72">
+        <img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
         <h2>KurshanLab Strain Database</h2>
         <?php
           $isStrainBeingEdited = false;
@@ -127,7 +127,11 @@
             $theOriginalStrainName = $theStrainName;
             $theOriginalIsolationName = htmlspecialchars($geneElementArrayToEdit['isolationName_col'],ENT_QUOTES);
 
-            $theOriginalDateFrozen = htmlspecialchars($geneElementArrayToEdit['dateFrozen_col'],ENT_QUOTES);
+            if ($geneElementArrayToEdit['dateFrozen_col'] != null) {
+              $theOriginalDateFrozen = htmlspecialchars($geneElementArrayToEdit['dateFrozen_col'],ENT_QUOTES);
+            } else {
+              $theOriginalDateFrozen = "";
+            }
 
             // BUG if thawed date is not set, we can’t run htmlspecialcharacters on it
             if (isset($geneElementArrayToEdit['dateThawed_col'])) {
@@ -147,11 +151,46 @@
 
             $theOriginalLastVialer = $geneElementArrayToEdit['lastVialContributor_fk'];
 
+            if ($geneElementArrayToEdit['dateHandedOff_col'] != null) {
+              $theOriginalHandOffDate = htmlspecialchars($geneElementArrayToEdit['dateHandedOff_col'],ENT_QUOTES);
+            } else {
+              $theOriginalHandOffDate = "";
+            }
+
+            if ($geneElementArrayToEdit['dateSurvived_col'] != null) {
+              $theOriginalSurvivalDate = htmlspecialchars($geneElementArrayToEdit['dateSurvived_col'],ENT_QUOTES);
+            } else {
+              $theOriginalSurvivalDate = "";
+            }
+
+            if ($geneElementArrayToEdit['dateMoved_col'] != null) {
+              $theOriginalMovedDate = htmlspecialchars($geneElementArrayToEdit['dateMoved_col'],ENT_QUOTES);
+            } else {
+              $theOriginalMovedDate = "";
+            }
+
             $labProduced = false;
             if ($strainNameArray[0] == 'PTK') {
               $labProduced = true;
             }
+          } else {
+            $theOriginalDateFrozen = "";
+            $theOriginalHandOffDate = "";
+            $theOriginalSurvivalDate = "";
+            $theOriginalMovedDate = "";
           }
+
+          $theHandOffState = ($theOriginalHandOffDate != "");
+          $theFrozenState = ($theOriginalDateFrozen != "");
+          $theSurvivalState = ($theOriginalSurvivalDate != "");
+          $theMovedState = ($theOriginalMovedDate != "");
+
+
+          // we’ve decided to make these buttons display only
+          $theHandOffButtonState = "disabled";
+          $theFrozenButtonState = "disabled";
+          $theSurvivalButtonEnabledState = "disabled";
+          $theMoveButtonEnabledState = "disabled";
       ?>
       <form class="needs-validation" novalidate action="../strains/submit_edited_strain_entry.php"  method="post">
 
@@ -251,7 +290,7 @@
                 require_once("../classes/classes_gene_elements.php");
                 // we just need an empty strain object here
                 $theTempStrain = createStrainPlaceHolder();
-               $theTempStrain->getNextName($theGeneCurrentCount,$theNextStrainName);
+                $theTempStrain->getNextName($theGeneCurrentCount,$theNextStrainName);
 
                 echo "<input type='hidden' id='strainBeingEditedHiddenField' name='hidden-label' value=$isStrainBeingEdited>";
                 echo "<input type='hidden' id='PTKNumberHiddenField' name='hidden-label' value=$theNextStrainName>";
@@ -378,25 +417,109 @@
       </div>
 
       <div class="row">
+         <?php 
+          echo "<span class='mb-1'>set strain states on the main page</span>";
+          ?>
+      </div>
 
-        <div class="col-md-3 mb-3">
-          <label for="dateFrozen_InputID">date frozen</label>
+      <div class="row">
+
+        <!-- <div class="col-md-3 mb-3"> -->
+        <!-- <div class="col-md-12"> -->
+          <div class="container">
+          <!-- <div class="checkbox-group d-flex justify-content-start"> -->
+          <div class="row justify-content-between">
           <?php
-            if ($isStrainBeingEdited) {
-              echo "<input type='date' id='dateFrozen_InputID' class='form-control' value=$theOriginalDateFrozen name='dateFrozen_htmlName' required title='dateFrozen'>";
+            $userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+            if ($userObject->IsCurrentUserAnEditor()) {
+
+              // for editor, we will have a frozen checkbox
+              // with date dislayed beneath
+
+              // a survival checkbox
+              // with date dislayed beneath
+
+              // a move to checkbox (submit is the actual button)
+              // with date dislayed beneath
+              // if this has a date, all these buttons are disabled and can't enabled
+
+
+               echo "<div class='col-md-3'>";
+                echo "<div class='custom-control custom-checkbox'>";
+                  if ($theHandOffState) {
+                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState id='handoffButtonID'>";
+                  } else {
+                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState id='handoffButtonID'>";
+                  }
+                  echo "<label class='form-check-label' for='frozenButtonID'>Handed Off?</label>";
+                echo "</div>";
+              // forces some space
+              echo "<span>" . ($theOriginalHandOffDate ?: '&nbsp;') . "</span>";
+              echo "</div>";
+
+              echo "<div class='col-md-3'>";
+                echo "<div class='custom-control custom-checkbox'>";
+                  if ($theFrozenState) {
+                    echo "<input type='checkbox' class='form-check-input frozen ' checked $theFrozenButtonState id='frozenButtonID'>";
+                  } else {
+                    echo "<input type='checkbox' class='form-check-input frozen ' $theFrozenButtonState id='frozenButtonID'>";
+                  }
+                  echo "<label class='form-check-label' for='frozenButtonID'>Frozen?</label>";
+                echo "</div>";
+              echo "<span'>$theOriginalDateFrozen</span>";
+              echo "</div>";
+           
+              echo "<div class='col-md-3'>";
+                echo "<div class='custom-control custom-checkbox'>";
+                  if ($theSurvivalState) {
+                    echo "<input type='checkbox' class='form-check-input survival ' checked $theSurvivalButtonEnabledState id='survivalButtonID'>";
+                  } else {
+                    echo "<input type='checkbox' class='form-check-input survival ' $theSurvivalButtonEnabledState id='survivalButtonID'>";
+                  }
+                  echo "<label class='form-check-label' for='survivalButtonID'>Survived?</label>";
+                echo "</div>";
+              echo "<span>$theOriginalSurvivalDate</span>"; 
+              echo "</div>";
+
+              echo "<div class='col-md-3'>";
+                echo "<div class='custom-control custom-checkbox'>";
+                  if ($theMovedState) {
+                    echo "<input type='checkbox' class='form-check-input finaldestination ' checked $theMoveButtonEnabledState id='movedButtonID'>";
+                    echo "<label class='form-check-label' for='movedButtonID'>Moved To Final Destination</label>";
+                  } else {
+                    echo "<input type='checkbox' class='form-check-input finaldestination ' $theMoveButtonEnabledState id='movedButtonID'>";
+                    echo "<label class='form-check-label' for='movedButtonID'>Move To Final Destination?</label>";
+                  }
+                echo "</div>";
+              echo "<span'>$theOriginalMovedDate</span>"; 
+              echo "</div>";
+           
             } else {
-              echo "<input type='date' id='dateFrozen_InputID' class='form-control' name='dateFrozen_htmlName' required title='dateFrozen'>";
+               echo "<div class='col-md-3'>";
+                echo "<div class='custom-control custom-checkbox'>";
+                  if ($theHandOffState) {
+                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState id='handoffButtonID'>";
+                  } else {
+                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState id='handoffButtonID'>";
+                  }
+                  echo "<label class='form-check-label' for='frozenButtonID'>Handed Off?</label>";
+                echo "</div>";
+              // forces some space
+              echo "<span>" . ($theOriginalHandOffDate ?: '&nbsp;') . "</span>";
+              echo "</div>";
             }
           ?>
-          <div class="invalid-feedback">
-            You must enter a date for the date frozen.
-          </div>
 				</div>
+        </div>
+        
+			</div>
 
+      <div class="row">
         <div class="col-md-3 mb-3">
           <?php
           if ($isStrainBeingEdited) { //this shows only if we are editing.
-            echo "<label for='dateThawed_InputID'>date thawed</label>";
+            // mt-2 to give some space above
+            echo "<label class='mt-2' for='dateThawed_InputID'>date thawed</label>";
             if ($theOriginalDateThawed != NULL) {
               echo "<input type='date' id='dateThawed_InputID' class='form-control' value=$theOriginalDateThawed name='dateThawed_htmlName' title='dateThawed'>";
             } else {
@@ -407,9 +530,8 @@
             echo "</div>";
           }
           ?>
-				</div>
-
-			</div>
+        </div>
+      </div>
 
       <div class="row">
 
@@ -441,6 +563,14 @@
 
             <?php
               echo "<input type='hidden' name='originalStrainEdited' value=\"$isStrainBeingEdited\">";
+
+              echo "<input type='hidden' name='originalHandOffDate_postvar' value=$theOriginalHandOffDate>";
+              echo "<input type='hidden' name='originalDateFrozen_postvar' value=$theOriginalDateFrozen>";
+
+            
+              echo "<input type='hidden' name='originalSurvivalDate_postvar' value=$theOriginalSurvivalDate>";
+              echo "<input type='hidden' name='originalMovedDate_postvar' value=$theOriginalMovedDate>";
+
               if ($isStrainBeingEdited) {
                 echo "<input type=\"hidden\" name=\"originalGeneNumbers_postVar\" value=$strainNameArray[1]>";
                 echo "<input type=\"hidden\" name=\"originalGeneLetters_postVar\" value=$strainNameArray[0]>";
@@ -449,12 +579,15 @@
                 echo "<input type='hidden' name='fullFreezer_postvar' value=\"$theOriginalFullFreezer\">";
                 echo "<input type='hidden' name='fullNitrogen_postvar' value=\"$theOriginalNitrogen\">";
                 echo "<input type='hidden' name='originalContributorID_postvar' value=\"$theOriginalContributor\">";
-                echo "<input type='hidden' name='originalDateFrozen_postvar' value=$theOriginalDateFrozen>";
+                
                 echo "<input type='hidden' name='originalDateThawed_postvar' value=$theOriginalDateThawed>";
                 echo "<input type='hidden' name='originalIsolationName_postvar' value=$theOriginalIsolationName>";
 
                 echo "<input type='hidden' name='originalIsLastVial_postvar' value=$theOriginalIsLastVial>";
                 echo "<input type='hidden' name='originalLastVialer_postvar' value=$theOriginalLastVialer>";
+
+                
+
 
                 echo "<input type='hidden' name='isLabProduced_postvar' value=$labProduced>";
                 echo "<input type='submit' name='acceptNewStrainEntry_htmlName' class='btn btn-primary btn-block' value='Accept Edited Strain' alt='Accept Edited Strain' style='float:right'/>";

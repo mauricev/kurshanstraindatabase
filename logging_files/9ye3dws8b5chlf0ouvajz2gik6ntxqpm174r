@@ -1,8 +1,0 @@
-added allele: kur19; with no comment given ; no gene specified ; sequenceFile: 1.ape
-updated allele: ert930; with comment 'kur19 is becoming ert-930'; no gene specified ; sequenceFile: 1.ape
-updated allele: kur20; with comment 'kur19 became ert-930 now becomes kur20'; no gene specified 
-added allele: kur21; with comment 'kur21 with 3'; no gene specified ; sequenceFile: 3.ape
-updated allele: tur245; with comment 'kur21 with 3 then tur245 with 6'; no gene specified ; sequenceFile: 6.ape
-updated allele: kur22; with comment 'kur21 with 3 then tur245 with 6 then kur22 with 4'; no gene specified 
-added allele: xfg4334; with comment 'xfg4334 with 1'; no gene specified ; sequenceFile: 1.ape
-updated allele: kur23; with comment 'xfg4334 with 1 to kur23 with 3'; no gene specified 

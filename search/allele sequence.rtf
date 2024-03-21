@@ -1,0 +1,94 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;\f2\froman\fcharset0 Times-Roman;
+\f3\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red0\green0\blue0;\red25\green25\blue25;
+\red25\green28\blue31;\red246\green247\blue249;\red52\green52\blue52;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;\cssrgb\c12941\c12941\c12941;
+\cssrgb\c12941\c14510\c16078;\cssrgb\c97255\c97647\c98039;\cssrgb\c26667\c26667\c26667;\csgray\c0;}
+\margl1440\margr1440\vieww21740\viewh18340\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+echo "<input type='hidden' id="numberOfAlleles" value=\\"$theNumberOfAlleles\\">";\
+\
+$theHiddenID = "hidden-" . $theStrainID['
+\f1\b\fs26\fsmilli13120 \cb2 \expnd0\expndtw0\kerning0
+strainName_col
+\f0\b0\fs24 \cb1 \kerning1\expnd0\expndtw0 '] . "-" ."x"; // where x is the number in the loop of alleles\
+                  \
+$theButtonID = "button-" . $theStrainID['
+\f1\b\fs26\fsmilli13120 \cb2 \expnd0\expndtw0\kerning0
+strainName_col
+\f0\b0\fs24 \cb1 \kerning1\expnd0\expndtw0 ']  . "-" . "x";\
+                  \
+Search needs to search for each allele and then search for each allele, the sequence data and sequence file name\
+\
+$theAlleleObject = new LoadAllele();\
+$theAlleleArray = $theAlleleObject->searchRelatedToStrain($theStrainID['strain_id']);\
+\
+foreach ($theAlleleArray as $theAllele) \{\
+	$theAlleleArray2 = $theAlleleObject->searchSequenceDataInfo($theAllele['alleleName_col']);\
+\}\
+\
+$theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);\
+$theNumberOfAlleles = 0;\
+foreach ($theAlleleArray2 as $theAllele) \{\
+	\
+	$theSequenceFileName = htmlspecialchars($theAlleleArray2['sequenceDataName_col'],ENT_QUOTES);\
+	If (theSequenceFileName != "") \{\
+		$theSequenceData = htmlspecialchars($theAlleleArray2['sequence_data_col'],ENT_QUOTES);\
+	\
+		$theNumberOfAlleles = $theNumberOfAlleles + 1;\
+		$theHiddenID = "hidden-" . $theStrainID['
+\f1\b\fs26\fsmilli13120 \cb2 \expnd0\expndtw0\kerning0
+strainName_col
+\f0\b0\fs24 \cb1 \kerning1\expnd0\expndtw0 '] . "-" . $theNumberOfAlleles; // where x is the number in the loop of alleles\
+                  \
+		$theButtonID = "button-" . $theStrainID['
+\f1\b\fs26\fsmilli13120 \cb2 \expnd0\expndtw0\kerning0
+strainName_col
+\f0\b0\fs24 \cb1 \kerning1\expnd0\expndtw0 ']  . "-" . $theNumberOfAlleles;\
+\
+		echo "<input type='hidden' id=$theHiddenID name=\\"$theSequenceFileName\\" value=\\"$theSequenceData\\">";\
+\
+		echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm download'>download for $theAlleleArray2['alleleName_col'] </button>";\
+	\}\
+\}\
+echo "<input type='hidden' id="numberOfAlleles" value=\\"$theNumberOfAlleles\\">";\
+          \
+The button id needs to have the strain name appended because we willl have multiple download buttons for the same set of data because multiple strains may have the same allele with sequence data.\
+\
+We need to loop over the alleles for this particular strain\
+Then we need to check if they have sequence data\
+For each one we create a download button and it has the name of allele in the download button since there may be more than one button with \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\fs28 \cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \expnd0\expndtw0\kerning0
+SELECT tank_name from A\
+INNER JOIN B on A.rack_fk = B.racks_id\
+INNER JOIN C on B.facilities_fk= C.facility_id\
+WHERE facility_name = "Peredalab"\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs24 \cf5 \cb6 \outl0\strokewidth0 \strokec5 TV20120; we are going to remove the existing alleles\
+Remove trIs30 I; agr-1(tm2051) II\
+Add two alleles with sequence data\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26\fsmilli13120 \cf7 \cb2 \strokec7 kur33\
+kur48\
+\
+In preparation for adding passwords for remote access.\
+Windows 10 computers are rebooting due to windows update \
+Windows 7, state of this is unknown \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs22 \cf8 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \outl0\strokewidth0 2c0dbb27a6db9735d8a5487e70ef11bb
+\f0\fs26\fsmilli13120 \cf7 \cb2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \outl0\strokewidth0 \strokec7 \
+}

@@ -1,6 +1,6 @@
 @import "/js/bootstrap/css/bootstrap.min.css";
-@import "/css/selectize.bootstrap4.css";
-@import "/css/bootstrap-datepicker.css";
+@import "/css/selectize.bootstrap5.css";
+@import "/css/bootstrap-datepicker3.min.css";
 @import "https://fonts.googleapis.com/css?family=Open+Sans";
 
 body {
@@ -26,4 +26,55 @@ body {
 
 .twelvepoints {
 	font-size: 12px !important;
+}
+
+.button-breathing-room {
+  margin-top: -5px;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* Adjust as needed */
+}
+
+.form-check-input {
+    margin-right: 5px; /* Adjust as needed */
+}
+
+.horizontal-checkboxes {
+  display: flex;
+  flex-wrap: nowrap; /* Ensures checkboxes don't wrap to new line */
+  margin-right: 10px; /* Optional margin for spacing */
+}
+
+.horizontal-checkbox {
+  float: left;
+  margin-right: 10px; /* Add some margin for spacing */
+}
+
+.form-check2 {
+  display: flex; /* Maintain for vertical alignment (optional) */
+  align-items: center; /* Maintain for vertical alignment (optional) */
+  margin-bottom: 5px; /* Adjust as needed */
+}
+
+.checkbox-group {
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly between items */
+    width: 100%; /* Ensure the group takes full width to distribute items across */
+}
+
+.checkbox-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] + label {
+    margin-top: 5px; /* Space between checkbox and label if needed */
+}
+
+.checkbox-item label + span {
+    margin-top: 5px; /* Space between label and date if needed */
 }

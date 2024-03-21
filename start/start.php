@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/start-javascript.js"></script>
 
 	<style>
 		h6 {
@@ -15,15 +16,23 @@
 		}
 	</style>
 
+	<script>
+      $( document ).ready(function()
+      {
+        handleStrainButtons();
+      });
+    </script>
+
  </head>
  <body class="bg-light">
-	 <div class="container">
-		 <div class="text-center">
-			 <img class="d-block mx-auto mb-4" alt="" width="72" height="72">
-			 <h2>KurshanLab Strain Database</h2>
-			 <p class="lead">Home</p>
-		 </div>
-
+ 	<div class="container">
+		<div class="py-5 text-center">
+			<img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
+      <h2>KurshanLab Strain Database</h2>
+      <p class="lead">Home</p>
+    </div>
+	<div class="container">
+		
 		<form class="needs-validation" action="" method="post">
 
 			<div class="row">
@@ -137,8 +146,8 @@
 						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
 						if (count($theSearchResult) > 0 ) {
 
-							echo "<label>table of thawed strains</label>";
-							echo "<table class='table table-striped table-hover table-bordered twelvepoints'>";
+							echo "<label>thawed strains</label>";
+							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='thawed-table'>";
 								echo "<th class='font-weight-bold'>strain name</th>";
 								echo "<th class='font-weight-bold'>date thawed</th>";
 								echo "<th class='font-weight-bold'>thawed by</th>";
@@ -148,26 +157,29 @@
 
 								foreach ($theSearchResult as $theStrainID) {
 
-										$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
-										$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-										echo "<td>$theStrainName</td>";
+									// BUGfixed, was missing row entry, 2024_02_13
+									echo "<tr>";
 
-										$dateThawed = "";
-										if (isset($theStrainArray['dateThawed_col']) && $theStrainArray['dateThawed_col'] != "") {
-											$dateThawed = htmlspecialchars($theStrainArray['dateThawed_col'],ENT_QUOTES);
-										}
-										echo "<td>$dateThawed</td>";
+									$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
+									$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+									echo "<td>$theStrainName</td>";
 
-										// this needs to do a lookup
-										$theContributorObject = new LoadContributor();
-										$theContributorString = "";
-										$theActualContributor = $theStrainArray['lastVialContributor_fk'];
+									$dateThawed = "";
+									if (isset($theStrainArray['dateThawed_col']) && $theStrainArray['dateThawed_col'] != "") {
+										$dateThawed = htmlspecialchars($theStrainArray['dateThawed_col'],ENT_QUOTES);
+									}
+									echo "<td>$dateThawed</td>";
 
-										if ((isset($theActualContributor)) && ($theActualContributor != 0) && ($theActualContributor != NULL) ) {
-											$theContributorArray = $theContributorObject->returnSpecificRecord($theActualContributor);
-											$theContributorString = htmlspecialchars($theContributorArray['contributorName_col'],ENT_QUOTES);
-										}
-										echo "<td>$theContributorString</td>";
+									// this needs to do a lookup
+									$theContributorObject = new LoadContributor();
+									$theContributorString = "";
+									$theActualContributor = $theStrainArray['lastVialContributor_fk'];
+
+									if ((isset($theActualContributor)) && ($theActualContributor != 0) && ($theActualContributor != NULL) ) {
+										$theContributorArray = $theContributorObject->returnSpecificRecord($theActualContributor);
+										$theContributorString = htmlspecialchars($theContributorArray['contributorName_col'],ENT_QUOTES);
+									}
+									echo "<td>$theContributorString</td>";
 
 									echo "</tr>";
 
@@ -176,6 +188,207 @@
 							
 						} else {
 							echo "<label>there are no thawed strains</label>";
+						}
+					?>
+				</div>
+			</div>
+
+			<!-- when we click a button on the screen, it assigns the OK button of this dialog its information (strain id, etc) -->
+		    <dialog id="confirmation_dialog">
+		        <h2>Confirmation</h2>
+		        <p id="confirmation_string"></p>
+		        <button id="cancel-button">Cancel</button>
+		        <button id="ok-button">OK</button>
+		    </dialog>
+
+			<!-- for regular users, table goes here to display strains not yet handed off -->
+			<div class="row">
+				<div class="col-md-12 mb-3">
+					<?php
+						$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+						if ($userObject->IsCurrentUserAnEditor()) {
+							// we had no choice but to hard code is null, binding a null value does not work
+							
+							// EXCLUDE MOVED STRAINS
+
+							$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NOT NULL AND strain_table.dateMoved_col IS NULL ORDER BY strain_table.strainName_col asc";
+
+							$searchDatabase = new Peri_Database();
+
+							$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
+							$preparedSQLQuery_prop->execute();
+							$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+
+							if (count($theSearchResult) > 0 ) {
+
+								echo "<label>handed off strains waiting to be processed further</label>";
+								echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='processstrains-table'>";
+									echo "<th class='font-weight-bold'>strain name</th>";
+									echo "<th class='font-weight-bold'>frozen?</th>";
+									echo "<th class='font-weight-bold'>survived?</th>";
+									echo "<th class='font-weight-bold'>move to final destination</th>";
+
+									require_once("../classes/classes_load_elements.php");
+									$theStrainClass = new LoadParentStrains();
+
+									$theRowNumber = 1; // starting with 1, not 0
+
+									foreach ($theSearchResult as $theStrainID) {
+
+										// we track row numbers so we know which one to delete when handed off
+										echo "<tr id=$theRowNumber>";
+
+										$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
+										$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+										$theStrainID = htmlspecialchars($theStrainArray['strain_id'],ENT_QUOTES);
+										if ($theStrainArray['dateFrozen_col'] != null) {
+											$theFrozenDate = htmlspecialchars($theStrainArray['dateFrozen_col'],ENT_QUOTES);
+										} else {
+											$theFrozenDate = "";
+										}
+										if ($theStrainArray['dateSurvived_col'] != null) {
+											$theSurvivalDate = htmlspecialchars($theStrainArray['dateSurvived_col'],ENT_QUOTES);
+										} else {
+											$theSurvivalDate = "";
+										}
+										
+										echo "<td>$theStrainName</td>";
+
+										echo "<td>";
+											$theFrozenState = ($theFrozenDate != null);
+            					$frozenButtonID = "frozen-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+            					$frozenDateID = "frozen-date-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+            					$theSurvivalState = ($theSurvivalDate != null);
+											$survivalButtonID = "survival-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+											$survivalDateID = "survival-date-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+
+											$theFrozenButtonState = "";
+											$theSurvivalButtonEnabledState = "";
+											$theMoveButtonEnabledState = "";
+
+							        if ($theFrozenState == false) {
+							           $theSurvivalButtonEnabledState = "disabled";
+							           $theMoveButtonEnabledState = "disabled";
+							        }
+							        if ($theSurvivalState) {
+							            $theFrozenButtonState = "disabled";
+							        } else {
+							           	$theMoveButtonEnabledState = "disabled";
+							        }
+
+            					// we use a class because there are multiple buttons on this page
+											echo "<div class='form-check'>";
+											  echo "<div class='custom-control custom-checkbox'>";
+											    if ($theFrozenState) {
+											      echo "<input type='checkbox' class='form-check-input frozen' checked $theFrozenButtonState id=$frozenButtonID>";
+											    } else {
+											      echo "<input type='checkbox' class='form-check-input frozen' $theFrozenButtonState id=$frozenButtonID>";
+											    }
+											    echo "<label class='form-check-label' for='$frozenButtonID'>Frozen?</label>";
+											  echo "</div>";
+											echo "</div>";
+											echo "<span id=$frozenDateID>$theFrozenDate</span>"; 
+
+										echo "</td>";
+
+										echo "<td>";
+											echo "<div class='form-check'>";
+			                  					echo "<div class='custom-control custom-checkbox'>";
+			                  						if ($theSurvivalState) {
+			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState checked id=$survivalButtonID>";
+			                  						} else {
+			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState id=$survivalButtonID>";
+			                  						}
+													echo "<label class='form-check-label' for='customCheck1'>Survived?</label>";
+												echo "</div>";
+											echo "</div>";
+											echo "<span id=$survivalDateID>$theSurvivalDate</span>"; 
+										echo "</td>";
+
+										echo "<td>";
+										$finalDestinationButtonID = "finaldestination-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+										echo "<button type='button' id=$finalDestinationButtonID class='btn btn-outline-info btn-sm finaldestination' $theMoveButtonEnabledState>final move...</button>";
+										echo "</td>";
+
+										echo "</tr>";
+										$theRowNumber = $theRowNumber + 1;
+
+									}
+								echo "</table>";
+								
+							} else {
+								echo "<label>there are no strains waiting to be handed off</label>";
+							}
+						}
+						// we had no choice but to hard code is null, binding a null value does not work
+						$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NULL AND strain_table.author_fk = ? ORDER BY strain_table.strainName_col asc";
+
+						$searchDatabase = new Peri_Database();
+
+						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
+						// Start output buffering
+ob_start();
+// Print the session array
+print_r($_SESSION);
+// Capture the output
+$sessionContents = ob_get_clean();
+// Log it to the PHP error log
+error_log("Session Contents: " . $sessionContents);
+
+
+						$preparedSQLQuery_prop->execute([$_SESSION['user']]); // we show only those not handed off strains created by the current user
+
+						//$nullDate = null;
+						//$preparedSQLQuery_prop->bindParam(1, $nullDate, PDO::PARAM_NULL);
+						//$theQueryArray = [null]; // this is the ? above.
+						//$preparedSQLQuery_prop->execute($theQueryArray);
+						
+						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+
+						if (count($theSearchResult) > 0 ) {
+
+							echo "<label>my strains waiting to be handed off</label>";
+							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='handoff-table'>";
+								echo "<th class='font-weight-bold'>strain name</th>";
+
+								$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+								if ($userObject->IsCurrentUserAnEditor()) {
+									echo "<th class='font-weight-bold'>hand off to me</th>";
+								} else {
+									echo "<th class='font-weight-bold'>hand off to the strain manager</th>";
+								}
+								
+
+								require_once("../classes/classes_load_elements.php");
+								$theStrainClass = new LoadParentStrains();
+
+								$theRowNumber = 1; // starting with 1, not 0
+
+								foreach ($theSearchResult as $theStrainID) {
+
+									// we track row numbers so we know which one to delete when handed off
+									echo "<tr id=$theRowNumber>";
+
+
+									$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
+									$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+									echo "<td>$theStrainName</td>";
+
+									echo "<td>";
+                  					$theButtonID = "handoff-button-row-" . $theRowNumber . "-strainid-" . $theStrainID['strain_id'] . "-strain_name-" . $theStrainName;
+                  					// class "download" is used to identify the button
+                  					// we use a class because there are multiple buttons on this page
+                  					echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm handoff'>handoff</button>";
+									echo "</td>";
+
+									echo "</tr>";
+									$theRowNumber = $theRowNumber + 1;
+
+								}
+							echo "</table>";
+							
+						} else {
+							echo "<label>there are no strains waiting to be handed off</label>";
 						}
 					?>
 				</div>

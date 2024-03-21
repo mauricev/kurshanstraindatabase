@@ -35,6 +35,20 @@
 
 		// LoadGeneticElement
 		public function returnSpecificRecord($elementToReturn_param) {
+			
+			$this->preparedSQLQuery_prop = $this->sqlPrepare("SELECT * FROM $this->tableName_prop WHERE $this->elementIDColumn_prop = ?");
+
+			$this->preparedSQLQuery_prop->execute([$elementToReturn_param]);
+
+			$existingElement = $this->preparedSQLQuery_prop->fetch();
+
+
+			//we summarily return the entire associative array
+			return ($existingElement);
+		}
+
+		public function returnSpecificRecord_good($elementToReturn_param) {
+			
 			$this->preparedSQLQuery_prop = $this->sqlPrepare("SELECT * FROM $this->tableName_prop WHERE $this->elementIDColumn_prop = ?");
 
 			$this->preparedSQLQuery_prop->execute([$elementToReturn_param]);
@@ -559,6 +573,7 @@
 			} else {
 					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
 			}
+			
 			echo "<option value=''>$this->placeholder_prop</option>";
 			foreach($theArray as $row) {
 					$name = $row[$this->elementNameColumn_prop];
@@ -570,8 +585,14 @@
 					// if the allele has no associated gene, this will trigger a PHP warning
 					$theGeneObject = new LoadGene();
 					$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
-
-					$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+				
+					// BUGfixed 2023_12_12 some alleles don’t have genes assigned
+					if ($geneElementArrayToEdit != null) {
+						$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+					} else {
+						$geneToAdd = "no gene assigned";
+					}
+					
 					echo "<option value=\"$id\">$geneToAdd ($name) </option>";
 			}
 			echo "</select>";
@@ -993,5 +1014,3 @@
 			return '/';
 		}
 	}
-
-?>

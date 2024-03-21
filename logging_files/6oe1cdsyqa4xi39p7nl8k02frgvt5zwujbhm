@@ -1,9 +1,0 @@
-added gene: try-111; with no comment given ; on chromosome III
-added allele: kur3; with no comment given ; and gene try-111
-updated strain: PTK8; with no isolation name given ; with comment 'this is a test strain'; frozen on 2020-10-06; thawed on ; located at F-0001, C7-9, N-001, A9 with alleles ju82, s69, kur3; with transgenes wyIs685, kurEx1
-added gene: epo-303; with no comment given ; on chromosome III
-added allele: kur4; with no comment given ; and gene epo-303
-updated strain: PTK8; with no isolation name given ; with comment 'this is a test strain'; frozen on 2020-10-06; thawed on ; located at F-0001, C7-9, N-001, A9 with alleles ju82, s69, kur3, kur4; with transgenes wyIs685, kurEx1
-added transgene: kurIs2; with no comment given ; on chromosome II; parent transgene: none; coinjectionMarker: none; and plasmids: none
-updated strain: PTK8; with no isolation name given ; with comment 'this is a test strain'; frozen on 2020-10-06; thawed on ; located at F-0001, C7-9, N-001, A9 with alleles ju82, s69, kur3, kur4; with transgenes wyIs685, kurEx1, kurEx2
-updated strain: PTK8; with no isolation name given ; with comment 'this is a test strain'; frozen on 2020-10-06; thawed on ; located at F-0001, C7-9, N-001, A9 with alleles ju82, s69, kur3, kur4; with transgenes wyIs685, kurEx1, kurIs2

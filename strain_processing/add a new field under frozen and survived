@@ -1,0 +1,30 @@
+add a new field under frozen and survived
+date field
+when null nothing is displayed
+when set, date displays
+it will have the same id as the button prepended with date-
+so we can deduce its id from thebuttonid
+we will populate it in html on at the outset
+and then when we set the checkbox, we also set the date field; we have to read the date because it may not be today
+
+is there an easy way to return two values via ajax?
+
+
+frozen set, survive and move become enabled
+frozen unset, survive and move are disabled
+
+frozen is set, survive is available. if survive is set, frozen becomes disabled and move becomes available
+if survive is not set, move is set to disabled
+
+where do these button rules get set
+
+we set the buttons initially in html
+
+then we have a button update method that sets them whenever frozen and survival are updated
+
+it then sets the buttons based on the rules above; it looks like there are four rules
+
+start don't show moved strains
+
+
+

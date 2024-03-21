@@ -1,0 +1,29 @@
+@import "/js/bootstrap/css/bootstrap.min.css";
+@import "/css/selectize.bootstrap4.css";
+@import "/css/bootstrap-datepicker.css";
+@import "https://fonts.googleapis.com/css?family=Open+Sans";
+
+body {
+	    font-family: "Open Sans";
+			font-size: 16px !important;
+			/*transform: scale(0.85);
+			transform-origin: top left;*/
+}
+
+.form-control.is-valid:focus, .was-validated :valid.form-control {
+  border-color:inherit !important;
+  background-image: inherit !important;
+  box-shadow:inherit !important;
+}
+
+.hidden {
+	opacity:0;
+}
+
+.tinylabel {
+	font-size: 9px !important;
+}
+
+.twelvepoints {
+	font-size: 12px !important;
+}

@@ -31,7 +31,7 @@
   <body class="bg-light">
     <div class="container-fluid">
   		<div class="py-5 text-center">
-        <img class="d-block mx-auto mb-4" alt="" width="72" height="72">
+        <img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
         <h2>KurshanLab Strain Database</h2>
         <p class="lead">Search Results</p>
       </div>
@@ -60,7 +60,6 @@
         if ($theSearchResult === false) {
           echo "You didn't specify any search parameters.";
         } else {
-
           require_once("../classes/classes_search_output.php");
           $theTableOutputClass = new TableOutputClass();
 
@@ -99,13 +98,20 @@
 
               $theTableOutputClass->appendTableHeader('nitrogen');
 
-              $theTableOutputClass->appendTableHeader('frozen on');
+              //$theTableOutputClass->appendTableHeader('frozen on');
 
-              $theTableOutputClass->appendTableHeader('thawed on');
+              //$theTableOutputClass->appendTableHeader('thawed on');
               // when searching for comments in genes/alleles/transgenes, this field will be populated for the second header
 
               // added 5th revision, 2/2/23
               $theTableOutputClass->appendTableHeader('allele sequence data');
+
+              // 6th revision, 3/21/24
+              $theTableOutputClass->appendTableHeader('handed off on');
+              $theTableOutputClass->appendTableHeader('frozen on');
+              $theTableOutputClass->appendTableHeader('survived on');
+              $theTableOutputClass->appendTableHeader('moved on');
+              $theTableOutputClass->appendTableHeader('thawed on');
 
               $theTableOutputClass->appendTableHeader('authored by');
 
@@ -367,6 +373,12 @@
                 $theTableOutputClass->appendTableHeader('');
               }
 
+// sequence data is not a search term
+              $theTableOutputClass->appendTableHeader('');
+
+// date handed off is not a search term
+              $theTableOutputClass->appendTableHeader('');
+
 // date frozen
               if ( (isset($_POST['dateFrozenBeginning_htmlName'])) && ($_POST['dateFrozenBeginning_htmlName'] != "") && ($_POST['dateFrozenEnding_htmlName'] != "") ) {
                 $header = htmlspecialchars($_POST['dateFrozenBeginning_htmlName'],ENT_QUOTES) . "–" . htmlspecialchars($_POST['dateFrozenEnding_htmlName'],ENT_QUOTES);
@@ -375,10 +387,13 @@
                 $theTableOutputClass->appendTableHeader('');
               }
 
-// date thawed is not a search term
+// date survived is not a search term
               $theTableOutputClass->appendTableHeader('');
 
-// sequence data is not a search term
+// date moved is not a search term
+              $theTableOutputClass->appendTableHeader('');
+
+// date thawed is not a search term
               $theTableOutputClass->appendTableHeader('');
 
 // author header
@@ -714,20 +729,11 @@
 
               $theTableOutputClass->appendTableData($theStrainArray['fullNitrogen_col']);
 
-              $theTableOutputClass->appendTableData(htmlspecialchars($theStrainArray['dateFrozen_col'],ENT_QUOTES));
-
-              $data = "";
-              if (isset($theStrainArray['dateThawed_col']) && $theStrainArray['dateThawed_col'] != "") {
-                $data = htmlspecialchars($theStrainArray['dateThawed_col'],ENT_QUOTES);
-              }
-              $theTableOutputClass->appendTableData($data);
-
-              $theAlleleObject = new LoadAllele();
-              //$theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
-              $theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
-
               echo "<td>";
 
+              $theAlleleObject = new LoadAllele();
+              $theAlleleArray2 = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
+              
               $theSequenceFileName = "";
               $theNumberOfAlleles = 0;
 
@@ -747,32 +753,47 @@
   		            echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm download'>download for " . $theAllele['alleleName_col']. "</button>";
   	            }
               }
-              //echo "number of alleles" . $theNumberOfAlleles ;
-              //echo "<input type='hidden' id='numberOfAlleles' value=\"$theNumberOfAlleles\">";
-              echo "</td>";
               $theTableOutputClass->appendExportedTableData($theSequenceFileName);
-/*
-              $theAlleleObject = new LoadAllele();
-              $theAlleleArray = $theAlleleObject->searchRelatedToStrain($theStrainID['strain_id']);
-
-              // we have a second related search that gets us the name of sequence data for each allele and put that into
-              the array
-              // we can then display here the sequence file name
-              // it returns an array which consists of sequence file names and the sequence data
-              // this might be helpful because
-              // multiple alleles per strain
-              select sequenceDataName_col,sequence_data_col from table alleles where strain_table.strain_id = this strain’s id AND WHERE sequenceDataName_col != ""
-              this will return an array of
-
-              $theAlleleObject = new LoadAllele();
-              $theAlleleArray = $theAlleleObject->searchRelatedToStrainForSequenceData($theStrainID['strain_id']);
-
-
-
-
-
-*/
+              echo "</td>";
+              
+              
 // SECTION 3
+              
+             if ($theStrainArray['dateHandedOff_col'] == null) {
+                $theHandedOffDate = "";
+              } else {
+                $theHandedOffDate = htmlspecialchars($theStrainArray['dateHandedOff_col'],ENT_QUOTES);
+              }
+              $theTableOutputClass->appendTableData($theHandedOffDate);
+
+              if ($theStrainArray['dateFrozen_col'] == null) {
+                $theFrozenDate = "";
+              } else {
+                $theFrozenDate = htmlspecialchars($theStrainArray['dateFrozen_col'],ENT_QUOTES);
+              }
+              $theTableOutputClass->appendTableData($theFrozenDate);
+
+              if ($theStrainArray['dateSurvived_col'] == null) {
+                $theSurvivalDate = "";
+              } else {
+                $theSurvivalDate = htmlspecialchars($theStrainArray['dateSurvived_col'],ENT_QUOTES);
+              }
+              $theTableOutputClass->appendTableData($theSurvivalDate);
+
+              if ($theStrainArray['dateMoved_col'] == null) {
+                $theMovedDate = "";
+              } else {
+                $theMovedDate = htmlspecialchars($theStrainArray['dateMoved_col'],ENT_QUOTES);
+              }
+              $theTableOutputClass->appendTableData($theMovedDate);
+
+              $data = "";
+              if (isset($theStrainArray['dateThawed_col']) && $theStrainArray['dateThawed_col'] != "") {
+                $data = htmlspecialchars($theStrainArray['dateThawed_col'],ENT_QUOTES);
+              }
+              $theTableOutputClass->appendTableData($data);
+  
+
               // this needs to do a lookup
               $data = "";
               $theAuthor = new LoadAuthors();
@@ -798,6 +819,7 @@
           echo "<input type='hidden' id='excelWhichSearch' value='strainSearchResults'>";
           $theFileData = $theTableOutputClass->returnTheFileData();
           echo "<input type='hidden' id='excelDownloadData' value=\"$theFileData\">";
+          
         }
       ?>
   </body>

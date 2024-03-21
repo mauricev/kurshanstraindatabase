@@ -1,0 +1,47 @@
+for friday
+
+we need to move this display to show only when a non-editor is in the database and we should have a user to ensure it shows up that way and still works
+
+then we have a 
+"table of strains handed off to you for further processing"
+
+if the strain has been handed off and has not been moved to its final destination
+
+moved to its final destination
+there needs to be a boolean for this option in the database and we need to add that to the class and constructor
+
+date frozen is no longer a date field in the edit strain dialog; it will now be a checkbox
+
+survival checked
+
+we have a new table for editors
+
+strain name 	set status as frozen 						survival check									move to final destination
+				will be a checkbox 							will be a checkbox 							will be a button
+				and will have a confirmation prompt			and will have a confirmation prompt			and will have a confirmation prompt
+				does essentially what handoff does			does essentially what handoff does			does essentially what handoff does
+				but can be unchecked 						can be unchecked						but no date associated with this
+				and will set date back to null				and will set date back to null				
+
+
+disable/enable rules
+
+if frozen is unhchecked, survival and move to are disabled
+if survival is unchecked move to is disabled
+
+when they change values, the disabling/enabling needs to update
+
+the question is how we handle the enabling/disabling of buttons
+
+how do we even handle the display of the button status?
+
+the way to do this is to feed the button id of survival and move to the first button
+
+when the first button is clicked and does its thing, it alters the button status of the other buttons
+
+the same will apply to the survival check button
+
+the edit screen will need the same buttons but here they won't need confirmation dialogs but they will need disabling/enabling code
+
+Peri question?
+does moved to final destination also get a date?

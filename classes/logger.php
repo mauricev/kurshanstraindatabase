@@ -14,7 +14,7 @@ class Logger {
       $theFileName = $_SESSION['loggerFileName'];
       // possible BUG, was using a relative reference, now uses document root
       $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
-      if ($theFileReference !== false) {
+      if ($theFileReference) {
         fclose($theFileReference);
       }
     }
@@ -31,7 +31,6 @@ class Logger {
     }
 
   public function appendToLog ($stringToAppend_param) {
-
     $theFileName = $this->returnLogFileName();
     $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
     if ($theFileReference !== false) {
@@ -41,11 +40,10 @@ class Logger {
   }
 
   public function returnLog () {
-
     $theFileName = $this->returnLogFileName();
     $theFileArray = file($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", FILE_IGNORE_NEW_LINES);
     if ($theFileArray !== false) {
-      // the last entries are the first ones done, so we need reverse the array
+      // the last entries are the first ones done, so we need to reverse the array
       $theFileArrayReversed = array_reverse($theFileArray);
       $theLogString = "";
       $theCounter = 1;
@@ -63,8 +61,6 @@ class Logger {
         $theCounter++;
       }
       return htmlspecialchars($theLogString,ENT_QUOTES);
-    } else {
-      return "The log couldn't be opened.";
     }
   }
 }

@@ -189,7 +189,13 @@
 		public function concatElementWhereClauseToMasterWhereClauseInternal($thePrimaryWhereClause_param, $inConjunction_param) {
 
 				$incomingWhereString1 = $thePrimaryWhereClause_param;
+
+				//echo "<br>thePrimaryWhereClause_param: " . $thePrimaryWhereClause_param . "<br>";
+
 				$incomingWhereString2 = $this->theWhereClauseString_prop; // this object’s where clause built from above method
+
+				//echo "<br>theWhereClauseString_prop: " . $this->theWhereClauseString_prop . "<br>";
+
 				$theOutGoingWhereString = "";
 				if (($incomingWhereString1 != "" ) && ($incomingWhereString2 != "" )) {
 					$theOutGoingWhereString = $incomingWhereString1 . $inConjunction_param . $incomingWhereString2;
@@ -198,7 +204,9 @@
 				} else {
 					$theOutGoingWhereString = $incomingWhereString2;
 				}
+				
 				//echo "<br>theOutGoingWhereString: " . $theOutGoingWhereString . "<br>";
+				
 				return $theOutGoingWhereString;
 		}
 
@@ -272,14 +280,23 @@
 							// that's it!
 
 							$theHavingCountArray["$this->searchParameter_prop"] = $theArraySize + 1; // +1 because arraysize is assuming a count starting at zero
-							// at th end, we loop through this array
+							// at the end, we loop through this array
 							// if it’s > 1
+							// theHavingCountArray is an actual count of the elements
 						}
 					}
 					array_push($theBuddingQueryArray_param, $this->arrayToBuildFrom_prop[$theIndex]);
+
+					echo "<br> theBuddingQueryArray_param ";
+					var_dump($theBuddingQueryArray_param);
+					echo "<br>";
 				}
 				// outside loop to close off the parentheses when search is
 				$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . " ) ";
+
+				echo "<br>having array<br>";
+				var_dump($theHavingCountArray);
+				echo "<br>end having array<br>";
 			}
 		}
 
@@ -654,7 +671,7 @@
 					if ($this->IsItORSearch_prop == false ) {
 						$this->searchParameter_prop = 'transgene_table.transgene_id '; // remove the = ?
 					}
-					// why doesn't this call the array push
+					// why doesn't this call the array push?
 					// constructor does this
 					parent::__construct($joinObject_param, $theBuddingQueryArray_param, $theHavingCountArray);
 				}
@@ -993,30 +1010,31 @@
 				$searchState = 'searchForJustStrains';
 			}
 
-			//echo "search state is ". $searchState;
-
 			switch($searchState) {
 				case 'searchForJustStrains':
 					// here we are searching for JUST strain parameters
 					// that is there is no join clause
 
 					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . " WHERE " . $thePrimaryWhereClause . " ORDER BY truestrain_table.strainName_col";
-
 					break;
 				case 'searchForCommentsOnly':
 					// $theSelectString already has the search string built for us, so nothing else to do here; this is also true for when limiting search to strain comments
 					break;
 				case 'searchForSomethingElse':
 
+					// here we will add buildNotInClause
+
+
 					$inGroupedByID = "truestrain_table.strain_id";
 					// adds key to group by and values for ? to buddingqueryarray
 					buildGroupByHavingClause($theHavingCountArray,$theBuddingQueryArray, $outGroupByHavingClause);
 
 					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $outGroupByHavingClause . " ORDER BY truestrain_table.strainName_col";
-					// echo "select string, ". $theSelectString."<br>";
-					// echo "query values<br> ";
-					// var_dump($theBuddingQueryArray);
-					// echo "<br>";
+					 
+					 echo "select string, ". $theSelectString."<br>";
+					 echo "query values<br> ";
+					 var_dump($theBuddingQueryArray);
+					 echo "<br>";
 
 					break;
 
@@ -1035,6 +1053,7 @@
 				$preparedSQLQuery_prop->execute($theBuddingQueryArray);
 
 				$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+
 				return ($theResult);
 			} else {
 				return false;

@@ -8,4 +8,3 @@ if (!(isset($_SESSION['loggedin']))) {
 function ourheader($page) {
   header($page);
 }
-?>

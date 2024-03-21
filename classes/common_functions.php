@@ -50,7 +50,12 @@
         $theNewIsLastVialState = "";
         $selectedLastVialer = "";
 
-    	 	return new Strain($name, $isolationName, $dateFrozen, $dateThawed, $comments,$setOfParentStrains,$setOfAlleles,$setOfTransGenes,$setOfBalancers,$contributorID,$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer);
+        $handOffDate = null;
+        $frozenDate = null;
+        $survivalDate = null;
+        $movedDate = null;
+
+    	 	return new Strain($name, $isolationName, $dateFrozen, $dateThawed, $comments,$setOfParentStrains,$setOfAlleles,$setOfTransGenes,$setOfBalancers,$contributorID,$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer,$handOffDate, $survivalDate, $movedDate);
     	 }
 
       function createTransGenePlaceHolder($transGeneLocation_param) {
