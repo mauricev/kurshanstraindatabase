@@ -52,13 +52,6 @@
 		}
 
     public function updateOurEntry ($existingGeneElementID_param) {
-
-      echo "<br>this->classTable_prop ".$this->classTable_prop;
-      echo "<br>this->classTableName_prop ".$this->classTableName_prop;
-      echo "<br>this->actualElementName_prop ".$this->actualElementName_prop;
-      echo "<br>this->actualElementID_prop ".$this->actualElementID_prop;
-      echo "<br>existingGeneElementID_param ".$existingGeneElementID_param;
-
       $preparedSQLQuery = $this->sqlPrepare("UPDATE $this->classTable_prop SET $this->classTableName_prop = ? WHERE $this->actualElementID_prop = ?");
       $preparedSQLQuery->execute([$this->actualElementName_prop,$existingGeneElementID_param]);
 
@@ -67,14 +60,40 @@
 	}
 
   class NewContributor extends NewElement {
+    protected $classOutsideContributor_prop;
+    protected $actualOutsideContributor_prop;
 
     public function __construct($newElement_param) {
       parent::__construct($newElement_param);
+      error_log("__construct");
 
       $this->classTable_prop = 'contributor_table';
       $this->classTableName_prop = 'contributorName_col';
       $this->actualElementID_prop = 'contributor_id';
       $this->elementKind_prop = 'contributor';
+      $this->classOutsideContributor_prop = "outside_contributor_col";
+    }
+
+    public function setOutsideContributorState($contributor_State) {
+      error_log("setOutsideContributorState");
+      $this->actualOutsideContributor_prop = $contributor_State;
+    }
+
+    public function insertOurEntry () {
+      $preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->classTable_prop ($this->classTableName_prop, $this->classOutsideContributor_prop) VALUES (?,?)");
+      $itemstoInsert = array($this->actualElementName_prop,$this->actualOutsideContributor_prop);
+      $preparedSQLInsert->execute($itemstoInsert);
+
+      $this->actualLoggingObject->appendToLog("created " . $this->elementKind_prop . ": " . $this->actualElementName_prop);
+    }
+
+    public function updateOurEntry ($existingGeneElementID_param) {
+      error_log("updateOurEntry");
+
+      $preparedSQLQuery = $this->sqlPrepare("UPDATE $this->classTable_prop SET $this->classTableName_prop = ?, $this->classOutsideContributor_prop = ? WHERE $this->actualElementID_prop = ?");
+      $preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualOutsideContributor_prop, $existingGeneElementID_param]);
+
+      $this->actualLoggingObject->appendToLog("updated " . $this->elementKind_prop . ": " .  $this->actualElementName_prop);
     }
   }
 

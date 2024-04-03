@@ -128,6 +128,7 @@
 						echo "<div class='col-md-2 mb-3'>";
 							echo "<input type='submit' name='edit_htmlName' class='form-control btn btn-primary btn-block' formaction='lister.php' value='Edit Entries' alt='Edit Entries'/>";
 						echo "</div>";
+
 					echo "</div>";
 				}
 			?>
@@ -317,23 +318,30 @@
 								echo "</table>";
 								
 							} else {
-								echo "<label>there are no strains waiting to be handed off</label>";
+								echo "<label>there are no strains waiting to be processed</label>";
 							}
 						}
+
+					echo "</div>";
+				echo "</div>";
+				echo "<div class='row'>";
+					echo "<div class='col-md-12 mb-3'>";
+
 						// we had no choice but to hard code is null, binding a null value does not work
 						$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NULL AND strain_table.author_fk = ? ORDER BY strain_table.strainName_col asc";
 
 						$searchDatabase = new Peri_Database();
 
 						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
+						
 						// Start output buffering
-ob_start();
-// Print the session array
-print_r($_SESSION);
-// Capture the output
-$sessionContents = ob_get_clean();
-// Log it to the PHP error log
-error_log("Session Contents: " . $sessionContents);
+						ob_start();
+						// Print the session array
+						print_r($_SESSION);
+						// Capture the output
+						$sessionContents = ob_get_clean();
+						// Log it to the PHP error log
+						error_log("Session Contents: " . $sessionContents);
 
 
 						$preparedSQLQuery_prop->execute([$_SESSION['user']]); // we show only those not handed off strains created by the current user

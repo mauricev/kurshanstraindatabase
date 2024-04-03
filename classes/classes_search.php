@@ -286,17 +286,9 @@
 						}
 					}
 					array_push($theBuddingQueryArray_param, $this->arrayToBuildFrom_prop[$theIndex]);
-
-					echo "<br> theBuddingQueryArray_param ";
-					var_dump($theBuddingQueryArray_param);
-					echo "<br>";
 				}
 				// outside loop to close off the parentheses when search is
 				$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . " ) ";
-
-				echo "<br>having array<br>";
-				var_dump($theHavingCountArray);
-				echo "<br>end having array<br>";
 			}
 		}
 
@@ -1030,11 +1022,6 @@
 					buildGroupByHavingClause($theHavingCountArray,$theBuddingQueryArray, $outGroupByHavingClause);
 
 					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $outGroupByHavingClause . " ORDER BY truestrain_table.strainName_col";
-					 
-					 echo "select string, ". $theSelectString."<br>";
-					 echo "query values<br> ";
-					 var_dump($theBuddingQueryArray);
-					 echo "<br>";
 
 					break;
 

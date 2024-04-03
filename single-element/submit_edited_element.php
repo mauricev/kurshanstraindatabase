@@ -15,12 +15,20 @@
 
         $singleElementBeingEdited = $_POST['original_isElementBeingEdited_postvar'];
 
+        error_log("in submit, ".  $singleElementBeingEdited);
+
         if ($singleElementBeingEdited) {
           $theElementID = $_POST['original_elementID_postvar'];
         }
       	switch($_POST['original_element_postvar']) {
       		case 'newContributor_htmlName';
       			$theElementObject = new NewContributor($theElementString);
+            $contributorState = 0;
+            if (isset($_POST['outsideLab_fieldID'])) {
+              $contributorState = 1;
+            }
+            error_log("in submit, value of contributorState ".$contributorState);
+            $theElementObject->setOutsideContributorState($contributorState);
       			break;
 
       		case 'newCoInjection_htmlName';
@@ -37,6 +45,8 @@
       	}
       	if($theElementObject) {
           if ($singleElementBeingEdited) {
+            // this code doesn't take into account unsetting the outside lab setting for a contributor
+            // to do this requires saving the orignal value and if it’s changed, updateOurEntry
             if (!($theElementObject->doesItAlreadyExist())) {
               $theElementObject->updateOurEntry($theElementID);
             }

@@ -147,13 +147,18 @@
 
             $theOriginalContributor = $geneElementArrayToEdit['contributor_fk'];
 
-            $theOriginalIsLastVial= $geneElementArrayToEdit['isLastVial_col'];
+            // we no longer save this setting
+            // when it is set, we use it to send the strain back to the original user
+            //$theOriginalIsLastVial= $geneElementArrayToEdit['isLastVial_col'];
+            $theOriginalIsLastVial = 0;
 
             $theOriginalLastVialer = $geneElementArrayToEdit['lastVialContributor_fk'];
 
             if ($geneElementArrayToEdit['dateHandedOff_col'] != null) {
+              error_log("handoff date is not null" . $geneElementArrayToEdit['dateHandedOff_col']);
               $theOriginalHandOffDate = htmlspecialchars($geneElementArrayToEdit['dateHandedOff_col'],ENT_QUOTES);
             } else {
+              error_log("handoff date is null");
               $theOriginalHandOffDate = "";
             }
 
@@ -186,8 +191,15 @@
           $theMovedState = ($theOriginalMovedDate != "");
 
 
-          // we’ve decided to make these buttons display only
-          $theHandOffButtonState = "disabled";
+          // we’ve decided to make these buttons display only except for handed off
+          // if handed off state is not handed off, user can set it
+          // once set here, it can't be unset. 
+          if ($theHandOffState) {
+            $theHandOffButtonState = "disabled";
+          } else {
+            $theHandOffButtonState = "";
+          }
+          
           $theFrozenButtonState = "disabled";
           $theSurvivalButtonEnabledState = "disabled";
           $theMoveButtonEnabledState = "disabled";
@@ -383,11 +395,11 @@
             if ($isStrainBeingEdited) {
               echo "<div class='col-md-3 mb-3'style='padding-top:12px'>";
                 echo "<div class='form-check'>";
-                  if ($theOriginalIsLastVial == 1) {
-                    echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' checked id='lastTubeCheckBoxID'>";
-                  } else {
+                  //if ($theOriginalIsLastVial == 1) {
+                  //  echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' checked id='lastTubeCheckBoxID'>";
+                  //} else {
                     echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' id='lastTubeCheckBoxID'>";
-                  }
+                  //}
                   // stores the value of the checkbox so javascript can access it
                   echo "<input type='hidden' id='IsLastVialHiddenField' name='hidden-label' value=$theOriginalIsLastVial>";
                   echo "<label class='form-check-label' for='lastTubeCheckBoxID'>last tube?</label>";
@@ -447,9 +459,9 @@
                echo "<div class='col-md-3'>";
                 echo "<div class='custom-control custom-checkbox'>";
                   if ($theHandOffState) {
-                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState id='handoffButtonID'>";
+                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState name='handedOffState_buttonValue' id='handoffButtonID'>";
                   } else {
-                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState id='handoffButtonID'>";
+                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState name='handedOffState_buttonValue' id='handoffButtonID'>";
                   }
                   echo "<label class='form-check-label' for='frozenButtonID'>Handed Off?</label>";
                 echo "</div>";
@@ -498,9 +510,9 @@
                echo "<div class='col-md-3'>";
                 echo "<div class='custom-control custom-checkbox'>";
                   if ($theHandOffState) {
-                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState id='handoffButtonID'>";
+                    echo "<input type='checkbox' class='form-check-input handoff ' checked $theHandOffButtonState name='handedOffState_buttonValue' id='handoffButtonID'>";
                   } else {
-                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState id='handoffButtonID'>";
+                    echo "<input type='checkbox' class='form-check-input handoff ' $theHandOffButtonState name='handedOffState_buttonValue'  id='handoffButtonID'>";
                   }
                   echo "<label class='form-check-label' for='frozenButtonID'>Handed Off?</label>";
                 echo "</div>";
@@ -565,6 +577,13 @@
               echo "<input type='hidden' name='originalStrainEdited' value=\"$isStrainBeingEdited\">";
 
               echo "<input type='hidden' name='originalHandOffDate_postvar' value=$theOriginalHandOffDate>";
+              // we need to pass the original hand off state
+              // only if this state is different from the original state do we change the button
+              // and since if it's already set, the button will be disabled, it can only go from unchecked to checked
+              // it cannot be unchecked.
+              echo "<input type='hidden' name='originalHandOffState_postvar' value=$theHandOffState>";
+
+              
               echo "<input type='hidden' name='originalDateFrozen_postvar' value=$theOriginalDateFrozen>";
 
             
@@ -585,9 +604,6 @@
 
                 echo "<input type='hidden' name='originalIsLastVial_postvar' value=$theOriginalIsLastVial>";
                 echo "<input type='hidden' name='originalLastVialer_postvar' value=$theOriginalLastVialer>";
-
-                
-
 
                 echo "<input type='hidden' name='isLabProduced_postvar' value=$labProduced>";
                 echo "<input type='submit' name='acceptNewStrainEntry_htmlName' class='btn btn-primary btn-block' value='Accept Edited Strain' alt='Accept Edited Strain' style='float:right'/>";

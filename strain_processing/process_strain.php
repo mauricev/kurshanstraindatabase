@@ -39,6 +39,10 @@
       case "handoff":
         $handOffDate = $theDate;
         break;
+      case "de-handoff":
+        $handOffDate = null;
+        $movedDate = null;
+        break;
       case "frozen":
         $frozenDate = $theDate;
         if ($checkBoxState == "true") {

@@ -228,6 +228,8 @@
 	}
 
 	class LoadContributor extends LoadGeneticElement {
+		protected $elementLabContributor;
+
 		public function __construct() {
 			parent::__construct();
 			$this->tableName_prop = "contributor_table";
@@ -240,6 +242,81 @@
 			$this->elementHTMLName = 'newContributor_htmlName';
 			$this->elementString = "Contributor";
 			$this->elementStringLC = "contributor";
+			$this->elementLabContributor = "outside_contributor_col";
+		}
+
+
+		// we organize the table into two groups. The first group are the ordinary collaborators. The second group 
+		// are those from outside laboratories
+		public function buildSelectTable ($isMultiple_param) {
+			error_log("buildSelectTable");
+			// isMultiple_param is false for this select table
+			$theArray = $this->returnAll();
+			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
+			echo "<option value=''>$this->placeholder_prop</option>";
+			foreach($theArray as $row) {
+				if ($row[$this->elementLabContributor] == false) {
+					$name = htmlspecialchars($row[$this->elementNameColumn_prop],ENT_QUOTES);
+					$id = $row[$this->elementIDColumn_prop];
+					echo "<option value=\"$id\">$name</option>";
+				}
+			}
+			if (count($theArray) > 0) {
+				echo "<optgroup label='Outside labs'>";
+				foreach($theArray as $row) {
+					if ($row[$this->elementLabContributor] == true) {
+						$name = htmlspecialchars($row[$this->elementNameColumn_prop],ENT_QUOTES);;
+						$id = $row[$this->elementIDColumn_prop];
+						echo "<option value=\"$id\">$name</option>";
+					}
+				}
+				echo "</optgroup>";
+				
+			}
+			echo "</select>";
+		}
+
+		// we organize the table into two groups. The first group are the ordinary collaborators. The second group 
+		// are those from outside laboratories1
+		public function buildSelectedTablesWithSingleEntry ($entryToSelect_param) {
+			$theEntireArray = $this->returnAll();
+
+		 	echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" single placeholder=\"$this->placeholder_prop\">";
+
+			// NULL entry means nothing was selected; the line below prevents the default first value from showing
+			if ($entryToSelect_param == NULL) {
+				echo "<option value=''>\"$this->placeholder_prop\"</option>";
+			}
+			sort($theEntireArray);
+			foreach ($theEntireArray as $theEntireArrayItem)
+			{
+				if ($theEntireArrayItem[$this->elementLabContributor] == false) {
+					$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
+					$id = $theEntireArrayItem[$this->elementIDColumn_prop];
+					if ($entryToSelect_param == $id) {
+						echo "<option value=\"$id\" selected='selected'>$name</option>";
+					} else {
+						echo "<option value=\"$id\">$name</option>";
+					}
+				}
+			}
+			if (count($theEntireArray) > 0) {
+				echo "<optgroup label='Outside labs'>";
+				foreach ($theEntireArray as $theEntireArrayItem)
+				{
+					if ($theEntireArrayItem[$this->elementLabContributor] == true) {
+						$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
+						$id = $theEntireArrayItem[$this->elementIDColumn_prop];
+						if ($entryToSelect_param == $id) {
+							echo "<option value=\"$id\" selected='selected'>$name</option>";
+						} else {
+							echo "<option value=\"$id\">$name</option>";
+						}
+					}
+				}
+				echo "</optgroup>";
+			}
+			echo "</select>";
 		}
 	}
 

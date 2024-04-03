@@ -628,7 +628,6 @@
 
 			$this->columnDateMoved_prop = "dateMoved_col";
 			$this->actualDateMoved_prop = $finalDestinationDate_param;
-
 		}
 
 		public function returnFreezerNitrogenArrays(&$outFreezerArray,&$outNitrogenArray) {
@@ -713,7 +712,6 @@
 
 		// strain
 		public function updateFreezerTable() {
-
 				$theNewFreezerFNumber_param = "";
 				$theNewFreezerIndex_param = "";
 				$theNewNitrogenNNumber_param = "";
@@ -787,9 +785,9 @@
 
 				$this->updateFreezerTable();
 
-				$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop, $this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col, contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+				$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop, $this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col, contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-				$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop);
+				$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop);
 				$preparedSQLInsert->execute($itemstoInsert);
 
 				$this->insertStrainAlleles($this->lastInsertId(), $allelesAndTransGenesForStrainString);
@@ -813,9 +811,9 @@
 
 		if($this->updateFreezerTable()) {
 			// I am confused, but chromosomes are entered only if the transgene is integrated and alleles don't get chromosomes
-			$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop, $this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop,$this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col,contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+			$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop, $this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop,$this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col,contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop,$_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop);
+			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop,$_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop );
 			if ($preparedSQLInsert->execute($itemstoInsert)) {
 
 				$this->insertStrainAlleles($this->lastInsertId(), $allelesAndTransGenesForStrainString);
@@ -846,9 +844,9 @@
 			$this->deleteStrainRelated("strain_to_transgene_table", $existingGeneElementID_param);
 			$this->deleteStrainRelated("strain_to_balancer_table", $existingGeneElementID_param);
 
-			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? WHERE strain_id = ?");
+			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?, $this->columnDateHandedOff_prop = ? ,$this->columnDateMoved_prop = ? WHERE strain_id = ?");
 
-			$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $existingGeneElementID_param,);
+			$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$existingGeneElementID_param);
 
 			$preparedSQLUpdate->execute($itemstoInsert);
 
@@ -882,9 +880,9 @@
 			$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_transgene_table WHERE strain_fk = ?");
 			$preparedSQLQuery->execute([$existingGeneElementID_param]);
 
-			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?WHERE strain_id = ?");
+			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? , $this->columnDateHandedOff_prop = ?, $this->columnDateMoved_prop = ? WHERE strain_id = ?");
 
-			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $existingGeneElementID_param);
+			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $this->actualDateHandedOff_prop, $this->columnDateMoved_prop, $existingGeneElementID_param);
 
 			// $this->actualElementName_prop = actual strain name
 			// $this->actualComments_prop = actual strain comment
@@ -913,6 +911,17 @@
 					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed off to strain manager";
 				}
 		        break;
+		       case "de-handoff":
+		       	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateHandedOff_prop = ?, $this->columnDateMoved_prop = ? WHERE strain_id = ?");
+				$itemstoUpdate = array($this->actualDateHandedOff_prop,$this->actualDateMoved_prop, $existingGeneElementID_param);
+
+				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+				if ($userObject->IsCurrentUserAnEditor()) {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed back to the strain creator";
+				} else {
+					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed back to my handoff queue";
+				}
+		       	break;
 		      case "frozen":
 		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateFrozen_prop = ? WHERE strain_id = ?");
 				$itemstoUpdate = array($this->actualDateFrozen_prop,$existingGeneElementID_param);
@@ -943,6 +952,25 @@
 		}
 		catch(Exception $e) {
 			error_log("exception");
+			$this->actualLoggingObject->appendToLog($e->getMessage());
+		}
+	}
+
+	public function updateDates($existingGeneElementID_param) {
+		try {
+			
+		    $preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateHandedOff_prop = ?,  $this->columnDateSurvived_prop = ?, $this->columnDateMoved_prop = ? WHERE strain_id = ?");
+		
+			$itemstoUpdate = array($this->actualDateHandedOff_prop,$this->actualDateSurvived_prop, $this->actualDateMoved_prop,$existingGeneElementID_param);
+
+			$preparedSQLUpdate->execute($itemstoUpdate);
+
+			$theStrainLog = "updated strain " . $this->actualElementName_prop . " with date " . $this->actualDateHandedOff_prop;
+			
+			$this->actualLoggingObject->appendToLog($theStrainLog);
+		}
+		catch(Exception $e) {
+			error_log("exception " . $e);
 			$this->actualLoggingObject->appendToLog($e->getMessage());
 		}
 	}

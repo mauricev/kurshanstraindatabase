@@ -61,10 +61,8 @@ function lastTubeRequireThawed() {
 	if (isStrainBeingEditedState == true ) {
 		if($('#lastTubeCheckBoxID').prop('checked')) {
 			$("#dateThawed_InputID").attr("required", true);
-			console.log("required");
 		} else {
 			$("#dateThawed_InputID").attr("required", false);
-			console.log("not required");
 		}
 	}
 }

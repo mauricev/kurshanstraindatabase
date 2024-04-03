@@ -55,6 +55,10 @@
           $theElementString = $singleElementObjectToEdit->returnElementString();
           $theElementStringLC = $singleElementObjectToEdit->returnElementLC();
           $theHTMLName = $singleElementObjectToEdit->returnHTMLName();
+
+          $theOutsideLabFlagString = "this is an outside lab";
+          $theOutsideLabFlag = $elementArrayToEdit['outside_contributor_col'];
+
         } else {
 
           if(isset($_POST['newContributor_htmlName']))
@@ -62,6 +66,10 @@
             $theHTMLName = 'newContributor_htmlName';
             $theElementString = "Contributor";
             $theElementStringLC = "contributor";
+
+            $theOutsideLabFlagString = "this is an outside lab";
+            $theOutsideLabFlag = false;
+
           } else if(isset($_POST['newCoInjection_htmlName']))
           {
             $theHTMLName = 'newCoInjection_htmlName';
@@ -102,6 +110,22 @@
                 }
               ?>
             </div>
+          <?php
+            echo "<div class='row'>";
+              echo "<div class='col-md-4 mb-3'>";
+                if ($singleElementBeingEdited) {
+                  $checkedValue = "";
+                  if($theOutsideLabFlag) {
+                    $checkedValue = "checked";
+                  }
+                 echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' $checkedValue name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
+
+                } else {
+                  echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
+                }
+              echo "</div>";
+            echo "</div>;"
+           ?>
       		</div>
       		<div class='row'>
             <div class="col-md-2 mb-3">

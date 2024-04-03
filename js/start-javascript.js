@@ -246,21 +246,30 @@ function handleStrainButtons() {
 	        var checkBoxState = "not used";
 	        if (whichProcess == "frozen" || whichProcess == "survival") {
 	            try {
-	                checkBoxState = (await returnCheckBoxValue(whichProcess, strainID)) !== "null";
+	                checkBoxState = (await returnCheckBoxValue(whichProcess, strainID)) !== "null"; // when not null, it contains a date
 	            } catch (error) {
 	                console.log("Error getting checkbox state:", error);
 	            }
 	        }
 
+	        // if the user chose survival and the checkbox comes back false, the user also wants the strain to be de-handed off
+	
 	        processStrain(whichProcess, strainID, theButtonID, checkBoxState);
+
+
+	        // when it’s true, it’s becoming false, being de-selected, so we proeed with handoff
+	        if((whichProcess == "survival") && (checkBoxState == true)) {
+	        	whichProcess = "de-handoff";
+	        	processStrain(whichProcess, strainID, theButtonID, checkBoxState);
+	        }
 	       
 	        var rowToRemove = document.getElementById(rowNumber);
-	        if ((whichProcess == "handoff") || (whichProcess == "finaldestination") && rowToRemove) {
+	        if ((whichProcess == "finaldestination") && rowToRemove) {
 	            rowToRemove.remove();
 	        }
 
 	        // we need to not only remove it from the current list but also add it to the other list
-	        if (whichProcess == "handoff") {
+	        if ( (whichProcess == "handoff") || ((whichProcess == "de-handoff") && (checkBoxState == true)) ) {
 	        	 setTimeout(() => {
 	            	window.location.reload();
 	        	}, 1000); 

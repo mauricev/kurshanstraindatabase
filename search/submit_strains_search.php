@@ -6,8 +6,8 @@
     <title>KurshanLab Strain Database</title>
 
     <link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/common-functions.js"></script>
     <script src="../js/search-javascript.js"></script>
     <script src="../js/FileSaver.js/src/FileSaver.js"></script>
@@ -68,9 +68,6 @@
           // third part is echoing the actual data, which is usually going to be a loop
 
           $theStrainClass = new LoadParentStrains();
-
-          //var_dump($_POST);
-          //echo "<br>";
 
           echo "<table class='table table-striped table-hover table-bordered'>";
 
@@ -418,15 +415,25 @@
 // Start of SECTION 3
           // here we loop through the search results
           foreach ($theSearchResult as $theStrainID) {
+            
+            // we initialize this for each row!
+            $thePrintOutputClass = new PrintOutputClass();
+
             $theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
+            $strainID = $theStrainArray['strain_id'];
 
             $theTableOutputClass->appendTableRow();
 
-              $data = $theStrainArray['strain_id'];
-              $theTableOutputClass->appendTableData($data);
+           
+            $theTableOutputClass->appendTableData($strainID);
+            $thePrintOutputClass->appendToPrintData($strainID);
 
-              $data = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-              $theTableOutputClass->appendTableDataWithClass($data,'strain'); // what class is this?
+            $strainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+            
+            //$strainLink = '<a href=print_strain.php?id=' . $strainID . '>' . $strainName . '</a>'; // by concatenating double quotes aren’t needed
+
+            $theTableOutputClass->appendTableDataWithClassAndID($strainName,'strain', $strainName); // what class is this?
+            $thePrintOutputClass->appendToPrintData($strainName);
 
 // this is the genotype cell
 // we display the allele and transgene for each chromosome with the chromosome number
@@ -563,14 +570,17 @@
 
               //echo "</td>";
               $theTableOutputClass->appendTableData($theDisplayGenotypeString);
+              $thePrintOutputClass->appendToPrintData($theDisplayGenotypeString);
 // SECTION 3, end genotype
 // isolation name
               $data = htmlspecialchars($theStrainArray['isolationName_col'],ENT_QUOTES);
               $theTableOutputClass->appendTableData($data);
-
+              $thePrintOutputClass->appendToPrintData($data);
 
               //$theTableOutputClass->appendTableData($theStrainArray['comments_col']); // BUG; there is some character here causing a hidden field to become unhidden
-              $theTableOutputClass->appendTableData(htmlspecialchars($theStrainArray['comments_col'],ENT_QUOTES));
+              $theComments = htmlspecialchars($theStrainArray['comments_col'],ENT_QUOTES);
+              $theTableOutputClass->appendTableData($theComments);
+              $thePrintOutputClass->appendToPrintData($theComments);
 
               // we may change this: put chromosome at beginning and bold it, put in a return
               // IV:
@@ -617,6 +627,7 @@
               }
 
               $theTableOutputClass->appendTableData($theCommentString);
+              $thePrintOutputClass->appendToPrintData($theCommentString);
 
               $theTransGeneLine = "";
 
@@ -702,6 +713,7 @@
 
 // SECTION 3
               $theTableOutputClass->appendTableData($theTransGeneLine);
+              $thePrintOutputClass->appendToPrintData($theTransGeneLine);
 
               $theParentStrainObject = new LoadParentStrains();
               $theParentStrainArray = $theParentStrainObject->searchRelatedToStrain($theStrainID['strain_id']);
@@ -715,6 +727,7 @@
               }
 
               $theTableOutputClass->appendTableData($theParentStrainLine);
+              $thePrintOutputClass->appendToPrintData($theParentStrainLine);
 
               // this needs to do a lookup
               $theContributor = new LoadContributor();
@@ -724,10 +737,13 @@
                 $data = htmlspecialchars($theContributorArray['contributorName_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($data);
+              $thePrintOutputClass->appendToPrintData($data);
 
               $theTableOutputClass->appendTableData($theStrainArray['fullFreezer_col']);
+              $thePrintOutputClass->appendToPrintData($theStrainArray['fullFreezer_col']);
 
               $theTableOutputClass->appendTableData($theStrainArray['fullNitrogen_col']);
+              $thePrintOutputClass->appendToPrintData($theStrainArray['fullNitrogen_col']);
 
               echo "<td>";
 
@@ -754,6 +770,7 @@
   	            }
               }
               $theTableOutputClass->appendExportedTableData($theSequenceFileName);
+              $thePrintOutputClass->appendToPrintData($theSequenceFileName);
               echo "</td>";
               
               
@@ -765,6 +782,7 @@
                 $theHandedOffDate = htmlspecialchars($theStrainArray['dateHandedOff_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($theHandedOffDate);
+              $thePrintOutputClass->appendToPrintData($theHandedOffDate);
 
               if ($theStrainArray['dateFrozen_col'] == null) {
                 $theFrozenDate = "";
@@ -772,6 +790,7 @@
                 $theFrozenDate = htmlspecialchars($theStrainArray['dateFrozen_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($theFrozenDate);
+              $thePrintOutputClass->appendToPrintData($theFrozenDate);
 
               if ($theStrainArray['dateSurvived_col'] == null) {
                 $theSurvivalDate = "";
@@ -779,6 +798,7 @@
                 $theSurvivalDate = htmlspecialchars($theStrainArray['dateSurvived_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($theSurvivalDate);
+              $thePrintOutputClass->appendToPrintData($theSurvivalDate);
 
               if ($theStrainArray['dateMoved_col'] == null) {
                 $theMovedDate = "";
@@ -786,12 +806,14 @@
                 $theMovedDate = htmlspecialchars($theStrainArray['dateMoved_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($theMovedDate);
+              $thePrintOutputClass->appendToPrintData($theMovedDate);
 
               $data = "";
               if (isset($theStrainArray['dateThawed_col']) && $theStrainArray['dateThawed_col'] != "") {
                 $data = htmlspecialchars($theStrainArray['dateThawed_col'],ENT_QUOTES);
               }
               $theTableOutputClass->appendTableData($data);
+              $thePrintOutputClass->appendToPrintData($data);
   
 
               // this needs to do a lookup
@@ -802,6 +824,7 @@
                 $data = $theAuthorArray['authorName_col'];
               }
               $theTableOutputClass->appendTableData($data);
+              $thePrintOutputClass->appendToPrintData($data);
 
               // this needs to do a lookup
               $data = "";
@@ -811,6 +834,9 @@
                 $data = $theEditorArray['authorName_col'];
               }
               $theTableOutputClass->appendTableData($data);
+              $thePrintOutputClass->appendToPrintData($data);
+
+              $thePrintOutputClass->assignToStrainName($strainName);
 
             $theTableOutputClass->appendTableRow();
           }
