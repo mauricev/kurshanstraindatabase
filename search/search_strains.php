@@ -230,6 +230,7 @@
 <!-- alleles and genes -->
           <div class="col-md-3 mb-3">
             <label class="input-group-addon"><input type="checkbox" id='alleleName_chkboxID' checked name="alleleName_chkbox_htmlName">OR search</label>
+            <label class="input-group-addon px-2" ><input type="checkbox" id='alleleRestrict_chkboxID' name="alleleRestrict_chkboxID_chkbox_htmlName">just these alleles?</label>
             <?php
               require_once("../classes/classes_load_elements.php");
               $theAlleleListing = new LoadAllele();
@@ -264,6 +265,7 @@
         <div class='row'>
           <div class="col-md-3 mb-3">
             <label class="input-group-addon" ><input type="checkbox" id='transgeneName_chkboxID' checked name="transgeneName_chkbox_htmlName">OR search</label>
+            <label class="input-group-addon px-2" ><input type="checkbox" id='transgeneRestrict_chkboxID' name="transgeneRestrict_chkboxID_chkbox_htmlName">just these transgenes?</label>
             <?php
               require_once("../classes/classes_load_elements.php");
               $theTransGeneListing = new LoadTransGene();

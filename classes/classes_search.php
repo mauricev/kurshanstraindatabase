@@ -152,6 +152,7 @@
 			$this->buildElementWhereClause($theBuddingQueryArray_param, $theHavingCountArray);
 		}
 
+		// this is for SINGLE element search only
 		public function buildElementWhereClause(&$theBuddingQueryArray_param, &$theHavingCountArray) {
 			$theArraySize = count ($this->arrayToBuildFrom_prop) - 1;
 			// if the array has one element
@@ -161,9 +162,10 @@
 			} else  {
 
 				$this->theWhereClauseString_prop = "( ";
+				
 				for ($theIndex = 0 ;  $theIndex <= $theArraySize; $theIndex++) {
 					if ($theIndex == 0) {
-						 $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . $this->searchParameter_prop;
+						 $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . $this->searchParameter_prop; // $this->searchParameter_prop is here
 					} else {
 						if ($this->IsItORSearch_prop) {
 							$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . ' OR ' . $this->searchParameter_prop;
@@ -192,7 +194,7 @@
 
 				//echo "<br>thePrimaryWhereClause_param: " . $thePrimaryWhereClause_param . "<br>";
 
-				$incomingWhereString2 = $this->theWhereClauseString_prop; // this object’s where clause built from above method
+				$incomingWhereString2 = $this->theWhereClauseString_prop; // this object’s where clause built comes from the above method
 
 				//echo "<br>theWhereClauseString_prop: " . $this->theWhereClauseString_prop . "<br>";
 
@@ -224,6 +226,9 @@
 		protected $searchParameter_prop;
 		// for now this is hard-coded
 		protected $IsItORSearch_prop = true;
+
+		protected $foreignKeyTable_prop;
+		protected $foreignKey_prop;
 
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
 			parent::__construct($joinObject_param, $theBuddingQueryArray_param, $theHavingCountArray);
@@ -268,7 +273,7 @@
 							$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . ' OR ' . $this->searchParameter_prop;
 				 		} else {
 				 			if ($theIndex < $theArraySize) {	// we are not at the last entry yet
-								$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . '?, ';
+								$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . '?, '; // the comma is here!
 							} else {
 								$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . '?'; // at the last entry, no comma; last line below will append paren
 							}
@@ -276,7 +281,7 @@
 							// we add $this->searchParameter_prop at the beginning
 							// we need to create an array consisting of two elements, $this->searchParameter_prop and the count
 							// and append it to having array here
-							// at the end we will see if haaving has any elements and add the group by
+							// at the end we will see if having has any elements and add the group by
 							// that's it!
 
 							$theHavingCountArray["$this->searchParameter_prop"] = $theArraySize + 1; // +1 because arraysize is assuming a count starting at zero
@@ -299,6 +304,44 @@
 		// this is our ever growing where string: $thePrimaryWhereClause_param and
 		// $this->theWhereClauseString_prop is the string for this object
 
+		//protected $foreignKeyTable_prop;
+		//protected $foreignKey_prop;
+
+		/*
+		AND strain_table.strain_id NOT IN (
+    SELECT strain_fk 
+    FROM strain_to_transgene_table 
+    WHERE transgene_fk != 5
+
+    or 
+    WHERE transgene_fk NOT IN (5, 8)
+)
+*/
+		public function restrictSearchClause(&$restrictClause_param, &$theBuddingQueryArray_param) {
+			// output is different for a single element versus multiple elements
+			$theArraySize = count ($this->arrayToBuildFrom_prop) - 1;
+			if($theArraySize >= 0) {
+				$restrictClause_param = $restrictClause_param . " AND truestrain_table.strain_id NOT IN ( SELECT strain_fk FROM " . $this->foreignKeyTable_prop . " WHERE " . $this->foreignKey_prop;
+				// if the array has one element
+				if ($theArraySize == 0) {
+					$restrictClause_param = $restrictClause_param . " != ?";
+					array_push($theBuddingQueryArray_param, $this->arrayToBuildFrom_prop[0]);
+				} else  {
+					$restrictClause_param = $restrictClause_param . " NOT IN (";
+					for ($theIndex = 0 ; $theIndex <= $theArraySize; $theIndex++) {
+						if ($theIndex < $theArraySize) {	// we are not at the last entry yet
+							$restrictClause_param = $restrictClause_param . '?, '; // the comma is here!
+						} else {
+							$restrictClause_param = $restrictClause_param . '?'; // at the last entry, no comma; last line below will append closing parenthesis
+						}
+						array_push($theBuddingQueryArray_param, $this->arrayToBuildFrom_prop[$theIndex]);
+					}
+					$restrictClause_param = $restrictClause_param . " ) ";
+				}
+				$restrictClause_param = $restrictClause_param . " )";
+			}
+		}
+		
 	}
 
 	class StrainsSearchForStrains extends GeneElementSearch {
@@ -508,6 +551,9 @@
 	}
 
 	class GenesSearchForStrains extends GeneMultipleElementSearch {
+		protected $foreignKeyTable_prop = 'allele_table';
+		protected $foreignKey_prop = 'gene_fk';
+
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
 			if(isset($_POST['genesArray_htmlName'])) {
 				$this->arrayToBuildFrom_prop = $_POST['genesArray_htmlName'];
@@ -530,9 +576,13 @@
 				}
 			}
 		}
+		// doesn't current allow for restricted search
 	}
 
 	class AllelesSearchForStrains extends GeneMultipleElementSearch {
+		protected $foreignKeyTable_prop = 'strain_to_allele_table';
+		protected $foreignKey_prop = 'allele_fk';
+
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
 
 			if (isset($_POST['allelesArray_htmlName'])) {
@@ -554,6 +604,12 @@
 					}
 					parent::__construct($joinObject_param, $theBuddingQueryArray_param, $theHavingCountArray);
 				}
+			}
+		}
+
+		public function restrictSearchClause(&$restrictClause_param, &$theBuddingQueryArray_param) {
+			if(isset($_POST['alleleRestrict_chkboxID_chkbox_htmlName'])) {
+				parent::restrictSearchClause($restrictClause_param, $theBuddingQueryArray_param);
 			}
 		}
 	}
@@ -646,8 +702,12 @@
 	}
 
 	class TransGenesSearchForStrains extends GeneMultipleElementSearch {
+		protected $foreignKeyTable_prop = 'strain_to_transgene_table';
+		protected $foreignKey_prop = 'transgene_fk';
+
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
 			if(isset($_POST['transgeneArray_htmlName'])) {
+				// this is the array of transgenes we are searching for
 				$this->arrayToBuildFrom_prop = $_POST['transgeneArray_htmlName'];
 				$theArrayCount = count($this->arrayToBuildFrom_prop);
 				if ($theArrayCount > 0) {
@@ -667,6 +727,12 @@
 					// constructor does this
 					parent::__construct($joinObject_param, $theBuddingQueryArray_param, $theHavingCountArray);
 				}
+			}
+		}
+
+		public function restrictSearchClause(&$restrictClause_param, &$theBuddingQueryArray_param) {
+			if(isset($_POST['transgeneRestrict_chkboxID_chkbox_htmlName'])) {
+				parent::restrictSearchClause($restrictClause_param, $theBuddingQueryArray_param);
 			}
 		}
 	}
@@ -787,28 +853,6 @@
 			}
 		}
 	}
-
-	// class GenesSearchForPlasmids extends GeneElementSearch {
-	// 	public function __construct(&$joinObject_param, &$theBuddingQueryArray_param) {
-	// 		if(isset($_POST['genesArray_htmlName'])) {
-	// 			$this->arrayToBuildFrom_prop = $_POST['genesArray_htmlName'];
-	// 			if (count($this->arrayToBuildFrom_prop) > 0) {
-	// 				$this->searchParameter_prop = 'gene_table.gene_id  = ?';
-	//
-	// 				$joinObject_param->addToJoinString('gene');
-	//
-	// 				$this->IsItORSearch_prop = false;
-	// 				// if (isset($_POST['fluoroTag_chkbox_htmlName'])) {
-	// 				// 	$this->IsItORSearch_prop = $_POST['fluoroTag_chkbox_htmlName'];
-	// 				// }
-	//
-	// 				// why doesn't this call the array push
-	// 				// constructor does this
-	// 				parent::__construct($joinObject_param, $theBuddingQueryArray_param);
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	class AntibioticsSearchForPlasmids extends GeneMultipleElementSearch {
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
@@ -965,12 +1009,15 @@
 			$theParentStrainsObject = new ParentStrainsSearchForStrainsForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theParentStrainsObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
+			
 			$theGenesObject = new GenesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theGenesObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
+			
 			$theAllelesObject = new AllelesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theAllelesObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
+			
 			$theBalancersObject = new BalancersSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theBalancersObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
@@ -983,6 +1030,8 @@
 			$theTransGeneChromosomeObject = new TransGenesChromosomesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theTransGeneChromosomeObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
+			
+			// here is where the action is for transgenes
 			$theTransGeneObject = new TransGenesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theTransGeneObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
@@ -1015,18 +1064,36 @@
 				case 'searchForSomethingElse':
 
 					// here we will add buildNotInClause
-
+					// how we have three restrictSearchClauses here,
+					$restrictSearchClause = "";
+					// one for alleles and transgenes
+					$theAllelesObject->restrictSearchClause($restrictSearchClause,$theBuddingQueryArray);
+			
+					$theTransGeneObject->restrictSearchClause($restrictSearchClause,$theBuddingQueryArray);
 
 					$inGroupedByID = "truestrain_table.strain_id";
 					// adds key to group by and values for ? to buddingqueryarray
 					buildGroupByHavingClause($theHavingCountArray,$theBuddingQueryArray, $outGroupByHavingClause);
 
-					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $outGroupByHavingClause . " ORDER BY truestrain_table.strainName_col";
+					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . " ORDER BY truestrain_table.strainName_col";
+
+
+					// it looks we just need to append after the where clause (and be before having, and order clauses)
+					// need to really confirm we want to be before having
+
+					/*echo "thePrimaryWhereClause " . $thePrimaryWhereClause . "<br>";
+
+echo "<br>";
+echo "<br>";
+					echo "theSelectString " . $theSelectString . "<br>";
+
+					echo "theBuddingQueryArray "  . "<br>";
+					var_dump($theBuddingQueryArray);
+					echo "<br>";*/
 
 					break;
 
 				case 'searchForEverything':
-					echo "when do we come here<br>";
 					// apparently we don’t need union distinct here
 					$theSelectString = $theSelectString . " UNION SELECT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY strainName_col";
 					break;

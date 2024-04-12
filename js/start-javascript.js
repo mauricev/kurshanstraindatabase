@@ -1,5 +1,3 @@
-
-
 function specificDisables(checkBoxStateFrozen, checkBoxStateSurvival, frozenButtonID,survivalButtonID, moveButtonID) {
 	if (checkBoxStateFrozen) {
         $('#' + survivalButtonID).prop('disabled', false);
