@@ -1009,11 +1009,8 @@
 			$theParentStrainsObject = new ParentStrainsSearchForStrainsForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theParentStrainsObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
-			
-			$theGenesObject = new GenesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
-			$thePrimaryWhereClause = $theGenesObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
+			// gene search moved down below
 
-			
 			$theAllelesObject = new AllelesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theAllelesObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
@@ -1037,6 +1034,28 @@
 
 			$thePrimaryJoinClause = $innerJoinObject->getJoinString();
 
+
+			// searching for an allele will generally exclude any search for a gene
+			// so we search for genes separately and intersect it with any prior search
+			// if we are searching only for genes, then this prior search will be blank.
+
+			// problem code above won't see any entries for a gene search since it's down herre
+			// buddingqueryaray is also here
+			// we need to move this search up there 
+			// and we need genequeryarray
+			// to which we append to the query array 
+
+			$geneJoinObject = new InnerJoinerForStrains();
+			$theHavingCountArrayForGenes = array();
+			$outGroupByHavingClauseForGenes = "";
+			$theGeneQueryArray = array();
+			$theGenesWhereClause = "";
+			$theGenesObject = new GenesSearchForStrains($geneJoinObject, $theGeneQueryArray, $theHavingCountArrayForGenes);
+			$theGenesWhereClause = $theGenesObject->concatElementWhereClauseToMasterWhereClause($theGenesWhereClause);
+			$theGeneJoinClause = $geneJoinObject->getJoinString();
+			buildGroupByHavingClause($theHavingCountArrayForGenes,$theGeneQueryArray, $outGroupByHavingClauseForGenes);
+
+
 			$searchState = 'searchForNothing';
 			//$theSelectString not empty means there is a comments search in play
 			// a not empty $thePrimaryJoinClause  means there is a search for something else also in play
@@ -1049,6 +1068,13 @@
 				$searchState = 'searchForSomethingElse';
 			} else if ($thePrimaryWhereClause != "") {
 				$searchState = 'searchForJustStrains';
+			}
+
+			if ($searchState == 'searchForNothing') {
+				// search is still search for nothing, check if there's a gene's search
+				if ($theGenesWhereClause != "") {
+					$searchState = 'searchForSomethingElse';
+				}
 			}
 
 			switch($searchState) {
@@ -1071,17 +1097,44 @@
 			
 					$theTransGeneObject->restrictSearchClause($restrictSearchClause,$theBuddingQueryArray);
 
-					$inGroupedByID = "truestrain_table.strain_id";
 					// adds key to group by and values for ? to buddingqueryarray
 					buildGroupByHavingClause($theHavingCountArray,$theBuddingQueryArray, $outGroupByHavingClause);
 
-					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . " ORDER BY truestrain_table.strainName_col";
+					// if we are searching genes too, then we are conducting an intersecting search and order by can’t be used in the first portion of the select
+					$orderBy = "";
+					if (mb_strlen($theGenesWhereClause) == 0) {
+						$orderBy = " ORDER BY truestrain_table.strainName_col";
+					}
 
+					// main search excluding genes
+					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . $orderBy;
+
+
+					// intersect is a new MySQL feature to intersect the results of two separate select searches
+					$intersect = "";
+					// if we are searching both genes and something else, set up for intersection
+
+					if ((mb_strlen($thePrimaryWhereClause) > 0) && (mb_strlen($theGenesWhereClause) > 0)) {
+
+						$theBuddingQueryArray = array_merge($theBuddingQueryArray, $theGeneQueryArray);
+
+						// "order by" is global to the intersected search
+						$theSelectString = $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theGeneJoinClause . " WHERE " . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY strainName_col";
+					
+					} elseif (mb_strlen($theGenesWhereClause) > 0) {
+						$theBuddingQueryArray = $theGeneQueryArray;
+
+						$theSelectString = $intersect . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theGeneJoinClause . " WHERE " . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY truestrain_table.strainName_col";
+					}
+
+					// if we are at least searching genes, set up the select for it
+					
 
 					// it looks we just need to append after the where clause (and be before having, and order clauses)
 					// need to really confirm we want to be before having
 
-					/*echo "thePrimaryWhereClause " . $thePrimaryWhereClause . "<br>";
+					/*echo "theGenesWhereClause " . $theGenesWhereClause . "<br>";
+					echo "theGeneJoinClause " . $theGeneJoinClause . "<br>";
 
 echo "<br>";
 echo "<br>";

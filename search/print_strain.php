@@ -30,7 +30,7 @@
         require_once("../classes/classes_load_elements.php");
         require_once("../classes/classes_search_output.php");
 
-        $theOutputString = $_GET['output'];
+        $theOutputString = urldecode($_GET['output']);
         
         $theOutputStringBrokenUp = explode("¶", $theOutputString);
         $strainID = $theOutputStringBrokenUp[1];

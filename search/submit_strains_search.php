@@ -836,6 +836,7 @@
               $theTableOutputClass->appendTableData($data);
               $thePrintOutputClass->appendToPrintData($data);
 
+              // assign the http link (URL) of all the strain info to the strain name
               $thePrintOutputClass->assignToStrainName($strainName);
 
             $theTableOutputClass->appendTableRow();

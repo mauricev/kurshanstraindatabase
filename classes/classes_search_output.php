@@ -63,15 +63,19 @@
         $this->fileData = "";
       }
 
-    // _ is the delimiter
+    // paragraph symbol is the delimiter
     public function appendToPrintData ($stringToAppend_param) {
       $this->fileData = $this->fileData . "¶"  . $stringToAppend_param;
     }
 
     public function assignToStrainName ($inID_param) {
+    
+      //BUGFixed, need to encode and decode because html can't process original string
+      $fileDataEncoded = urlencode($this->fileData);
+
       echo '<script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
-          document.getElementById("' . $inID_param . '").innerHTML = \'<a href="print_strain.php?output=' . $this->fileData . '" target="_blank" rel="noopener noreferrer">' . $inID_param . '</a>\';
+          document.getElementById("' . $inID_param . '").innerHTML = \'<a href="print_strain.php?output=' . $fileDataEncoded . '" target="_blank" rel="noopener noreferrer">' . $inID_param . '</a>\';
         });
       </script>';
 
