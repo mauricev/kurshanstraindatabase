@@ -225,6 +225,7 @@
 								echo "<label>handed off strains waiting to be processed further</label>";
 								echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='processstrains-table'>";
 									echo "<th class='font-weight-bold'>strain name</th>";
+									echo "<th class='font-weight-bold'>return to strain owner</th>";
 									echo "<th class='font-weight-bold'>frozen?</th>";
 									echo "<th class='font-weight-bold'>survived?</th>";
 									echo "<th class='font-weight-bold'>move to final destination</th>";
@@ -254,6 +255,14 @@
 										}
 										
 										echo "<td>$theStrainName</td>";
+
+										echo "<td>";
+										// i am here
+
+											$sendBackButtonID = "sendback-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
+	                  	echo "<button type='button' id=$sendBackButtonID class='btn btn-outline-info btn-sm sendback'>send back</button>";
+											
+										echo "</td>";
 
 										echo "<td>";
 											$theFrozenState = ($theFrozenDate != null);

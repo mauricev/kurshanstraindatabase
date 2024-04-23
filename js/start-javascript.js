@@ -172,6 +172,9 @@ async function returnDialogText(whichProcess, strainID, strainName) {
 	    case "finaldestination":
 	        message = "Are you sure you want to move strain " + strainName + " to its final destination?";
 	        break;
+	    case "sendback":
+	        message = "Are you sure you want to hand back " + strainName + " to its owner?";
+	        break;
     }
     return message;
 }
@@ -186,6 +189,7 @@ function handleStrainButtons() {
  	var theFrozenButtons = document.querySelectorAll('.frozen'); 
  	var theSurvivalButtons = document.querySelectorAll('.survival'); 
  	var theMoveButtons = document.querySelectorAll('.finaldestination');
+ 	var theSendBackButtons = document.querySelectorAll('.sendback');
 
  	
  	async function processStrainButtonClick(inEvent_param) {
@@ -212,17 +216,20 @@ function handleStrainButtons() {
 	}
 
 	// if we are not on the editor page, length here should be zero
-	var theLength = theFrozenButtons.length; // all three buttons exist in tandem
+	var theLength = theFrozenButtons.length; // all four buttons exist in tandem
 	for (var theIndex = 0; theIndex < theLength; theIndex++) {
 		theFrozenButtons[theIndex].addEventListener('click',processStrainButtonClick);
 		theSurvivalButtons[theIndex].addEventListener('click',processStrainButtonClick);
 		theMoveButtons[theIndex].addEventListener('click',processStrainButtonClick);
+		theSendBackButtons[theIndex].addEventListener('click',processStrainButtonClick);
 	}
 
 	cancelButton.addEventListener('click', () => {
 		event.preventDefault();
 	  	confirmationDialog.close();
 
+	  	// what happens the send back, move and handoff buttons are cancelled out of?
+	  	console.log("in cancel");
 	  	var theButtonID = cancelButton.dataset.clickedButtonId;
 	  	var isChecked = $('#' + theButtonID).prop('checked');
 	  	// toggle the button’s checked state back to its orignal state
@@ -253,21 +260,10 @@ function handleStrainButtons() {
 	        // if the user chose survival and the checkbox comes back false, the user also wants the strain to be de-handed off
 	
 	        processStrain(whichProcess, strainID, theButtonID, checkBoxState);
-
-
-	        // when it’s true, it’s becoming false, being de-selected, so we proeed with handoff
-	        if((whichProcess == "survival") && (checkBoxState == true)) {
-	        	whichProcess = "de-handoff";
-	        	processStrain(whichProcess, strainID, theButtonID, checkBoxState);
-	        }
-	       
-	        var rowToRemove = document.getElementById(rowNumber);
-	        if ((whichProcess == "finaldestination") && rowToRemove) {
-	            rowToRemove.remove();
-	        }
-
+	        
 	        // we need to not only remove it from the current list but also add it to the other list
-	        if ( (whichProcess == "handoff") || ((whichProcess == "de-handoff") && (checkBoxState == true)) ) {
+	        if ( (whichProcess == "handoff") || (whichProcess == "sendback") ) {
+	        	console.log("in sendback");
 	        	 setTimeout(() => {
 	            	window.location.reload();
 	        	}, 1000); 

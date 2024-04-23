@@ -32,21 +32,32 @@
     $survivalDate = "";
     $movedDate = "";
 
+    // if we are setting these, they get their existing values unless isNitrogenFreezeDateSet is not set
+    $isNitrogenFreezeDateSet = $geneElementArrayToEdit['initial_nitrogenFrozen'];
+    $nitrogenFreezeDate = $geneElementArrayToEdit['date_nitrogenFrozen'];
+
     // we need to only set the strain name and the date
+    
     $theDate = date('Y-m-d');
 
     switch($whichProcess) {
       case "handoff":
         $handOffDate = $theDate;
         break;
-      case "de-handoff":
+      case "sendback":
         $handOffDate = null;
         $movedDate = null;
         break;
       case "frozen":
         $frozenDate = $theDate;
         if ($checkBoxState == "true") {
-          $frozenDate = null;
+          $frozenDate = null; // we are unsetting the frozen date; we may not be able to test whether this works until another day has passed
+        // we need to check if nitrogen is marked; if it is not, then we set it; otherwise, we give the original date it had been set to    
+        } else {                        
+          if (!$isNitrogenFreezeDateSet) {
+            $isNitrogenFreezeDateSet = 1;
+            $nitrogenFreezeDate = $theDate;
+          }
         }
         break;
       case "survival":
@@ -60,7 +71,7 @@
         break;
     }
 
-    $strainObject = new Strain($geneElementArrayToEdit['strainName_col'], $isolationNameNotUsed, $frozenDate, $thawedDateNotUsed, $commentNotUsed,$parentStrainsNotUsed,$allelesNotUsed,$transGenesNotUsed,$balancersNotUsed,$contributorNotUsed[0],$frozenLocationNotUsed,$nitrogenNotUsed,$lastVialStateNotUsed,$lastVialer[0],$handOffDate, $survivalDate, $movedDate);
+    $strainObject = new Strain($geneElementArrayToEdit['strainName_col'], $isolationNameNotUsed, $frozenDate, $thawedDateNotUsed, $commentNotUsed,$parentStrainsNotUsed,$allelesNotUsed,$transGenesNotUsed,$balancersNotUsed,$contributorNotUsed[0],$frozenLocationNotUsed,$nitrogenNotUsed,$lastVialStateNotUsed,$lastVialer[0],$handOffDate, $survivalDate, $movedDate, $isNitrogenFreezeDateSet, $nitrogenFreezeDate);
 
     $strainObject->processStrainStatus($strainID,$whichProcess); 
 

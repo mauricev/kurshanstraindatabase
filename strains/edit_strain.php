@@ -140,25 +140,28 @@
               $theOriginalDateThawed = NULL;
             }
 
+            // added date for nitrogen freezing
+            if (isset($geneElementArrayToEdit['date_nitrogenFrozen'])) {
+              $theOriginalDateNitrogen = htmlspecialchars($geneElementArrayToEdit['date_nitrogenFrozen'],ENT_QUOTES);
+            } else {
+              $theOriginalDateNitrogen = NULL;
+            }
+
             $theOriginalComment = htmlspecialchars($geneElementArrayToEdit['comments_col'],ENT_QUOTES);
 
             $theOriginalFullFreezer = $geneElementArrayToEdit['fullFreezer_col'];
             $theOriginalNitrogen = $geneElementArrayToEdit['fullNitrogen_col'];
 
             $theOriginalContributor = $geneElementArrayToEdit['contributor_fk'];
-
-            // we no longer save this setting
-            // when it is set, we use it to send the strain back to the original user
-            //$theOriginalIsLastVial= $geneElementArrayToEdit['isLastVial_col'];
-            $theOriginalIsLastVial = 0;
+          
+            // when it is set, we use it to send the strain back to the original user, but we do this only when the setting is changed from 0 to 1.
+            $theOriginalIsLastVial= $geneElementArrayToEdit['isLastVial_col'];
 
             $theOriginalLastVialer = $geneElementArrayToEdit['lastVialContributor_fk'];
 
             if ($geneElementArrayToEdit['dateHandedOff_col'] != null) {
-              error_log("handoff date is not null" . $geneElementArrayToEdit['dateHandedOff_col']);
               $theOriginalHandOffDate = htmlspecialchars($geneElementArrayToEdit['dateHandedOff_col'],ENT_QUOTES);
             } else {
-              error_log("handoff date is null");
               $theOriginalHandOffDate = "";
             }
 
@@ -395,11 +398,11 @@
             if ($isStrainBeingEdited) {
               echo "<div class='col-md-3 mb-3'style='padding-top:12px'>";
                 echo "<div class='form-check'>";
-                  //if ($theOriginalIsLastVial == 1) {
-                  //  echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' checked id='lastTubeCheckBoxID'>";
-                  //} else {
+                  if ($theOriginalIsLastVial == 1) {
+                    echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' checked id='lastTubeCheckBoxID'>";
+                  } else {
                     echo "<input class='form-check-input' type='checkbox' value='' name='lastvialcheckbox_htmlName' id='lastTubeCheckBoxID'>";
-                  //}
+                  }
                   // stores the value of the checkbox so javascript can access it
                   echo "<input type='hidden' id='IsLastVialHiddenField' name='hidden-label' value=$theOriginalIsLastVial>";
                   echo "<label class='form-check-label' for='lastTubeCheckBoxID'>last tube?</label>";
@@ -527,9 +530,9 @@
 			</div>
 
       <div class="row">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 mt-4 mb-3">
           <?php
-          if ($isStrainBeingEdited) { //this shows only if we are editing.
+          if ($isStrainBeingEdited) { // this shows only if we are editing.
             // mt-2 to give some space above
             echo "<label class='mt-2' for='dateThawed_InputID'>date thawed</label>";
             if ($theOriginalDateThawed != NULL) {
@@ -543,11 +546,26 @@
           }
           ?>
         </div>
+
+        <div class="col-md-3 mt-4 mb-3">
+          <?php
+          if ($isStrainBeingEdited) { // this shows only if we are editing.
+            // mt-2 to give some space above
+            echo "<label class='mt-2' for='dateThawed_InputID'>backup box on</label>";
+            if ($theOriginalDateNitrogen != NULL) {
+              echo "<input type='date' id='dateNitrogen_InputID' class='form-control' value=$theOriginalDateNitrogen name='dateNitrogen_htmlName' title='dateThawed'>";
+            } else {
+              echo "<input type='date' id='dateNitrogen_InputID' class='form-control' name='dateNitrogen_htmlName' title='dateNitrogen'>";
+            }
+          }
+          ?>
+        </div>
+
       </div>
 
       <div class="row">
 
-        <div class="form-group col-md-5 mb-3">
+        <div class="form-group col-md-5 mt-2 mb-3">
           <?php
             // what should edit page display. we should display the actual values!
             if (!$isStrainBeingEdited) {
@@ -583,9 +601,9 @@
               // it cannot be unchecked.
               echo "<input type='hidden' name='originalHandOffState_postvar' value=$theHandOffState>";
 
-              
-              echo "<input type='hidden' name='originalDateFrozen_postvar' value=$theOriginalDateFrozen>";
 
+              // BUGFixed, this line somehow got deleted
+              echo "<input type='hidden' name='originalDateFrozen_postvar' value=$theOriginalDateFrozen>";
             
               echo "<input type='hidden' name='originalSurvivalDate_postvar' value=$theOriginalSurvivalDate>";
               echo "<input type='hidden' name='originalMovedDate_postvar' value=$theOriginalMovedDate>";
@@ -598,9 +616,13 @@
                 echo "<input type='hidden' name='fullFreezer_postvar' value=\"$theOriginalFullFreezer\">";
                 echo "<input type='hidden' name='fullNitrogen_postvar' value=\"$theOriginalNitrogen\">";
                 echo "<input type='hidden' name='originalContributorID_postvar' value=\"$theOriginalContributor\">";
+
+                echo "<input type='hidden' name='originalNitrogenFreeze_postvar' value=\"$theOriginalContributor\">";
                 
                 echo "<input type='hidden' name='originalDateThawed_postvar' value=$theOriginalDateThawed>";
                 echo "<input type='hidden' name='originalIsolationName_postvar' value=$theOriginalIsolationName>";
+
+                echo "<input type='hidden' name='originalDateNitrogenFrozen_postvar' value=$theOriginalDateNitrogen>";
 
                 echo "<input type='hidden' name='originalIsLastVial_postvar' value=$theOriginalIsLastVial>";
                 echo "<input type='hidden' name='originalLastVialer_postvar' value=$theOriginalLastVialer>";

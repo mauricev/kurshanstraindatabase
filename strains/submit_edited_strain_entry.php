@@ -23,9 +23,6 @@
         $theNewHandedOffState = false;
       }
       $theOriginalHandedOffState = $_POST['originalHandOffState_postvar'];
-      error_log("theNewHandedOffState " . $theNewHandedOffState);
-      error_log("theOriginalHandedOffState " . $theOriginalHandedOffState);
-
 
       $theNewSurvivalDate = $_POST['originalSurvivalDate_postvar'];
       $theNewMovedDate = $_POST['originalMovedDate_postvar'];
@@ -58,14 +55,6 @@
           $selectedBalancers = $_POST['balancersArray_htmlName'];
       }
 
-      $theNewIsLastVialState = 0;
-      if (isset($_POST['lastvialcheckbox_htmlName'])) {
-        $theNewIsLastVialState = 1;
-        // needs to reset handoff and moved dates
-        $theNewHandedOffDate = null;
-        $theNewMovedDate = null;
-      }
-
       // only option; assigned differently
       if(isset($_POST['lastVialerArray_htmlName'])){
         $selectedLastVialer = $_POST['lastVialerArray_htmlName'];
@@ -73,6 +62,15 @@
           $selectedLastVialer[0] = NULL;
         }
       } else $selectedLastVialer[0] = NULL;
+
+      // if the nitrogen dates were previously set or are now being set, we pass that on
+      if (isset($_POST['dateNitrogen_htmlName']) && $_POST['dateNitrogen_htmlName'] != NULL) {
+        $theNewSetNitrogenFrozenDate = 1;
+        $theNewNitrogenFrozenDate = $_POST['dateNitrogen_htmlName'];
+      } else {
+        $theNewSetNitrogenFrozenDate = 0;
+        $theNewNitrogenFrozenDate = null;
+      }
 
       require_once('../classes/classes_gene_elements.php');
 
@@ -88,7 +86,6 @@
       if ($theNewHandedOffDate == "") {
         $theNewHandedOffDate = null;
       }
-
 
       if ($theNewDateFrozen == "") {
         $theNewDateFrozen = null;
@@ -109,6 +106,8 @@
 
         $theFrozenLocation = $_POST['fullFreezer_postvar'];
         $theNitrogenLocation = $_POST['fullNitrogen_postvar'];
+
+        $theOriginalNitrogenFreezeDate = $_POST['originalDateNitrogenFrozen_postvar'];
 
         // comment
         if ($_POST['comment_postvar'] != $theNewComment) {
@@ -154,14 +153,34 @@
           $strainHasBeenChanged = true;
         }
 
-        // lastvialer
-        $theCurrentLastVialState = 0;
-        if (isset($_POST['lastvialcheckbox_htmlName'])) {
-          $theCurrentLastVialState = 1;
-        }
-        if ($theCurrentLastVialState != $theNewIsLastVialState) {
+        // date nitrogen frozen
+        if ($theOriginalNitrogenFreezeDate != $theNewNitrogenFrozenDate) {
           $strainHasBeenChanged = true;
         }
+
+        // lastvialer
+        // new strains don't have this button!
+
+        // BUGFixed when this button is checked, we now unset survival and frozen times
+        // a note about how this works
+
+        $theOriginalLastVialState = $_POST['originalIsLastVial_postvar']; // from database
+        $theNewIsLastVialState = 0;
+        if (isset($_POST['lastvialcheckbox_htmlName'])) {
+          $theNewIsLastVialState = 1;     // if this were 1 originally, the code below doesn't execute
+        }
+        if ($theOriginalLastVialState != $theNewIsLastVialState) {
+          $strainHasBeenChanged = true;
+          if ($theNewIsLastVialState == 1) {
+            $theNewHandedOffDate = null;
+            $theNewMovedDate = null;
+            $theNewSurvivalDate = null;
+            $theNewDateFrozen = null;
+
+            $strainHasBeenChanged = true;
+          }
+        }
+      
         if ($_POST['originalLastVialer_postvar'] != $selectedLastVialer[0]) {
           $strainHasBeenChanged = true;
         }
@@ -189,10 +208,9 @@
         switch ($switchedState) {
 
           case "toExternallySourced":
-            error_log("toExternallySourced");
             // $strainHasBeenChanged by default;
             $theNewExternallySourcedStrainName = $_POST['manufacturedWhereLetters_htmlName'] . $_POST['manufacturedWhereNumbers_htmlName'];
-            $checkThisStrain = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+            $checkThisStrain = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
         		if(!$checkThisStrain->doesItAlreadyExist()){
               $checkThisStrain->updateOurEntry($theStrainID);
               ourheader("location: ../start/start.php");
@@ -200,29 +218,25 @@
         		break;
 
           case "toLabProduced":
-           error_log("toLabProduced");
             // $strainHasBeenChanged by default;
             // strain name is auto-generated by insertOurEntryWithCounterTableUpdate
             // new method updateOurEntryWithCounterTableUpdate creates a new counter record but puts the results into the existing transgene record
             $dummyName="";
-            $newStrainObject = new Strain($dummyName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+            $newStrainObject = new Strain($dummyName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
         		$newStrainObject->updateOurEntryWithCounterTableUpdate($theStrainID);
             ourheader("location: ../start/start.php");
         		break;
 
           case "stayingOnLabProduced":
-          error_log("stayingOnLabProduced1");
             if ($strainHasBeenChanged) {
               // we pass it the original name and just update
-              error_log("stayingOnLabProduced2");
-              $newStrainObject = new Strain($theOriginalStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+              $newStrainObject = new Strain($theOriginalStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
               $newStrainObject->updateOurEntry($theStrainID);
             }
             ourheader("location: ../start/start.php");
             break;
 
           case "stayingOnExternallySourced":
-          error_log("stayingOnExternallySourced");
             // we may or may not have edited the name;
             // if we edited it, then check that the new name is not a duplicate
             // but if we didn't edit it, don't check because that original name will be flagged inadvertently as a duplicate
@@ -231,7 +245,7 @@
             // the new name consists of three fields, the two text fields and the current chromosome state
             // the chromosome state may have changed
             $theNewExternallySourcedStrainName = $_POST['manufacturedWhereLetters_htmlName'] . $_POST['manufacturedWhereNumbers_htmlName'];
-            $checkThisStrain = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+            $checkThisStrain = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $theNewDateThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$theFrozenLocation,$theNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
 
             // if names have changed, then $strainHasBeenChanged is true by default
             if ($theOriginalStrainName != $theNewExternallySourcedStrainName) {
@@ -263,7 +277,7 @@
           switch ($_POST['manufacturedWhere_htmlName']) {
             case 'externally-sourced_value':
               $theNewExternallySourcedStrainName = $_POST['manufacturedWhereLetters_htmlName'] . $_POST['manufacturedWhereNumbers_htmlName'];
-              $newStrainObject = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $dummyThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+              $newStrainObject = new Strain($theNewExternallySourcedStrainName, $theNewIsolationName, $theNewDateFrozen, $dummyThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
               // first, start transaction
               // second, create strain: this is insertOurEntry.
               // third, call pdo->lastinsertid to get the id
@@ -280,7 +294,7 @@
             case 'lab-produced_value':
               // strain name is internally generated for lab-created strains
               $dummyName="";
-              $newStrainObject = new Strain($dummyName, $theNewIsolationName, $theNewDateFrozen, $dummyThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate);
+              $newStrainObject = new Strain($dummyName, $theNewIsolationName, $theNewDateFrozen, $dummyThawed, $theNewComment,$selectedParentStrains,$selectedAlleles,$selectedTransGenes,$selectedBalancers,$selectedContributor[0],$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer[0],$theNewHandedOffDate,$theNewSurvivalDate,$theNewMovedDate,$theNewSetNitrogenFrozenDate,$theNewNitrogenFrozenDate);
              // this method will do almost everything: it creates the name, updates the counter table, then does the insert for strain
    					  $newStrainObject->insertOurEntryWithCounterTableUpdate();
               ourheader("location: ../start/start.php");

@@ -249,7 +249,6 @@
 		// we organize the table into two groups. The first group are the ordinary collaborators. The second group 
 		// are those from outside laboratories
 		public function buildSelectTable ($isMultiple_param) {
-			error_log("buildSelectTable");
 			// isMultiple_param is false for this select table
 			$theArray = $this->returnAll();
 			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
@@ -701,13 +700,18 @@
 
 				$theGeneObject = new LoadGene();
 				$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
-				$geneToAdd = $geneElementArrayToEdit['geneName_col'];
 
-				if ($selected) {
-					echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
-				} else {
-					echo "<option value=\"$id\">$geneToAdd ($name)</option>";
+				// BUGFixed 2024-4-23, not all alleles have genes
+				if (isset($geneElementArrayToEdit) && is_array($geneElementArrayToEdit)) {
+					$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+
+					if ($selected) {
+						echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
+					} else {
+						echo "<option value=\"$id\">$geneToAdd ($name)</option>";
+					}
 				}
+				
 			}
 			echo "</select>";
 		}
