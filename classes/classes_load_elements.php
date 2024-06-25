@@ -521,6 +521,23 @@
 		}
 	}
 
+	class LoadHighValueStrain extends LoadGeneticElement {
+		public function __construct() {
+			parent::__construct();
+			$this->tableName_prop = "strain_value_table";
+			$this->selectID_prop = "select-highvalue_strain";
+			$this->selectName_prop = "highValueStrainArray_htmlName[]";
+			$this->placeholder_prop = "Select a reason for this high value strain";
+			$this->placeholder_multiple_prop = "Select a reason for this high value strain";
+			$this->elementNameColumn_prop = "strain_value";
+			$this->elementIDColumn_prop = "strain_value_id";
+
+			$this->elementHTMLName = 'newHighValueStrain_htmlName';
+			$this->elementString = "Reason for High Value Strain";
+			$this->elementStringLC = "reason for high value strain";
+		}
+	}
+
 	class LoadGene extends LoadGeneticElement {
 		public function __construct() {
 			parent::__construct();

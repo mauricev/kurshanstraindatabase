@@ -96,6 +96,9 @@
 				<div class="col-md-2 mb-3" style="margin-left:-20px">
 					<input type="submit" name='newFluoro_htmlName'class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add Fluor/Tag" alt="Add Fluor/Tag"/>
 				</div>
+				<div class="col-md-2 mb-3" style="margin-left:-20px">
+					<input type="submit" name='newHighValueStrain_htmlName'class="btn btn-primary btn-block" formaction="../single-element/edit_singleElement.php" value="Add High-Value Strain Reason" alt="Add High-Value Strain Reason"/>
+				</div>
 			</div>
 
 			<div class="row">
@@ -228,6 +231,7 @@
 									echo "<th class='font-weight-bold'>return to strain owner</th>";
 									echo "<th class='font-weight-bold'>frozen?</th>";
 									echo "<th class='font-weight-bold'>survived?</th>";
+									echo "<th class='font-weight-bold'>if high-value, why?</th>";
 									echo "<th class='font-weight-bold'>move to final destination</th>";
 
 									require_once("../classes/classes_load_elements.php");
@@ -315,6 +319,16 @@
 											echo "<span id=$survivalDateID>$theSurvivalDate</span>"; 
 										echo "</td>";
 
+										$theHighValueArray = new LoadHighValueStrain();
+										if(isset($theStrainArray['high_value_reason_fk'])) {
+											$theHighValueReasonArray = $theHighValueArray->returnSpecificRecord($theStrainArray['high_value_reason_fk']);
+											$theHighValueReason = $theHighValueReasonArray['strain_value'];
+											echo "<td>$theHighValueReason</td>";
+										} else {
+											echo "<td></td>";
+										}
+										
+
 										echo "<td>";
 										$finalDestinationButtonID = "finaldestination-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
 										echo "<button type='button' id=$finalDestinationButtonID class='btn btn-outline-info btn-sm finaldestination' $theMoveButtonEnabledState>final move...</button>";
@@ -343,6 +357,7 @@
 
 						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
 						
+						error_log("start");
 						// Start output buffering
 						ob_start();
 						// Print the session array
@@ -350,10 +365,11 @@
 						// Capture the output
 						$sessionContents = ob_get_clean();
 						// Log it to the PHP error log
-						error_log("Session Contents: " . $sessionContents);
-
+						error_log("in start, session is " . $sessionContents);
 
 						$preparedSQLQuery_prop->execute([$_SESSION['user']]); // we show only those not handed off strains created by the current user
+
+						error_log("end");
 
 						//$nullDate = null;
 						//$preparedSQLQuery_prop->bindParam(1, $nullDate, PDO::PARAM_NULL);

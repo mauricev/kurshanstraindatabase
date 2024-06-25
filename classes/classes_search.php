@@ -356,11 +356,13 @@
 			// to be a different class so they don't conflict
 			// this is an array of max one item
 
-			if ($_POST['trueStrainsArray_htmlName'][0] != "") {
+			// BUGFixed wasn't confirming the existence of this array, 2024-04-23
+			//if ($_POST['trueStrainsArray_htmlName'][0] != "") {
+			if ( (isset($_POST['trueStrainsArray_htmlName'])) && ($_POST['trueStrainsArray_htmlName'][0] != "") ) {
 				// we used to search for name, but now we are searching for id because we are using a select structure
 				array_push($theWhereClauseArray, 'truestrain_table.strain_id = ?');
-      	array_push($theBuddingQueryArray_param, $_POST['trueStrainsArray_htmlName'][0]);
-      }
+	      		array_push($theBuddingQueryArray_param, $_POST['trueStrainsArray_htmlName'][0]);
+	      	}
 
 			if ( (isset($_POST['contributorArray_htmlName'])) && ($_POST['contributorArray_htmlName'][0] != "") ) {
 

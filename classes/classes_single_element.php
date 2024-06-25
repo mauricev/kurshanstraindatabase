@@ -133,7 +133,17 @@
     }
   }
 
+  class NewHighValueStrain extends NewElement {
 
+    public function __construct($newElement_param) {
+      parent::__construct($newElement_param);
+
+      $this->classTable_prop = 'strain_value_table';
+      $this->classTableName_prop = 'strain_value';
+      $this->actualElementID_prop = 'strain_value_id';
+      $this->elementKind_prop = 'high_value_strain_type';
+    }
+  }
 
 
 

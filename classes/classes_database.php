@@ -146,6 +146,23 @@ class User extends Peri_Database {
     }
   }
 
+  public function fetchUserIdentify ($authorID) {
+    $preparedSQLQuery = $this->sqlPrepare("SELECT authorName_col FROM $this->tableName_prop WHERE author_id = ?");
+
+    $itemstoCheck = array($authorID);
+    $preparedSQLQuery->execute($itemstoCheck);
+
+    $existingElement = $preparedSQLQuery->fetch();
+
+    return ($existingElement['authorName_col']);
+  }
+
+  /*
+
+    $userObject = new User("","","");
+    $author = $userObject->fetchUserIdentify($_SESSION['user']);
+  */
+
   protected function fetchUserID () {
     $preparedSQLQuery = $this->sqlPrepare("SELECT author_id FROM $this->tableName_prop WHERE authorName_col = ?");
 
@@ -155,15 +172,16 @@ class User extends Peri_Database {
     $existingElement = $preparedSQLQuery->fetch();
 
     return ($existingElement['author_id']);
-
   }
 
   public function setupSession() {
-    echo "<br> setting up session";
     session_start();
     $_SESSION['loggedin'] = true;
-    $_SESSION['user'] = $this->fetchUserID();
+    $user = $this->fetchUserID();
+    $_SESSION['user'] = $user;
+    error_log("in setupSession, user is $user");
     $result = header("location: ../start/start.php");
+    exit();
   }
 }
 ?>

@@ -229,7 +229,6 @@ function handleStrainButtons() {
 	  	confirmationDialog.close();
 
 	  	// what happens the send back, move and handoff buttons are cancelled out of?
-	  	console.log("in cancel");
 	  	var theButtonID = cancelButton.dataset.clickedButtonId;
 	  	var isChecked = $('#' + theButtonID).prop('checked');
 	  	// toggle the button’s checked state back to its orignal state
@@ -260,11 +259,11 @@ function handleStrainButtons() {
 	        // if the user chose survival and the checkbox comes back false, the user also wants the strain to be de-handed off
 	
 	        processStrain(whichProcess, strainID, theButtonID, checkBoxState);
-	        
+	       
 	        // we need to not only remove it from the current list but also add it to the other list
-	        if ( (whichProcess == "handoff") || (whichProcess == "sendback") ) {
-	        	console.log("in sendback");
-	        	 setTimeout(() => {
+	        // BUGFixed, left out finaldestination
+	        if ( (whichProcess == "handoff") || (whichProcess == "sendback") || (whichProcess == "finaldestination")) {
+	        	setTimeout(() => {
 	            	window.location.reload();
 	        	}, 1000); 
 	        } else {

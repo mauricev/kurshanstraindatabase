@@ -110,6 +110,9 @@
               $theTableOutputClass->appendTableHeader('moved on');
               $theTableOutputClass->appendTableHeader('thawed on');
 
+              // 7th revision, 6/6/24
+              $theTableOutputClass->appendTableHeader('if high-value, the reason');
+
               $theTableOutputClass->appendTableHeader('authored by');
 
               $theTableOutputClass->appendTableHeader('most recently edited by');
@@ -391,6 +394,10 @@
               $theTableOutputClass->appendTableHeader('');
 
 // date thawed is not a search term
+              $theTableOutputClass->appendTableHeader('');
+
+              // 7th revision, 6/6/24
+// high value reason is not a search term
               $theTableOutputClass->appendTableHeader('');
 
 // author header
@@ -814,7 +821,16 @@
               }
               $theTableOutputClass->appendTableData($data);
               $thePrintOutputClass->appendToPrintData($data);
-  
+
+              // 7th revision, 6/6/24
+              $data = "";
+              $theHighValueReason = new LoadHighValueStrain();
+              if ((isset($theStrainArray['high_value_reason_fk'])) && ($theStrainArray['high_value_reason_fk'] != 0) && ($theStrainArray['high_value_reason_fk'] != NULL) ) {
+                $theHighValueArray = $theHighValueReason->returnSpecificRecord($theStrainArray['high_value_reason_fk']);
+                $data = $theHighValueArray['strain_value'];
+              }
+              $theTableOutputClass->appendTableData($data);
+              $thePrintOutputClass->appendToPrintData($data);
 
               // this needs to do a lookup
               $data = "";

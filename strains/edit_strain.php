@@ -72,6 +72,15 @@
           dropdownParent: 'body'
         });
 
+        $('#select-highvalue_strain').selectize({
+          create: false,
+          sortField: {
+            field: 'text',
+            direction: 'asc'
+          },
+          dropdownParent: 'body'
+        });
+
         // this is a radio button and we’re checking the checked one against its value
         if($('input[name=manufacturedWhere_htmlName]:checked').val() == 'externally-sourced_value') {
           $('input[name=manufacturedWhereLetters_htmlName]').prop('disabled', false);
@@ -181,6 +190,13 @@
             if ($strainNameArray[0] == 'PTK') {
               $labProduced = true;
             }
+
+            if (isset($geneElementArrayToEdit['high_value_reason_fk'])) {
+               $theOriginalHighValueStrainReason = $geneElementArrayToEdit['high_value_reason_fk'];
+            } else {
+               $theOriginalHighValueStrainReason = "";
+            }
+
           } else {
             $theOriginalDateFrozen = "";
             $theOriginalHandOffDate = "";
@@ -285,6 +301,21 @@
               }
             ?>
           </div>
+
+          <div class="col-md-3 mb-3">
+            <?php
+              require_once("../classes/classes_load_elements.php");
+              $theHighValueStrainReasonsListing = new LoadHighValueStrain();
+              if ($isStrainBeingEdited) {
+                $theHighValueStrainReasonsListing->buildSelectedTablesWithSingleEntry($theOriginalHighValueStrainReason);
+              } else {
+                $theHighValueStrainReasonsListing->buildSelectTable(false);
+              }
+            ?>
+            <div style="padding-bottom:16px">
+          </div>
+        </div>
+
         </div>
 
         <div class="row">
@@ -626,6 +657,8 @@
 
                 echo "<input type='hidden' name='originalIsLastVial_postvar' value=$theOriginalIsLastVial>";
                 echo "<input type='hidden' name='originalLastVialer_postvar' value=$theOriginalLastVialer>";
+
+                echo "<input type='hidden' name='originalHighValueReason_postvar' value=$theOriginalHighValueStrainReason>";
 
                 echo "<input type='hidden' name='isLabProduced_postvar' value=$labProduced>";
                 echo "<input type='submit' name='acceptNewStrainEntry_htmlName' class='btn btn-primary btn-block' value='Accept Edited Strain' alt='Accept Edited Strain' style='float:right'/>";

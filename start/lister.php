@@ -96,6 +96,15 @@
           dropdownParent: 'body'
         });
 
+        $('#select-highvalue_strain').selectize({
+          create: false,
+          sortField: {
+            field: 'text',
+            direction: 'asc'
+          },
+          dropdownParent: 'body'
+        });
+
 				disableLists();
 				cancelButton();
 
@@ -283,6 +292,23 @@
 				</div>
 			</div>
 
+			<div class="row">
+				<div class="col-md-3 mb-3">
+					<div class="custom-control custom-radio">
+						<input type = 'radio' id="high_value_stain_btn" class="custom-control-input" name='whichList_htmlName' value='high_value_stain_btn_htmlValue' required>
+						<label class="custom-control-label" for="high_value_stain_btn">High Value Strain Reasons</label>
+					</div>
+				</div>
+				<div class="col-md-3 mb-3">
+					<?php
+	          require_once("../classes/classes_load_elements.php");
+	          $theFluoroTagListing = new LoadHighValueStrain();
+						$isMultiple = false;
+	          $theFluoroTagListing->buildSelectTable($isMultiple);
+	        ?>
+				</div>
+			</div>
+
 			<!-- <div class="row">
 				<div class="col-md-6 mb-3">
 				</div>
@@ -353,6 +379,9 @@
 					break;
 				case 'balancers_btn_htmlValue':
 					$('#select-balancers')[0].selectize.enable();
+					break;
+				case 'high_value_stain_btn_htmlValue':
+					$('#select-highvalue_strain')[0].selectize.enable();
 					break;
       }
   	});

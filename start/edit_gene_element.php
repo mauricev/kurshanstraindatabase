@@ -93,6 +93,12 @@
                   }
                   break;
 
+                case 'high_value_stain_btn_htmlValue':
+                  if(isset($_POST['highValueStrainArray_htmlName'])){
+                    require_once("../single-element/edit_singleElement.php");
+                  }
+                  break;
+
                 default:
                   echo  "<br>we shouldn't be here, whichList_htmlName ";
                   break;

@@ -377,6 +377,7 @@ function disableLists () {
 	$('#select-antibiotics')[0].selectize.disable();
 	$('#select-fluorotags')[0].selectize.disable();
 	$('#select-balancers')[0].selectize.disable();
+	$('#select-highvalue_strain')[0].selectize.disable();
 }
 
 // string data going to the browser must be a "blob"

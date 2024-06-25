@@ -32,6 +32,8 @@
     $survivalDate = "";
     $movedDate = "";
 
+    $highValueStrainReasonNotUsed[0] = null;
+
     // if we are setting these, they get their existing values unless isNitrogenFreezeDateSet is not set
     $isNitrogenFreezeDateSet = $geneElementArrayToEdit['initial_nitrogenFrozen'];
     $nitrogenFreezeDate = $geneElementArrayToEdit['date_nitrogenFrozen'];
@@ -71,7 +73,7 @@
         break;
     }
 
-    $strainObject = new Strain($geneElementArrayToEdit['strainName_col'], $isolationNameNotUsed, $frozenDate, $thawedDateNotUsed, $commentNotUsed,$parentStrainsNotUsed,$allelesNotUsed,$transGenesNotUsed,$balancersNotUsed,$contributorNotUsed[0],$frozenLocationNotUsed,$nitrogenNotUsed,$lastVialStateNotUsed,$lastVialer[0],$handOffDate, $survivalDate, $movedDate, $isNitrogenFreezeDateSet, $nitrogenFreezeDate);
+    $strainObject = new Strain($geneElementArrayToEdit['strainName_col'], $isolationNameNotUsed, $frozenDate, $thawedDateNotUsed, $commentNotUsed,$parentStrainsNotUsed,$allelesNotUsed,$transGenesNotUsed,$balancersNotUsed,$contributorNotUsed[0],$frozenLocationNotUsed,$nitrogenNotUsed,$lastVialStateNotUsed,$lastVialer[0],$handOffDate, $survivalDate, $movedDate, $isNitrogenFreezeDateSet, $nitrogenFreezeDate,$highValueStrainReasonNotUsed[0]);
 
     $strainObject->processStrainStatus($strainID,$whichProcess); 
 

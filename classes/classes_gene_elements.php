@@ -54,6 +54,17 @@
 			}
 			return $existingState;
 		}
+
+		public function translateSessionToUser() {
+			require_once('../classes/classes_database.php');
+
+			$userObject = new User("","","");
+    		$author = $userObject->fetchUserIdentify($_SESSION['user']);
+    		if (!isset($author)) {
+    			$author = "not found";
+    		}
+    		return $author;
+		}
 	}
 
 	class Gene extends GeneticElement {
@@ -343,7 +354,7 @@
 
 				$this->fillCommentString($theComment);
 				$this->fillChromosomeString($theChromosomeString);
-				$this->actualLoggingObject->appendToLog("added transgene: " . $this->actualElementName_prop . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString);
+				$this->actualLoggingObject->appendToLog("added transgene: " . $this->actualElementName_prop . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString . " ; author is " . $this->translateSessionToUser());
 
 				$this->commit();
 			}
@@ -394,7 +405,7 @@
 				$this->returnLoggingForParentTransGeneCoinjectionMarker($parentTransGeneCoinjectionString);
 				$this->fillCommentString($theComment);
 				$this->fillChromosomeString($theChromosomeString);
-				$this->actualLoggingObject->appendToLog("updated transgene: " . $this->actualElementName_prop . $theComment . $theChromosomeString  . $parentTransGeneCoinjectionString . $plasmidsLogString);
+				$this->actualLoggingObject->appendToLog("updated transgene: " . $this->actualElementName_prop . $theComment . $theChromosomeString  . $parentTransGeneCoinjectionString . $plasmidsLogString  . " ; editor is " . $this->translateSessionToUser());
 
 				$this->commit();
 			}
@@ -421,7 +432,7 @@
 
 			$this->fillCommentString($theComment);
 			$this->fillChromosomeString($theChromosomeString);
-			$this->actualLoggingObject->appendToLog("added transgene: " . $theSubGeneName . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString);
+			$this->actualLoggingObject->appendToLog("added transgene: " . $theSubGeneName . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString . " ; author is " . $this->translateSessionToUser());
 			return true;
 		}
 
@@ -450,7 +461,7 @@
 			$this->fillCommentString($theComment);
 			$this->fillChromosomeString($theChromosomeString);
 			// note that the name $theSubGeneName is used because it's internally-produced
-			$this->actualLoggingObject->appendToLog("updated transgene: " . $theSubGeneName . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString);
+			$this->actualLoggingObject->appendToLog("updated transgene: " . $theSubGeneName . $theComment . $theChromosomeString . $parentTransGeneCoinjectionString . $plasmidsLogString . " ; editor is " . $this->translateSessionToUser());
 
 			return $updateResult;
 		}
@@ -587,7 +598,12 @@
 		protected ?String $columnNitrogenDate_prop;
 		protected ?String $actualNitrogenFreeze_prop;
 
-		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param, $handedOffDate_param, $survivalDate_param, $finalDestinationDate_param, $nitrogenFreezeBeingSet_param, $nitrogenFreezeDate_param) {
+		protected $highValueReason_prop;
+		protected $actualHighValueReason_prop;
+
+
+
+		public function __construct($name_param, $isolationName_param, $dateFrozen_param, $dateThawed_param, $comments_param,$setOfParentStrains_param,$setOfAlleles_param,$setOfTransGenes_param, $setOfBalancers_param,$contributorID_param,$unsavedFreezerLocation_param,$unsavedNitrogenLocation_param,$isLastVial_param,$lastVialer_param, $handedOffDate_param, $survivalDate_param, $finalDestinationDate_param, $nitrogenFreezeBeingSet_param, $nitrogenFreezeDate_param, $highValueReason_param) {
 			// pass empty string for location param. That's used to build the strain name.
 			parent::__construct($name_param,"",$comments_param,"");
 			$this->tableName_prop = "strain_table";
@@ -641,6 +657,10 @@
 
 			$this->columnNitrogenDate_prop = "date_nitrogenFrozen";
 			$this->actualNitrogenFreeze_prop = $nitrogenFreezeDate_param;
+
+			$this->highValueReason_prop = "high_value_reason_fk";
+			$this->actualHighValueReason_prop = $highValueReason_param;
+
 		}
 
 		public function returnFreezerNitrogenArrays(&$outFreezerArray,&$outNitrogenArray) {
@@ -736,6 +756,12 @@
 				return ($preparedSQLQuery->execute([$theNewFreezerFNumber_param,$theNewFreezerIndex_param,$theNewNitrogenNNumber_param,$theNewNitrogenIndex_param,"1"]));
 		}
 
+		protected function fillHighValueStrain(&$highValueReasonString_param) {
+			if ($this->actualHighValueReason_prop != "") {
+				$highValueReasonString_param = "; this is a high value strain ";
+			}
+		}
+
 		protected function fillIsolationNameString(&$isolationName_param) {
 			if ($this->actualIsolationName_prop != "") {
 				$isolationName_param = "; with isolation name '" . $this->actualIsolationName_prop . "'";
@@ -806,9 +832,9 @@
 
 				$this->updateFreezerTable();
 
-				$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop, $this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col, contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop,$this->columnNitrogenDateBeingSet_prop,$this->columnNitrogenDate_prop,$this->columnDateSurvived_prop) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop, $this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col, contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop,$this->columnNitrogenDateBeingSet_prop,$this->columnNitrogenDate_prop,$this->columnDateSurvived_prop,$this->highValueReason_prop) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-				$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop);
+				$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$this->actualHighValueReason_prop);
 				$preparedSQLInsert->execute($itemstoInsert);
 
 				$this->insertStrainAlleles($this->lastInsertId(), $allelesAndTransGenesForStrainString);
@@ -816,8 +842,9 @@
 				$this->fillIsolationNameString($theIsolationName);
 				$this->fillLastVialerString($theLastVialString);
 				$this->fillNitrogenFreeze($nitrogenFreezeString_param);
+				$this->fillHighValueStrain($highValueReasonString_param);
 
-				$theStrainLog = "added strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "'; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param;
+				$theStrainLog = "added strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "'; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param . $highValueReasonString_param  . " ; author is " . $this->translateSessionToUser();
 				$this->actualLoggingObject->appendToLog($theStrainLog);
 
 				$this->commit();
@@ -834,9 +861,9 @@
 
 		if($this->updateFreezerTable()) {
 			// I am confused, but chromosomes are entered only if the transgene is integrated and alleles don't get chromosomes
-			$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop, $this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop,$this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col,contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop,$this->columnNitrogenDateBeingSet_prop,$this->columnNitrogenDate_prop,$this->columnDateSurvived_prop ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop, $this->columnIsolationName_prop, $this->columnDateFrozen_prop, $this->columnDateThawed_prop,$this->columnWithCommentName_prop,fullFreezer_col,fullNitrogen_col,contributor_fk, author_fk,isLastVial_col,lastVialContributor_fk,$this->columnDateHandedOff_prop,$this->columnDateMoved_prop,$this->columnNitrogenDateBeingSet_prop,$this->columnNitrogenDate_prop,$this->columnDateSurvived_prop,$this->highValueReason_prop ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop,$_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop );
+			$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualFullFreezerNumber,$this->actualFullNitrogenNumber,$this->actualContributorID_prop,$_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop,$this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$this->actualHighValueReason_prop );
 			if ($preparedSQLInsert->execute($itemstoInsert)) {
 
 				$this->insertStrainAlleles($this->lastInsertId(), $allelesAndTransGenesForStrainString);
@@ -844,7 +871,9 @@
 				$this->fillIsolationNameString($theIsolationName);
 				$this->fillLastVialerString($theLastVialString);
 				$this->fillNitrogenFreeze($nitrogenFreezeString_param);
-				$theStrainLog = "added strain: " . $theSubGeneName . $theIsolationName . $theComment . "', frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param;
+				$this->fillHighValueStrain($highValueReasonString_param);
+
+				$theStrainLog = "added strain: " . $theSubGeneName . $theIsolationName . $theComment . "', frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param . $highValueReasonString_param . " ; author is " . $this->translateSessionToUser();
 				$this->actualLoggingObject->appendToLog($theStrainLog);
 
 				return true;
@@ -869,9 +898,9 @@
 			$this->deleteStrainRelated("strain_to_transgene_table", $existingGeneElementID_param);
 			$this->deleteStrainRelated("strain_to_balancer_table", $existingGeneElementID_param);
 
-			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?, $this->columnDateHandedOff_prop = ? ,$this->columnDateMoved_prop = ?, $this->columnNitrogenDateBeingSet_prop = ?, $this->columnNitrogenDate_prop = ?, $this->columnDateSurvived_prop = ? WHERE strain_id = ?");
+			$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ?, $this->columnDateHandedOff_prop = ? ,$this->columnDateMoved_prop = ?, $this->columnNitrogenDateBeingSet_prop = ?, $this->columnNitrogenDate_prop = ?, $this->columnDateSurvived_prop = ? , $this->highValueReason_prop = ? WHERE strain_id = ?");
 
-			$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$existingGeneElementID_param);
+			$itemstoInsert = array($this->actualElementName_prop,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'],$this->actualIsLastVial_prop,$this->actualLastVialer_prop, $this->actualDateHandedOff_prop,$this->actualDateMoved_prop,$this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$this->actualHighValueReason_prop,$existingGeneElementID_param);
 
 			$preparedSQLUpdate->execute($itemstoInsert);
 
@@ -880,8 +909,9 @@
 			$this->fillIsolationNameString($theIsolationName);
 			$this->fillLastVialerString($theLastVialString);
 			$this->fillNitrogenFreeze($nitrogenFreezeString_param);
+			$this->fillHighValueStrain($highValueReasonString_param);
 
-			$theStrainLog = "updated strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param;
+			$theStrainLog = "updated strain: " . $this->actualElementName_prop . $theIsolationName . $theComment . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $theLastVialString . $nitrogenFreezeString_param . $highValueReasonString_param . " ; editor is " . $this->translateSessionToUser();
 			$this->actualLoggingObject->appendToLog($theStrainLog);
 
 			$this->commit();
@@ -906,9 +936,9 @@
 		$preparedSQLQuery = $this->sqlPrepare("DELETE FROM strain_to_transgene_table WHERE strain_fk = ?");
 		$preparedSQLQuery->execute([$existingGeneElementID_param]);
 
-		$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? , $this->columnDateHandedOff_prop = ?, $this->columnDateMoved_prop = ?, $this->columnNitrogenDateBeingSet_prop = ?, $this->columnNitrogenDate_prop = ?, $this->columnDateSurvived_prop = ? WHERE strain_id = ?");
+		$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?,$this->columnIsolationName_prop = ?, $this->columnDateFrozen_prop = ?, $this->columnDateThawed_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, editor_fk = ?, isLastVial_col = ?, lastVialContributor_fk = ? , $this->columnDateHandedOff_prop = ?, $this->columnDateMoved_prop = ?, $this->columnNitrogenDateBeingSet_prop = ?, $this->columnNitrogenDate_prop = ?, $this->columnDateSurvived_prop = ? , $this->highValueReason_prop = ? WHERE strain_id = ?");
 
-		$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $this->actualDateHandedOff_prop, $this->columnDateMoved_prop, $this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$existingGeneElementID_param);
+		$itemstoInsert = array($theSubGeneName,$this->actualIsolationName_prop, $this->actualDateFrozen_prop, $this->actualDateThawed_prop,$this->actualComments_prop,$this->actualContributorID_prop, $_SESSION['user'], $this->actualIsLastVial_prop, $this->actualLastVialer_prop, $this->actualDateHandedOff_prop, $this->columnDateMoved_prop, $this->actualNitrogenDateBeingSet_prop,$this->actualNitrogenFreeze_prop,$this->actualDateSurvived_prop,$this->actualHighValueReason_prop,$existingGeneElementID_param);
 
 		// $this->actualElementName_prop = actual strain name
 		// $this->actualComments_prop = actual strain comment
@@ -919,10 +949,11 @@
 		$this->insertStrainAlleles($existingGeneElementID_param, $allelesAndTransGenesForStrainString);
 
 		this->fillNitrogenFreeze($nitrogenFreezeString_param);
+		$this->fillHighValueStrain($highValueReasonString_param);
 
 
 		// $this->actualElementName_prop doesn't have an entry for lab-produced strains; we used what's passed
-		$theStrainLog = "updated strain: " . $theSubGeneName . " with comment " . $this->actualComments_prop . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $nitrogenFreezeString_param;
+		$theStrainLog = "updated strain: " . $theSubGeneName . " with comment " . $this->actualComments_prop . "; frozen on " . $this->actualDateFrozen_prop . "; thawed on " . $this->actualDateThawed_prop . "; located at " . $this->actualFullFreezerNumber . ", " . $this->actualFullNitrogenNumber . $allelesAndTransGenesForStrainString . $nitrogenFreezeString_param . $highValueReasonString_param . " ; editor is " . $this->translateSessionToUser();
 		$this->actualLoggingObject->appendToLog($theStrainLog);
 	}
 
@@ -1137,7 +1168,7 @@
 				$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
 
 				$this->fillCommentString($theComment);
-				$this->actualLoggingObject->appendToLog("added plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
+				$this->actualLoggingObject->appendToLog("added plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop  . " ; author is " . $this->translateSessionToUser());
 
 				$this->commit();
 		}
@@ -1174,7 +1205,7 @@
 				$theGeneName = $theGeneObject->returnNamedSpecificRecord($this->actualGene_prop);
 
 				$this->fillCommentString($theComment);
-				$this->actualLoggingObject->appendToLog("updated plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop);
+				$this->actualLoggingObject->appendToLog("updated plasmid: " . $this->actualElementName_prop . $theComment . "; cDNA: " . $this->actualOthercDNA_prop . "; location: " . $this->actualLocation_prop . "; promoter: " . $thePromotorName . "; gene: " . $theGeneName . $plasmidAccessoryEntriesString_param . "; sequenceFile: " . $this->actualSequenceDataFileName_prop . " ; editor is " . $this->translateSessionToUser());
 
 				$this->commit();
 

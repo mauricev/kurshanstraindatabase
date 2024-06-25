@@ -56,9 +56,9 @@
         $movedDate = null;
         $isNitrogenFreezeDateBeingSet = 0;
         $nitrogenFreezeDate = null;
+        $highValueStrainReason = null;
 
-
-    	 	return new Strain($name, $isolationName, $dateFrozen, $dateThawed, $comments,$setOfParentStrains,$setOfAlleles,$setOfTransGenes,$setOfBalancers,$contributorID,$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer,$handOffDate, $survivalDate, $movedDate, $isNitrogenFreezeDateBeingSet, $nitrogenFreezeDate);
+    	 	return new Strain($name, $isolationName, $dateFrozen, $dateThawed, $comments,$setOfParentStrains,$setOfAlleles,$setOfTransGenes,$setOfBalancers,$contributorID,$unsavedFreezerLocation,$unsavedNitrogenLocation,$theNewIsLastVialState,$selectedLastVialer,$handOffDate, $survivalDate, $movedDate, $isNitrogenFreezeDateBeingSet, $nitrogenFreezeDate,$highValueStrainReason);
     	 }
 
       function createTransGenePlaceHolder($transGeneLocation_param) {

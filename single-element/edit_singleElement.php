@@ -46,10 +46,23 @@
               $singleElementObjectToEdit = new LoadFluoroTag();
               $selectedElement_param = $_POST['fluorotagArray_htmlName'];
               break;
+
+            case 'high_value_stain_btn_htmlValue':
+              $singleElementObjectToEdit = new LoadHighValueStrain();
+              $selectedElement_param = $_POST['highValueStrainArray_htmlName'];
+              break;
           }
           $elementArrayToEdit = $singleElementObjectToEdit->returnSpecificRecord($selectedElement_param[0]);
           // because we are already in the class, we can just pass the stored column name to fetch the record's array
-  				$theOldElementName = htmlspecialchars($elementArrayToEdit[$singleElementObjectToEdit->returnElementNameColumn()],ENT_QUOTES);
+          
+          // BUGFixed 6/3/24
+          $theOldElementName = "";
+          $elementNameColumn = $singleElementObjectToEdit->returnElementNameColumn();
+          if ($elementNameColumn > -1) {
+            if (isset($elementArrayToEdit[$elementNameColumn])) {
+              $theOldElementName = htmlspecialchars($elementArrayToEdit[$elementNameColumn],ENT_QUOTES);
+            }
+          }
 
   				$theOldElementID = $selectedElement_param[0];
           $theElementString = $singleElementObjectToEdit->returnElementString();
@@ -57,16 +70,15 @@
           $theHTMLName = $singleElementObjectToEdit->returnHTMLName();
 
           $theOutsideLabFlagString = "this is an outside lab";
-          $theOutsideLabFlag = $elementArrayToEdit['outside_contributor_col'];
-
+          if (isset($elementArrayToEdit['outside_contributor_col'])) {
+            $theOutsideLabFlag = $elementArrayToEdit['outside_contributor_col'];
+          }
         } else {
-
           if(isset($_POST['newContributor_htmlName']))
           {
             $theHTMLName = 'newContributor_htmlName';
             $theElementString = "Contributor";
             $theElementStringLC = "contributor";
-
             $theOutsideLabFlagString = "this is an outside lab";
             $theOutsideLabFlag = false;
 
@@ -85,6 +97,11 @@
             $theHTMLName = 'newFluoro_htmlName';
             $theElementString = "Fluor/tag";
             $theElementStringLC = "fluor/tag";
+          } else if(isset($_POST['newHighValueStrain_htmlName']))
+          {
+            $theHTMLName = 'newHighValueStrain_htmlName';
+            $theElementString = "Reason for High-Value Strain";
+            $theElementStringLC = "reason fo high-value strain";
           }
         }
 			?>
@@ -111,20 +128,22 @@
               ?>
             </div>
           <?php
-            echo "<div class='row'>";
-              echo "<div class='col-md-4 mb-3'>";
-                if ($singleElementBeingEdited) {
-                  $checkedValue = "";
-                  if($theOutsideLabFlag) {
-                    $checkedValue = "checked";
-                  }
-                 echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' $checkedValue name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
+            if(isset($_POST['newContributor_htmlName'])) {
+              echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-3'>";
+                  if ($singleElementBeingEdited) {
+                    $checkedValue = "";
+                    if($theOutsideLabFlag) {
+                      $checkedValue = "checked";
+                    }
+                   echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' $checkedValue name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
 
-                } else {
-                  echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
-                }
+                  } else {
+                    echo "<label class='input-group-addon'><input type='checkbox' id='outsideLab_fieldID' name='outsideLab_fieldID' style='margin-right: 6px;'>$theOutsideLabFlagString</label>";
+                  }
+                echo "</div>";
               echo "</div>";
-            echo "</div>;"
+          }
            ?>
       		</div>
       		<div class='row'>

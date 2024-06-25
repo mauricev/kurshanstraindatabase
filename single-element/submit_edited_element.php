@@ -42,6 +42,10 @@
       		case 'newFluoro_htmlName';
       			$theElementObject = new NewFluoro($theElementString);
       			break;
+
+          case 'newHighValueStrain_htmlName';
+            $theElementObject = new NewHighValueStrain($theElementString);
+            break;
       	}
       	if($theElementObject) {
           if ($singleElementBeingEdited) {
