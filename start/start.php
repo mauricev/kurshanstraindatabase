@@ -351,7 +351,8 @@
 					echo "<div class='col-md-12 mb-3'>";
 
 						// we had no choice but to hard code is null, binding a null value does not work
-						$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NULL AND strain_table.author_fk = ? ORDER BY strain_table.strainName_col asc";
+						// BUGFixed should be contributor_table and not author table
+						$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NULL AND strain_table.contributor_table = ? ORDER BY strain_table.strainName_col asc";
 
 						$searchDatabase = new Peri_Database();
 
