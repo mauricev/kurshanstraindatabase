@@ -27,7 +27,7 @@
           dropdownParent: 'body'
         });
 
-        $('#select-allele').selectize({
+        $alleleSelector = $('#select-allele').selectize({
           create: false,
           sortField: {
             field: 'text',
@@ -96,6 +96,20 @@
         edit_strain_lastvial_thawed_required_button();
         cancelButton();
 
+        var selectizeInstance = $alleleSelector[0].selectize;
+        $('form').on('submit', function(e) {
+            if (selectizeInstance.getValue() == "") {
+                e.preventDefault();
+                selectizeInstance.$wrapper.addClass('is-invalid');
+            } else {
+                selectizeInstance.$wrapper.removeClass('is-invalid');
+            }
+        });
+        selectizeInstance.on('change', function() {
+          if (selectizeInstance.getValue() !== "") {
+             selectizeInstance.$wrapper.removeClass('is-invalid');
+          }
+        });
       });
     </script>
   </head>
@@ -229,22 +243,24 @@
 
           <div class="col-md-3 mb-3">
             <?php
-              require_once("../classes/classes_gene_elements.php");
+              require_once("../classes/classes_load_elements.php");
+              require_once("../classes/common_functions.php");
               $theAlleleListing = new LoadAllele();
               if ($isStrainBeingEdited) {
                 $theMarkedAlleles = new LoadAllelesToStrain($theOriginalStrainID);
                 $theMarkedAllelesArray = $theMarkedAlleles->ReturnMarkedGeneElements();
                 $theMarkedAlleles->PopulateHiddenArray();
-                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray);
+                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray,Requirements::Required);
               } else {
                 $multiple = true;
-                $theAlleleListing->buildSelectTable($multiple);
+                $theAlleleListing->buildSelectTable($multiple,Requirements::Required);
               }
             ?>
           </div>
 
           <div class="col-md-3 mb-3">
             <?php
+              require_once("../classes/classes_load_elements.php");
               $theTransGeneListing = new LoadTransGene();
               if ($isStrainBeingEdited) {
                 $theMarkedTransGenes = new LoadTransGenesToStrain($theOriginalStrainID);
@@ -260,7 +276,7 @@
 
           <div class="col-md-3 mb-3">
             <?php
-              require_once("../classes/classes_gene_elements.php");
+              require_once("../classes/classes_load_elements.php");
               $theBalancerListing = new LoadBalancer();
               if ($isStrainBeingEdited) {
                 $theMarkedBalancers = new LoadBalancersToStrain($theOriginalStrainID);

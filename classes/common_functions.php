@@ -1,5 +1,12 @@
 
     <?php
+
+
+      enum Requirements {
+        case Required;
+        case Not_required;
+      }
+
       function whatIsTheState ($letters_param, $manufacturedWhere_param) {
         $switchedState ="";
         if ($letters_param == 'kur') {

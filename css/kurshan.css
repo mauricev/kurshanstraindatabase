@@ -78,3 +78,7 @@ body {
 .checkbox-item label + span {
     margin-top: 5px; /* Space between label and date if needed */
 }
+
+.selectize-control.is-invalid {
+    border-color: #dc3545; /* This is the Bootstrap red color for invalid fields */
+}

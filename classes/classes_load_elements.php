@@ -72,7 +72,7 @@
 		}
 
 		// LoadGeneticElement
-		public function buildSelectTable ($isMultiple_param) {
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			$theArray = $this->returnAll();
 			if ($isMultiple_param){
 					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_multiple_prop\"  multiple>";
@@ -117,7 +117,7 @@
 		}
 
 		// LoadGeneticElement
-		public function buildSelectedTablesWithMultipleEntries($arrayToSelect_param) {
+		public function buildSelectedTablesWithMultipleEntries(array $arrayToSelect_param, Requirements $requirement = Requirements::Not_required) {
 			$theEntireArray = $this->returnAll();
 			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\"  class='selectized' placeholder=\"$this->placeholder_multiple_prop\" multiple>";
 			// speed up our searches
@@ -177,7 +177,7 @@
 			$this->strainPlaceholder_prop = createStrainPlaceHolder();
 		}
 
-		public function buildSelectTable ($isMultiple_param) {
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			$this->strainPlaceholder_prop->returnCurrentFreezerNitrogenNumbers($theMaxFrozenNumber,$theMaxFrozenLetters, $theMaxNitrogenNumber, $theMaxNitrogenLetters);
 			$theMaxFullNitrogenNumber = "N-" . sprintf("%03d", $theMaxNitrogenNumber) . ", " . $theMaxNitrogenLetters;
 			$this->strainPlaceholder_prop->returnFreezerNitrogenArrays($theFreezerArray,$theNitrogenArray);
@@ -206,7 +206,7 @@
 			$this->strainPlaceholder_prop = createStrainPlaceHolder();
 		}
 
-		public function buildSelectTable ($isMultiple_param) {
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			$this->strainPlaceholder_prop->returnCurrentFreezerNitrogenNumbers($theMaxFrozenNumber,$theMaxFrozenLetters, $theMaxNitrogenNumber, $theMaxNitrogenLetters);
 			$theMaxFullFreezerNumber = "F-" . sprintf("%04d", $theMaxFrozenNumber) . ", " . $theMaxFrozenLetters;
 			$this->strainPlaceholder_prop->returnFreezerNitrogenArrays($theFreezerArray,$theNitrogenArray);
@@ -248,7 +248,7 @@
 
 		// we organize the table into two groups. The first group are the ordinary collaborators. The second group 
 		// are those from outside laboratories
-		public function buildSelectTable ($isMultiple_param) {
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			// isMultiple_param is false for this select table
 			$theArray = $this->returnAll();
 			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
@@ -393,7 +393,8 @@
       echo "</div>";
 		}
 
-		public function buildSelectTable ($isMultiple_param) {
+		// for vialers, required is internal 
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			$theArray = $this->returnAll();
 			echo "<select class='form-select' id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" required placeholder=\"$this->placeholder_prop\">";
 			echo "<option value=''>$this->placeholder_prop</option>";
@@ -566,7 +567,7 @@
 		}
 
 		// promoter has its own buildselecttable because not every gene is a promoter
-		public function buildSelectTable ($isMultiple_param) {
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
 			// $isMultiple_param is not used; we select only one promoter at a time
 			$theArray = $this->returnAll();
 			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
@@ -658,15 +659,18 @@
 		// building select table with alleles
 		// will need to look up gene id and then get the gene name and then populate list with gene name (allele name)
 
-		public function buildSelectTable ($isMultiple_param) {
-			$theArray = $this->returnAll();
-
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
+			$required = "";
+			if ($requirement == Requirements::Required) {
+				$required = "required";
+			}
 			if ($isMultiple_param){
-					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_multiple_prop\"  multiple>";
+					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" $required placeholder=\"$this->placeholder_multiple_prop\"  multiple>";
 			} else {
-					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
+					echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" $required placeholder=\"$this->placeholder_prop\">";
 			}
 			
+		    $theArray = $this->returnAll();
 			echo "<option value=''>$this->placeholder_prop</option>";
 			foreach($theArray as $row) {
 					$name = $row[$this->elementNameColumn_prop];
@@ -692,9 +696,13 @@
 		}
 
 		// needs to display both the allele and the associated gene
-		public function buildSelectedTablesWithMultipleEntries($arrayToSelect_param) {
+		public function buildSelectedTablesWithMultipleEntries($arrayToSelect_param, Requirements $requirement = Requirements::Not_required) {
 			$theEntireArray = $this->returnAll();
-			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\"  class='selectized' placeholder=\"$this->placeholder_multiple_prop\" multiple>";
+			$required = "";
+			if ($requirement == Requirements::Required) {
+				$required = "required";
+			}
+			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\"  class='selectized' $required placeholder=\"$this->placeholder_multiple_prop\" multiple>";
 			// speed up our searches
 			sort($theEntireArray);
 			sort($arrayToSelect_param);
