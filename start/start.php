@@ -350,37 +350,48 @@
 				echo "<div class='row'>";
 					echo "<div class='col-md-12 mb-3'>";
 
-						// we had no choice but to hard code is null, binding a null value does not work
-						// BUGFixed should be contributor_table and not author table
-						$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NULL AND strain_table.contributor_table = ? ORDER BY strain_table.strainName_col asc";
+						$theSelectString = "SELECT strain_id 
+FROM (
+    SELECT strain_id, strainName_col
+    FROM strain_table 
+    WHERE dateHandedOff_col IS NULL AND isLastVial_col = ? AND lastVialContributor_fk = ?
+    
+    UNION 
+    
+    SELECT strain_id, strainName_col
+    FROM strain_table 
+    WHERE dateHandedOff_col IS NULL AND author_fk = ? AND isLastVial_col = ?
+) AS combined_results
+ORDER BY strainName_col ASC;";
+
+						require_once("../classes/classes_load_elements.php");
+						$currentAuthor = new LoadAuthors();
+						$currentUser = $_SESSION['user'];
+						//$currentUser = 5;
+						$currentAuthorRecord = $currentAuthor->returnSpecificRecord($currentUser);
+						$currentContributor = $currentAuthorRecord['contributor_fk'];
+						//$currentContributor = 1;
 
 						$searchDatabase = new Peri_Database();
 
 						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
 						
-						error_log("start");
+						//error_log("start");
 						// Start output buffering
-						ob_start();
+						//ob_start();
 						// Print the session array
-						print_r($_SESSION);
+						//print_r($currentAuthorRecord);
 						// Capture the output
-						$sessionContents = ob_get_clean();
+						//$sessionContents = ob_get_clean();
 						// Log it to the PHP error log
-						error_log("in start, session is " . $sessionContents);
+						//error_log("in start, session is " . $sessionContents);
 
-						$preparedSQLQuery_prop->execute([$_SESSION['user']]); // we show only those not handed off strains created by the current user
+						$theQueryArray = [true,$currentContributor,$currentUser,false];
+						$preparedSQLQuery_prop->execute($theQueryArray); // we show only those not handed off strains created by the current user (or the last vial contributor)
 
-						error_log("end");
-
-						//$nullDate = null;
-						//$preparedSQLQuery_prop->bindParam(1, $nullDate, PDO::PARAM_NULL);
-						//$theQueryArray = [null]; // this is the ? above.
-						//$preparedSQLQuery_prop->execute($theQueryArray);
-						
 						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
 
-						if (count($theSearchResult) > 0 ) {
-
+						if (!empty($theSearchResult)) {
 							echo "<label>my strains waiting to be handed off</label>";
 							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='handoff-table'>";
 								echo "<th class='font-weight-bold'>strain name</th>";
