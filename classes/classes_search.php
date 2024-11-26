@@ -61,7 +61,7 @@
 
 	class InnerJoinerForStrains extends JoinerForStrains {
 		public function __construct() {
-
+			parent::__construct();
 			// this is a list of every possible inner join
 			// when we have many to many intermediary tables, there are two joins, one for each "side" of intermediary table, hence the top and bottom
 
@@ -93,7 +93,6 @@
 
 			$this->joinCatalog_prop['coinjection'] = ' INNER JOIN coinjection_marker_table ON transgene_table.coInjectionMarker_fk = coinjection_marker_table.coInjectionMarker_id';
 
-			parent::__construct();
 		}
 	}
 
@@ -124,6 +123,8 @@
 	class LeftJoinerForStrains extends JoinerForStrains {
 		public function __construct() {
 
+			parent::__construct();	// does this make sense? we need to check this out
+
 			// a list of every possible left join. we need to do left joins because not every strain will have all these features and we
 			// don't want to exclude any that are missing stuff
 			$this->joinCatalog_prop['allele_top'] =' LEFT JOIN strain_to_allele_table ON truestrain_table.strain_ID = strain_to_allele_table.strain_fk ';
@@ -133,8 +134,26 @@
 			$this->joinCatalog_prop['transgene_bottom'] =' LEFT JOIN transgene_table ON strain_to_transgene_table.transgene_fk = transgene_table.transgene_id ';
 			$this->joinCatalog_prop['balancer_top'] =' LEFT JOIN strain_to_balancer_table ON truestrain_table.strain_ID = strain_to_balancer_table.strain_fk ';
 			$this->joinCatalog_prop['balancer_bottom'] =' LEFT JOIN balancer_table ON strain_to_balancer_table.balancer_fk = balancer_table.balancer_id ';
+		}
+	}
 
-			parent::__construct();
+	class InnerJoinerForStrainsAfterComments extends JoinerForStrains {
+		public function __construct() {
+			parent::__construct(); // this would appear not to make sense to be called at the end
+
+			$this->joinCatalog_prop['allele_top'] =' INNER JOIN strain_to_allele_table AS inner_strain_to_allele ON truestrain_table.strain_ID = inner_strain_to_allele.strain_fk ';
+			$this->joinCatalog_prop['allele_bottom'] =' INNER JOIN allele_table AS inner_allele ON strain_to_allele_table.allele_fk = inner_allele.allele_id ';
+
+			// we only need to override for those used by left joins for comments, namely the alleles, genes and transgenes; strains are already aliased
+			//$this->joinCatalog_prop['balancer_top'] =' INNER JOIN strain_to_balancer_table AS inner_strain_to_balancer ON truestrain_table.strain_ID = inner_strain_to_balancer.strain_fk ';
+			//$this->joinCatalog_prop['balancer_bottom'] =' INNER JOIN balancer_table AS inner_balancer ON strain_to_balancer_table.balancer_fk = inner_balancer.balancer_id ';
+
+			$this->joinCatalog_prop['gene'] = ' INNER JOIN gene_table AS inner_strain_to_gene ON allele_table.gene_fk = inner_strain_to_gene.gene_ID ';
+
+			$this->joinCatalog_prop['transgene_top'] = ' INNER JOIN strain_to_transgene_table AS inner_strain_to_transgene ON truestrain_table.strain_ID = inner_strain_to_transgene.strain_fk ';
+			$this->joinCatalog_prop['transgene_bottom'] =' INNER JOIN transgene_table AS inner_transgene ON strain_to_transgene_table.transgene_fk = inner_transgene.transgene_id ';
+			//print_r("InnerJoinerForStrainsAfterComments constructor<br>");
+
 		}
 	}
 
@@ -198,9 +217,16 @@
 
 				//echo "<br>theWhereClauseString_prop: " . $this->theWhereClauseString_prop . "<br>";
 
+				//print_r("incoming where 1, $incomingWhereString1 <br>");
+				//print_r("incoming where 2, $incomingWhereString2 <br>");
+
 				$theOutGoingWhereString = "";
 				if (($incomingWhereString1 != "" ) && ($incomingWhereString2 != "" )) {
-					$theOutGoingWhereString = $incomingWhereString1 . $inConjunction_param . $incomingWhereString2;
+					if ($incomingWhereString1 == "(") {
+						$theOutGoingWhereString = $incomingWhereString1 . $incomingWhereString2;
+					} else {
+						$theOutGoingWhereString = $incomingWhereString1 . $inConjunction_param . $incomingWhereString2;
+					}
 				} else if ($incomingWhereString1 != "" ) {
 					$theOutGoingWhereString = $incomingWhereString1;
 				} else {
@@ -208,7 +234,7 @@
 				}
 				
 				//echo "<br>theOutGoingWhereString: " . $theOutGoingWhereString . "<br>";
-				
+				//print_r("outgoing where, $theOutGoingWhereString <br>");
 				return $theOutGoingWhereString;
 		}
 
@@ -237,9 +263,14 @@
 		public function buildElementWhereClause(&$theBuddingQueryArray_param, &$theHavingCountArray) {
 			$theArraySize = count ($this->arrayToBuildFrom_prop) - 1;
 			// if the array has one element
+			//print_r("in GeneMultipleElementSearch construct array size is $theArraySize<br>");
 			if ($theArraySize == 0) {
 				$this->theWhereClauseString_prop = $this->searchParameter_prop;
+				//print_r("where clause is now $this->theWhereClauseString_prop <br>");
+
 				array_push($theBuddingQueryArray_param, $this->arrayToBuildFrom_prop[0]);
+				//var_dump($this->arrayToBuildFrom_prop[0]);
+				//print_r("<br>");
 			} else  {
 				// we are building the elements of an individual where clause, so if I search for two alleles or two transgenes
 				// this code will build that search and add each element to the where clause and to the query array
@@ -740,6 +771,7 @@
 	}
 
 	class CommentsSearch extends GeneElementSearch {
+
 		public function __construct(&$joinObject_param, &$theBuddingQueryArray_param, &$theHavingCountArray) {
 
 			if ((isset($_POST['comment_htmlName'])) && ($_POST['comment_htmlName'] != "")) {
@@ -760,19 +792,35 @@
 		    $this->theWhereClauseString_prop = $this->searchParameter_prop;
 
 		    // double slash b along the REGEXP_LIKE for searching for words
-				array_push($theBuddingQueryArray_param, "\\b". $this->arrayToBuildFrom_prop[0] . "\\b");
+			array_push($theBuddingQueryArray_param, "\\b". $this->arrayToBuildFrom_prop[0] . "\\b");
 
 		  } else  {
-				$this->theWhereClauseString_prop = "( ";
-		    for ($theIndex = 0 ;  $theIndex <= $theArraySize; $theIndex++) {
-		      if ($theIndex == 0) {
-		         $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . $this->searchParameter_prop;
-		      } else {
-		        $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . ' OR ' . $this->searchParameter_prop;
-		      }
-					// double slash b along the REGEXP_LIKE for searching for words
-		      array_push($theBuddingQueryArray_param, "\\b". $this->arrayToBuildFrom_prop[$theIndex] . "\\b");
-		    }
+		  	$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . "( ";
+		  	if (!isset($_POST['commentsPhraseSearch_chkbox_htmlName'])) {
+		  		//print_r('commentsPhraseSearch_chkbox_htmlName is not set');
+		  		for ($theIndex = 0 ;  $theIndex <= $theArraySize; $theIndex++) {
+			      if ($theIndex == 0) {
+			         $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . $this->searchParameter_prop; //searchparam is the regex expression
+			      } else {
+			        $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . ' OR ' . $this->searchParameter_prop; // can we just put the words of the comment clause together?
+			      }
+						// double slash b along the REGEXP_LIKE for searching for words
+			      array_push($theBuddingQueryArray_param, "\\b". $this->arrayToBuildFrom_prop[$theIndex] . "\\b");
+			    }
+		  	} else {
+		  		//print_r('commentsPhraseSearch_chkbox_htmlName is set');
+		  		$wordsInTheArray = "";
+				for ($theIndex = 0 ;  $theIndex <= $theArraySize; $theIndex++) {
+					if ($wordsInTheArray == "") {
+						$wordsInTheArray = $wordsInTheArray . $this->arrayToBuildFrom_prop[$theIndex];
+					} else {
+						$wordsInTheArray = $wordsInTheArray . " " . $this->arrayToBuildFrom_prop[$theIndex];
+			    
+					}
+				}
+				$this->theWhereClauseString_prop = $this->theWhereClauseString_prop . $this->searchParameter_prop;
+		    	array_push($theBuddingQueryArray_param, "\\b". $wordsInTheArray . "\\b");
+		  	}
 		    // outside the loop, close it off
 		    $this->theWhereClauseString_prop = $this->theWhereClauseString_prop . " ) ";
 		  }
@@ -934,6 +982,8 @@
 
 	function searchDatabaseForStrains() {
 
+		
+
 		if (isset($_POST['allStrains_chkbox_htmlName']) && $_POST['allStrains_chkbox_htmlName']) {
 			// display all strains
 			$searchDatabase = new Peri_Database();
@@ -941,8 +991,15 @@
 			$theSelectString = "SELECT truestrain_table.strain_id FROM strain_table as truestrain_table";
 			$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
 			$preparedSQLQuery_prop->execute();
+
 			return ($preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC));
 		} else {
+
+			$searchState = 'searchForNothing';
+			$commentsInSearch = false;
+			$othersInSearch = false;
+			$strainInSearch = false;
+
 
 			$theSelectString = "";
 			$thePrimaryJoinClause = "";
@@ -970,6 +1027,10 @@
 			$leftJoinObject = new LeftJoinerForStrains();
 
 			$theCommentSearchObject = new StrainCommentsSearchForStrains($leftJoinObject, $theBuddingQueryArray, $theHavingCountArray);
+
+			if (isset($_POST['commentsANDeverythingelse_chkbox_htmlName'])) {
+				$theCommentWhereClause = $theCommentWhereClause . "(";
+			}
 
 			$theCommentWhereClause = $theCommentSearchObject->concatElementWhereClauseToMasterWhereClause($theCommentWhereClause);
 
@@ -1002,11 +1063,32 @@
 				}
 			}
 
-			// now we are doing a straight up AND search, so we can do an inner join
-			$innerJoinObject = new InnerJoinerForStrains();
+			/*if (isset($_POST['commentsANDeverythingelse_chkbox_htmlName'])) {
+				$innerJoinObject = new InnerJoinerForStrainsAfterComments();
+				$theCommentWhereClause = $theCommentWhereClause . ")";
+			} else {
+				$innerJoinObject = new InnerJoinerForStrains();
+			}*/
+
+			if (($theSelectString != "") && (isset($_POST['commentsANDeverythingelse_chkbox_htmlName']))) {
+				$commentsInSearch = true;
+				$innerJoinObject = new InnerJoinerForStrainsAfterComments();
+				//print_r("is comment search<br>");
+			} elseif ($theSelectString != "") 
+			{
+				$commentsInSearch = true;
+				$innerJoinObject = new InnerJoinerForStrains();
+			} else {
+				$innerJoinObject = new InnerJoinerForStrains();
+			}
 
 			$theStrainSearchObject = new StrainsSearchForStrains($innerJoinObject,$theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theStrainSearchObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
+
+			if ($thePrimaryWhereClause != "") {
+				$strainInSearch = true;
+				$originalPrimaryWhereClause = $thePrimaryWhereClause;
+			}
 
 			$theParentStrainsObject = new ParentStrainsSearchForStrainsForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theParentStrainsObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
@@ -1026,15 +1108,23 @@
 			$theCoInjectionMarkerObject = new CoInjectionMarkerSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theCoInjectionMarkerObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
+		
 			$theTransGeneChromosomeObject = new TransGenesChromosomesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
 			$thePrimaryWhereClause = $theTransGeneChromosomeObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
-
+			//var_dump($theBuddingQueryArray);
+			//print_r("<br>");
 			
 			// here is where the action is for transgenes
 			$theTransGeneObject = new TransGenesSearchForStrains($innerJoinObject, $theBuddingQueryArray, $theHavingCountArray);
+			//var_dump($theBuddingQueryArray);
+			//print_r("<br>");
 			$thePrimaryWhereClause = $theTransGeneObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
 			$thePrimaryJoinClause = $innerJoinObject->getJoinString();
+
+			if ($thePrimaryJoinClause != "") {
+				$othersInSearch = true;
+			}
 
 
 			// searching for an allele will generally exclude any search for a gene
@@ -1047,7 +1137,17 @@
 			// and we need genequeryarray
 			// to which we append to the query array 
 
-			$geneJoinObject = new InnerJoinerForStrains();
+			if (($theSelectString != "") && (isset($_POST['commentsANDeverythingelse_chkbox_htmlName']))) {
+				$geneJoinObject = new InnerJoinerForStrainsAfterComments();
+				//print_r("is comment search<br>");
+			} elseif ($theSelectString != "") 
+			{
+				$commentsInSearch = true;
+				$geneJoinObject = new InnerJoinerForStrains();
+			} else {
+				$geneJoinObject = new InnerJoinerForStrains();
+			}
+
 			$theHavingCountArrayForGenes = array();
 			$outGroupByHavingClauseForGenes = "";
 			$theGeneQueryArray = array();
@@ -1057,26 +1157,31 @@
 			$theGeneJoinClause = $geneJoinObject->getJoinString();
 			buildGroupByHavingClause($theHavingCountArrayForGenes,$theGeneQueryArray, $outGroupByHavingClauseForGenes);
 
+			if ($theGenesWhereClause != "") {
+				$othersInSearch = true;
+			}
 
-			$searchState = 'searchForNothing';
 			//$theSelectString not empty means there is a comments search in play
 			// a not empty $thePrimaryJoinClause  means there is a search for something else also in play
 			// a not empty $thePrimaryWhereClause means we are searching for something in the strain itself ($thePrimaryJoinClause is empty)
-			if ( ($theSelectString != "") && ($thePrimaryJoinClause != "") ) {
-				$searchState = 'searchForEverything';
-			} else if ($theSelectString != "") {
-				$searchState = 'searchForCommentsOnly';
-			} else if ($thePrimaryJoinClause != "") {
-				$searchState = 'searchForSomethingElse';
-			} else if ($thePrimaryWhereClause != "") {
-				$searchState = 'searchForJustStrains';
-			}
 
-			if ($searchState == 'searchForNothing') {
-				// search is still search for nothing, check if there's a gene's search
-				if ($theGenesWhereClause != "") {
+
+			// comments only is searchForCommentsOnly
+			// comments and others but not just strains is searchForEverything
+			// others but not comments is searchForSomethingElse
+			// strains 
+
+			if (($commentsInSearch == true) && (($othersInSearch == true) || ($strainInSearch == true))) {
+				$searchState = 'searchForEverything';
+			} else {
+				if ($strainInSearch == true) {
+					$searchState = 'searchForJustStrains';
+				} else {
 					$searchState = 'searchForSomethingElse';
 				}
+			}
+			if (($commentsInSearch == true) && (($othersInSearch == false) && ($strainInSearch == false))) {
+				$searchState = 'searchForCommentsOnly';
 			}
 
 			switch($searchState) {
@@ -1088,9 +1193,23 @@
 					break;
 				case 'searchForCommentsOnly':
 					// $theSelectString already has the search string built for us, so nothing else to do here; this is also true for when limiting search to strain comments
+					//var_dump($theBuddingQueryArray);
+					//print_r("theSelectString $theSelectString<br>");
 					break;
-				case 'searchForSomethingElse':
 
+					// no comments in search...
+				case 'searchForSomethingElse':
+				
+					// no comments in this search!
+
+
+					// search for alleles/transgenes, it is the first search
+					// search for alleles/transgenes and genes it is the second search
+					// search for genes, it is the third search
+
+					// let's see the effect 
+
+					//print_r("searchForEverything<br><br>");
 					// here we will add buildNotInClause
 					// how we have three restrictSearchClauses here,
 					$restrictSearchClause = "";
@@ -1108,49 +1227,122 @@
 						$orderBy = " ORDER BY truestrain_table.strainName_col";
 					}
 
-					// main search excluding genes
+
+					// for alleles/transgenes
 					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . $orderBy;
 
+					//print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
 
-					// intersect is a new MySQL feature to intersect the results of two separate select searches
-					$intersect = "";
+			
 					// if we are searching both genes and something else, set up for intersection
 
 					if ((mb_strlen($thePrimaryWhereClause) > 0) && (mb_strlen($theGenesWhereClause) > 0)) {
 
 						$theBuddingQueryArray = array_merge($theBuddingQueryArray, $theGeneQueryArray);
 
-						// "order by" is global to the intersected search
+						// for alleles/transgenes and genes
 						$theSelectString = $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theGeneJoinClause . " WHERE " . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY strainName_col";
+						
+						//print_r("theSelectString2 is $theSelectString<br><br>");
 					
+					// a genes only search comes here...
 					} elseif (mb_strlen($theGenesWhereClause) > 0) {
+
 						$theBuddingQueryArray = $theGeneQueryArray;
 
-						$theSelectString = $intersect . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theGeneJoinClause . " WHERE " . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY truestrain_table.strainName_col";
+						// for just genes
+						$theSelectString =  "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theGeneJoinClause . " WHERE " . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY truestrain_table.strainName_col";
+						//print_r("theSelectString3 is $theSelectString<br><br>");
 					}
 
-					// if we are at least searching genes, set up the select for it
-					
+					//print_r("theGeneJoinClause is $theGeneJoinClause<br><br>");
 
-					// it looks we just need to append after the where clause (and be before having, and order clauses)
-					// need to really confirm we want to be before having
-
-					/*echo "theGenesWhereClause " . $theGenesWhereClause . "<br>";
-					echo "theGeneJoinClause " . $theGeneJoinClause . "<br>";
-
-echo "<br>";
-echo "<br>";
-					echo "theSelectString " . $theSelectString . "<br>";
-
-					echo "theBuddingQueryArray "  . "<br>";
-					var_dump($theBuddingQueryArray);
-					echo "<br>";*/
-
+					//print_r("outGroupByHavingClauseForGenes is $outGroupByHavingClauseForGenes<br><br>");
 					break;
 
 				case 'searchForEverything':
-					// apparently we don’t need union distinct here
-					$theSelectString = $theSelectString . " UNION SELECT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY strainName_col";
+					//print_r("searchForEverything");
+				//print_r("2<br>");
+				//print_r("primary join clause<br>");
+			//print_r($thePrimaryJoinClause);
+			//print_r("<br>");
+
+			//print_r("primary where clause<br>");
+			//print_r($thePrimaryWhereClause);
+			//print_r("<br>");
+
+
+					$theANDCommentWhereClause = "";
+					$theANDCommentJoinClause = "";
+					$commentSearchOR = "";
+
+					if (isset($_POST['commentsANDeverythingelse_chkbox_htmlName'])) {
+						$theANDCommentJoinClause  = $theCommentJoinClause;
+						$theANDCommentWhereClause = $theCommentWhereClause . ") AND ";
+					} else {
+						$commentSearchOR  = $theSelectString . " UNION ";
+					}
+
+					if (isset($_POST['commentsANDeverythingelse_chkbox_htmlName'])) {
+						 //$theSelectString = "SELECT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theCommentJoinClause . " " . $thePrimaryJoinClause . " WHERE " . $theCommentWhereClause . " AND " . $thePrimaryWhereClause . " ORDER BY strainName_col";
+
+						//print_r("AND<br>");
+					} else {
+						//$theSelectString = $theSelectString . " UNION SELECT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY strainName_col";
+						
+						//print_r("OR<br>");
+					}
+					//print_r("$theSelectString<br>");
+					//var_dump($theBuddingQueryArray);
+					//print_r("searchForEverything<br><br>");
+					// here we will add buildNotInClause
+					// how we have three restrictSearchClauses here,
+					$restrictSearchClause = "";
+					// one for alleles and transgenes
+					$theAllelesObject->restrictSearchClause($restrictSearchClause,$theBuddingQueryArray);
+			
+					$theTransGeneObject->restrictSearchClause($restrictSearchClause,$theBuddingQueryArray);
+
+					// adds key to group by and values for ? to buddingqueryarray
+					buildGroupByHavingClause($theHavingCountArray,$theBuddingQueryArray, $outGroupByHavingClause);
+
+					// if we are searching genes too, then we are conducting an intersecting search and order by can’t be used in the first portion of the select
+					$orderBy = "";
+					if (mb_strlen($theGenesWhereClause) == 0) {
+						$orderBy = " ORDER BY truestrain_table.strainName_col";
+					}
+
+
+					// for alleles/transgenes
+					$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " .$theANDCommentJoinClause . $thePrimaryJoinClause . " WHERE " . $theANDCommentWhereClause . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . " ORDER BY 2";
+
+					//print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
+					//var_dump($theBuddingQueryArray);
+					//print_r("<br>");
+					// if we are searching both genes and something else, set up for intersection
+
+					if ((mb_strlen($thePrimaryWhereClause) > 0) && (mb_strlen($theGenesWhereClause) > 0)) {
+
+						$theBuddingQueryArray = array_merge($theBuddingQueryArray, $theGeneQueryArray);
+
+						// for alleles/transgenes and genes
+						$theSelectString = $commentSearchOR . $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY 2";
+						
+						//print_r("theSelectString2 is $theSelectString<br><br>");
+						//var_dump($theBuddingQueryArray);
+						//print_r("<br>");
+					
+					// a genes only search comes here...
+					} elseif (mb_strlen($theGenesWhereClause) > 0) {
+
+						$theBuddingQueryArray = array_merge($theBuddingQueryArray, $theGeneQueryArray);
+
+						// for just genes
+						$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause  . $outGroupByHavingClauseForGenes . " ORDER BY 2";
+						//print_r("theSelectString3 is $theSelectString<br><br>");
+						//var_dump($theBuddingQueryArray);
+						//print_r("<br>");
+					}
 					break;
 			}
 

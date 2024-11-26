@@ -116,6 +116,45 @@
 		}
 	}
 
+	// genes can have custom names, so we subclass that here
+	class RealGene extends Gene {
+		protected $actualIsNameCustom_prop;
+		protected $customName_col;
+
+		public function __construct($name_param,$chromosome_param,$comments_param,$customName_param) {
+			parent::__construct($name_param,$chromosome_param,$comments_param);
+
+			$this->tableName_prop = "gene_table";
+			$this->columnNameForElement_prop = "geneName_col";
+			$this->customName_col = 'customNameFlag';
+			$this->actualIsNameCustom_prop = $customName_param;
+		}
+
+		// in gene
+		public function insertOurEntry () {
+			$preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop ($this->columnNameForElement_prop,$this->columnWithCommentName_prop, chromosomeName_col, $this->customName_col) VALUES (?,?,?,?)");
+			$itemstoInsert = array($this->actualElementName_prop,$this->actualComments_prop,$this->actualChromosomeName_prop,$this->actualIsNameCustom_prop);
+			$preparedSQLInsert->execute($itemstoInsert);
+
+			$this->fillCommentString($theComment);
+			$this->fillChromosomeString($theChromosomeString);
+			$this->actualLoggingObject->appendToLog("added gene: " . $this->actualElementName_prop . $theComment . $theChromosomeString);
+		}
+
+		// updates an existing entry based on passed id (the class doesn't know about ids because it's ordinarily used to create new records
+		//currently only genes can be edited!
+		//gene
+		public function updateOurEntry ($existingGeneElementID_param) {
+
+			$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForChromosome_prop = ?, $this->customName_col = ? WHERE gene_id = ?");
+			$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualChromosomeName_prop, $this->actualIsNameCustom_prop, $existingGeneElementID_param]);
+
+			$this->fillCommentString($theComment);
+			$this->fillChromosomeString($theChromosomeString);
+			$this->actualLoggingObject->appendToLog("updated gene: " . $this->actualElementName_prop . $theComment . $theChromosomeString);
+		}
+	}
+
 	// not clear yet on how to derive this class
 	// we are the same as a gene but 1) name is one piece and 2) we might have a second chromosome
 	class Balancer extends Gene {

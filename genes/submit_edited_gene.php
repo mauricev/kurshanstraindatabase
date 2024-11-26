@@ -20,11 +20,20 @@
       $theNewChromosome = $_POST['chromosome_postvar'];
       $theNewComment = htmlspecialchars($_POST['comments_postvar'],ENT_QUOTES);
 
-      //$theNewComment = $_POST['comments_postvar'];
+      $theCustomNameCheckbox = 0;
+      if (isset($_POST['geneLetters_postvar']) && isset($_POST['geneNumbers_postvar'])) {
+        $theNewGeneName = $_POST['geneLetters_postvar'] . "-" . $_POST['geneNumbers_postvar'];
+      } else {
+        $theNewGeneName = $_POST['alternateGeneInput'];
+        $theCustomNameCheckbox = 1;
+      }
+
+      error_log("the gene name is ." . $theNewGeneName);
 
       require_once('../classes/classes_gene_elements.php');
 
-      $checkThisGene = new Gene($theNewGeneName,$theNewChromosome,$theNewComment);
+      // use RealGene because we need the custom name
+      $checkThisGene = new RealGene($theNewGeneName,$theNewChromosome,$theNewComment,$theCustomNameCheckbox);
       // if the names don't match, it was edited. Is this new name an already existing gene?
         if ($isGeneBeingEdited) {
           if ($theOldGeneName != $theNewGeneName){

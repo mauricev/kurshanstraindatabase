@@ -15,6 +15,21 @@
       {
       	cancelButton();
       });
+
+      function toggleGeneFields() {
+        const isChecked = document.getElementById('toggleFields').checked;
+        const geneFields = document.querySelectorAll('.gene-field');
+        const alternateInput = document.getElementById('alternateInput');
+
+        geneFields.forEach(field => {
+          field.disabled = isChecked;
+          field.required = !isChecked; // toggle required attribute
+        });
+
+        alternateInput.disabled = !isChecked;
+        alternateInput.required = isChecked; // toggle required attribute
+      }
+
     </script>
 
   </head>
@@ -41,17 +56,28 @@
       </div>
       <?php
       // $geneElementArrayToEdit contains an associative array of the gene record
-      // first entry , gene_name has the hyphen
+      // first entry , gene_name has the hyphen if it a not a custom name;
+      // if it is custom, we ignore any hyphens and we populate the custom name field
         if ($isGeneBeingEdited) {
-          $geneNameArray = explode("-",$geneName);
-
+          if ($geneElementArrayToEdit['customNameFlag'] != true) {
+            $geneNameArray = explode("-",$geneName);
+          } else {
+            $geneNameArray[0] = $geneName;
+          }
+          
           $theOldChromosome = htmlspecialchars($geneElementArrayToEdit['chromosomeName_col'],ENT_QUOTES);
 
           $theOldComment = htmlspecialchars($geneElementArrayToEdit['comments_col'],ENT_QUOTES);
 
+          $theOldCustomFlag = $geneElementArrayToEdit['customNameFlag'];
+
           $_POST['chromosomeName_postvar'] = $theOldChromosome;
           $_POST['geneNameArray_postvar'] = $geneNameArray;
-          $_POST['selectedElement_postvar'] = $selectedElement[0];
+          $_POST['geneCustomFlag_postvar'] = $theOldCustomFlag;
+          // BUGfixed commented out below
+          //$_POST['selectedElement_postvar'] = $selectedElement[0];
+        } else {
+          $theOldCustomFlag = false;
         }
       ?>
       <form class="needs-validation" novalidate action="../genes/submit_edited_gene.php" method="post">
@@ -66,27 +92,38 @@
         <div class="row">
           <div class="col-md-1 mb-3">
             <?php
-              if ($isGeneBeingEdited) {
-                echo "<input name=geneLetters_postvar type=text pattern='[a-z]{1,4}' class='form-control' value=$geneNameArray[0] required autofocus>";
-              } else {
-                echo "<input name=geneLetters_postvar type=text pattern='[a-z]{1,4}' class='form-control' value='' required autofocus>";
-              }
+              // Determine geneLetters_postvar field value and state based on $theOldCustomFlag
+              $geneLettersValue = $isGeneBeingEdited && !$theOldCustomFlag ? $geneNameArray[0] : '';
+              $geneLettersDisabled = $theOldCustomFlag ? 'disabled' : '';
+              echo "<input name='geneLetters_postvar' type='text' pattern='[a-z]{1,4}' class='form-control gene-field' value='$geneLettersValue' $geneLettersDisabled required autofocus>";
             ?>
             <div class="invalid-feedback">
               Valid lowercase letters of the gene are required. Leave out the hyphen.
             </div>
           </div>
+
           <div class="col-md-1 mb-3">
             <?php
-              if ($isGeneBeingEdited) {
-                echo "<input name=geneNumbers_postvar type=text pattern='[0-9]{1,6}' class='form-control' value=$geneNameArray[1] required>";
-              } else {
-                echo "<input name=geneNumbers_postvar type=text pattern='[0-9]{1,6}' class='form-control' value='' required>";
-              }
+              // Determine geneNumbers_postvar field value and state based on $theOldCustomFlag
+              $geneNumbersValue = $isGeneBeingEdited && !$theOldCustomFlag ? $geneNameArray[1] : '';
+              $geneNumbersDisabled = $theOldCustomFlag ? 'disabled' : '';
+              echo "<input name='geneNumbers_postvar' type='text' pattern='[0-9]{1,6}' class='form-control gene-field' value='$geneNumbersValue' $geneNumbersDisabled required>";
             ?>
             <div class="invalid-feedback">
               Valid numbers of the gene are required. Leave out the hyphen.
             </div>
+          </div>
+
+          <div class="col-md-1 mb-3">
+            <!-- Set the checkbox checked attribute if $theOldCustomFlag is true -->
+            <input type="checkbox" id="toggleFields" onclick="toggleGeneFields()" <?php echo $theOldCustomFlag ? 'checked' : ''; ?>> Use custom name:
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <!-- Set the value of alternateGeneInput and enable it based on $theOldCustomFlag -->
+            <input type="text" name="alternateGeneInput" class="form-control" id="alternateInput" 
+                   value="<?php echo $theOldCustomFlag ? $geneNameArray[0] : ''; ?>" 
+                   <?php echo $theOldCustomFlag ? '' : 'disabled'; ?>>
           </div>
           <div class="col-md-4 mb-3">
             <?php
@@ -125,8 +162,11 @@
                 echo "<input type='hidden' name='orginalChromosome_htmlName' value=\"$theOldChromosome\">";
                 echo "<input type='hidden' name='originalComment_htmlName' value=\"$theOldComment\">";
                 echo "<input type='hidden' name='originalGeneLetters_htmlName' value=$geneNameArray[0]>";
-                echo "<input type='hidden' name='originalGeneNumbers_htmlName' value=$geneNameArray[1]>";
+                if ($theOldCustomFlag == 0) {
+                  echo "<input type='hidden' name='originalGeneNumbers_htmlName' value=$geneNameArray[1]>";
+                }
                 echo "<input type='hidden' name='originalgeneElementID_htmlName' value=$selectedElement[0]>";
+                echo "<input type='hidden' name='originalCustomName_htmlName' value=$theOldCustomFlag>";
               }
             ?>
           </div>

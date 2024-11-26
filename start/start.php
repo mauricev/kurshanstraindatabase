@@ -136,7 +136,8 @@
 				}
 			?>
 
-			<!-- table goes here to display last vialed strains -->
+			<!-- 1 of 3 thawed (last vialed) strains -->
+
 			<div class="row">
 				<div class="col-md-12 mb-3">
 					<?php
@@ -150,7 +151,7 @@
 						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
 						if (count($theSearchResult) > 0 ) {
 
-							echo "<label>thawed strains</label>";
+							echo "<label>thawed strains <span class='text-danger'>needing to be refrozen</span></label>";
 							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='thawed-table'>";
 								echo "<th class='font-weight-bold'>strain name</th>";
 								echo "<th class='font-weight-bold'>date thawed</th>";
@@ -197,15 +198,103 @@
 				</div>
 			</div>
 
-			<!-- when we click a button on the screen, it assigns the OK button of this dialog its information (strain id, etc) -->
-		    <dialog id="confirmation_dialog">
-		        <h2>Confirmation</h2>
-		        <p id="confirmation_string"></p>
-		        <button id="cancel-button">Cancel</button>
-		        <button id="ok-button">OK</button>
-		    </dialog>
+			<?php
+					
+				//my strains waiting to be handed off
+				echo "<div class='row'>";
+					echo "<div class='col-md-12 mb-3'>";
 
-			<!-- for regular users, table goes here to display strains not yet handed off -->
+						$theSelectString = "SELECT strain_id 
+FROM (
+    SELECT strain_id, strainName_col
+    FROM strain_table 
+    WHERE dateHandedOff_col IS NULL AND isLastVial_col = ? AND lastVialContributor_fk = ?
+    
+    UNION 
+    
+    SELECT strain_id, strainName_col
+    FROM strain_table 
+    WHERE dateHandedOff_col IS NULL AND author_fk = ? AND isLastVial_col = ?
+) AS combined_results
+ORDER BY strainName_col ASC;";
+
+						require_once("../classes/classes_load_elements.php");
+						$currentAuthor = new LoadAuthors();
+						$currentUser = $_SESSION['user'];
+						//$currentUser = 5;
+						$currentAuthorRecord = $currentAuthor->returnSpecificRecord($currentUser);
+						$currentContributor = $currentAuthorRecord['contributor_fk'];
+						//$currentContributor = 1;
+
+						$searchDatabase = new Peri_Database();
+
+						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
+						
+						//error_log("start");
+						// Start output buffering
+						//ob_start();
+						// Print the session array
+						//print_r($currentAuthorRecord);
+						// Capture the output
+						//$sessionContents = ob_get_clean();
+						// Log it to the PHP error log
+						//error_log("in start, session is " . $sessionContents);
+
+						$theQueryArray = [true,$currentContributor,$currentUser,false];
+						$preparedSQLQuery_prop->execute($theQueryArray); // we show only those not handed off strains created by the current user (or the last vial contributor)
+
+						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+
+						if (!empty($theSearchResult)) {
+							echo "<label>my strains waiting to be handed off</label>";
+							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='handoff-table'>";
+								echo "<th class='font-weight-bold'>strain name</th>";
+
+								$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+								if ($userObject->IsCurrentUserAnEditor()) {
+									echo "<th class='font-weight-bold'>hand off to me</th>";
+								} else {
+									echo "<th class='font-weight-bold'>hand off to the strain manager</th>";
+								}
+								
+
+								require_once("../classes/classes_load_elements.php");
+								$theStrainClass = new LoadParentStrains();
+
+								$theRowNumber = 1; // starting with 1, not 0
+
+								foreach ($theSearchResult as $theStrainID) {
+
+									// we track row numbers so we know which one to delete when handed off
+									echo "<tr id=$theRowNumber>";
+
+
+									$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
+									$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+									echo "<td>$theStrainName</td>";
+
+									echo "<td>";
+                  					$theButtonID = "handoff-button-row-" . $theRowNumber . "-strainid-" . $theStrainID['strain_id'] . "-strain_name-" . $theStrainName;
+                  					// class "download" is used to identify the button
+                  					// we use a class because there are multiple buttons on this page
+                  					echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm handoff'>handoff</button>";
+									echo "</td>";
+
+									echo "</tr>";
+									$theRowNumber = $theRowNumber + 1;
+
+								}
+							echo "</table>";
+							
+						} else {
+							echo "<label>there are no strains waiting to be handed off</label>";
+						}
+					?>
+				</div>
+			</div>
+
+
+			<!-- 1 of 3, for regular users, handed off strains waiting to be processed further -->
 			<div class="row">
 				<div class="col-md-12 mb-3">
 					<?php
@@ -215,7 +304,7 @@
 							
 							// EXCLUDE MOVED STRAINS
 
-							$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NOT NULL AND strain_table.dateMoved_col IS NULL ORDER BY strain_table.strainName_col asc";
+							$theSelectString = "SELECT strain_table.strain_id FROM strain_table WHERE strain_table.dateHandedOff_col IS NOT NULL AND strain_table.dateMoved_col IS NULL ORDER BY strain_table.dateFrozen_col asc,strain_table.dateSurvived_col asc";
 
 							$searchDatabase = new Peri_Database();
 
@@ -328,7 +417,6 @@
 											echo "<td></td>";
 										}
 										
-
 										echo "<td>";
 										$finalDestinationButtonID = "finaldestination-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
 										echo "<button type='button' id=$finalDestinationButtonID class='btn btn-outline-info btn-sm finaldestination' $theMoveButtonEnabledState>final move...</button>";
@@ -347,98 +435,18 @@
 
 					echo "</div>";
 				echo "</div>";
-				echo "<div class='row'>";
-					echo "<div class='col-md-12 mb-3'>";
+				?>
+			
 
-						$theSelectString = "SELECT strain_id 
-FROM (
-    SELECT strain_id, strainName_col
-    FROM strain_table 
-    WHERE dateHandedOff_col IS NULL AND isLastVial_col = ? AND lastVialContributor_fk = ?
-    
-    UNION 
-    
-    SELECT strain_id, strainName_col
-    FROM strain_table 
-    WHERE dateHandedOff_col IS NULL AND author_fk = ? AND isLastVial_col = ?
-) AS combined_results
-ORDER BY strainName_col ASC;";
+			<!-- when we click a button on the screen, it assigns the OK button of this dialog its information (strain id, etc) -->
+		    <dialog id="confirmation_dialog">
+		        <h2>Confirmation</h2>
+		        <p id="confirmation_string"></p>
+		        <button id="cancel-button">Cancel</button>
+		        <button id="ok-button">OK</button>
+		    </dialog>
 
-						require_once("../classes/classes_load_elements.php");
-						$currentAuthor = new LoadAuthors();
-						$currentUser = $_SESSION['user'];
-						//$currentUser = 5;
-						$currentAuthorRecord = $currentAuthor->returnSpecificRecord($currentUser);
-						$currentContributor = $currentAuthorRecord['contributor_fk'];
-						//$currentContributor = 1;
-
-						$searchDatabase = new Peri_Database();
-
-						$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
-						
-						//error_log("start");
-						// Start output buffering
-						//ob_start();
-						// Print the session array
-						//print_r($currentAuthorRecord);
-						// Capture the output
-						//$sessionContents = ob_get_clean();
-						// Log it to the PHP error log
-						//error_log("in start, session is " . $sessionContents);
-
-						$theQueryArray = [true,$currentContributor,$currentUser,false];
-						$preparedSQLQuery_prop->execute($theQueryArray); // we show only those not handed off strains created by the current user (or the last vial contributor)
-
-						$theSearchResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
-
-						if (!empty($theSearchResult)) {
-							echo "<label>my strains waiting to be handed off</label>";
-							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='handoff-table'>";
-								echo "<th class='font-weight-bold'>strain name</th>";
-
-								$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
-								if ($userObject->IsCurrentUserAnEditor()) {
-									echo "<th class='font-weight-bold'>hand off to me</th>";
-								} else {
-									echo "<th class='font-weight-bold'>hand off to the strain manager</th>";
-								}
-								
-
-								require_once("../classes/classes_load_elements.php");
-								$theStrainClass = new LoadParentStrains();
-
-								$theRowNumber = 1; // starting with 1, not 0
-
-								foreach ($theSearchResult as $theStrainID) {
-
-									// we track row numbers so we know which one to delete when handed off
-									echo "<tr id=$theRowNumber>";
-
-
-									$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
-									$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-									echo "<td>$theStrainName</td>";
-
-									echo "<td>";
-                  					$theButtonID = "handoff-button-row-" . $theRowNumber . "-strainid-" . $theStrainID['strain_id'] . "-strain_name-" . $theStrainName;
-                  					// class "download" is used to identify the button
-                  					// we use a class because there are multiple buttons on this page
-                  					echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm handoff'>handoff</button>";
-									echo "</td>";
-
-									echo "</tr>";
-									$theRowNumber = $theRowNumber + 1;
-
-								}
-							echo "</table>";
-							
-						} else {
-							echo "<label>there are no strains waiting to be handed off</label>";
-						}
-					?>
-				</div>
-			</div>
-
+			
 
 			<div class="row">
 				<div class="col-md-12 mb-3">

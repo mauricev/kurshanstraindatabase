@@ -313,7 +313,9 @@
 <!-- comments/parent strains -->
         <div class='row'>
           <div class="col-md-6 mb-3">
-            <label class="input-group-addon" style="padding-bottom:-5px"><input type="checkbox" name="strainsOnly_chkbox_htmlName">limit comments search to strain comments</label>
+            <label class="input-group-addon" style="padding-right: 5px; padding-bottom: 0;"><input type="checkbox" name="strainsOnly_chkbox_htmlName">limit comments search to strain comments</label>
+            <label class="input-group-addon" style="padding-right: 5px; padding-bottom: 0;"><input type="checkbox" name="commentsPhraseSearch_chkbox_htmlName">search as a phrase</label>
+            <label class="input-group-addon" style="padding-right: 5px; padding-bottom: 0;"><input type="checkbox" name="commentsANDeverythingelse_chkbox_htmlName">AND with the others</label>
             <textarea id="commentID" class="form-control rounded-0" rows="2" name="comment_htmlName" title="strainSpecificComments" placeholder="comments" style="width:100%"></textarea>
           </div>
 
