@@ -1,0 +1,6 @@
+peri author contributor conversion
+1) create contributorName_col and outside_contributor_col to author table
+2) enter actual contributorName_col where they correspond to  on the author table
+
+3) replace author_ids with contributor_ids
+4) save the author id and replace it on the strain and transgene tables with the new contributorName_col
