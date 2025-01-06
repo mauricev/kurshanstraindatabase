@@ -18,7 +18,8 @@
         $('input[name=manufacturedWhereLetters_htmlName]').prop('disabled', true);
         $('input[name=manufacturedWhereNumbers_htmlName]').prop('disabled', true);
 
-        $('#select-transgene').selectize({
+        const selectizeInstances = []; 
+        selectizeInstances[0] = $('#select-transgene').selectize({
           create: false,
           sortField: {
             field: 'text',
@@ -27,7 +28,7 @@
           dropdownParent: 'body'
         });
 
-        $alleleSelector = $('#select-allele').selectize({
+        selectizeInstances[1] = $('#select-allele').selectize({
           create: false,
           sortField: {
             field: 'text',
@@ -63,7 +64,7 @@
           dropdownParent: 'body'
         });
 
-        $('#select-balancers').selectize({
+        selectizeInstances[2] = $('#select-balancers').selectize({
           create: false,
           sortField: {
             field: 'text',
@@ -96,20 +97,36 @@
         edit_strain_lastvial_thawed_required_button();
         cancelButton();
 
-        var selectizeInstance = $alleleSelector[0].selectize;
-        $('form').on('submit', function(e) {
-            if (selectizeInstance.getValue() == "") {
-                e.preventDefault();
-                selectizeInstance.$wrapper.addClass('is-invalid');
-            } else {
-                selectizeInstance.$wrapper.removeClass('is-invalid');
-            }
-        });
-        selectizeInstance.on('change', function() {
-          if (selectizeInstance.getValue() !== "") {
-             selectizeInstance.$wrapper.removeClass('is-invalid');
-          }
-        });
+    
+    $('form').on('submit', function (e) {
+    let countValidSelectors = 0;
+
+    selectizeInstances.forEach((instance, index) => {
+        const value = instance[0].selectize.getValue();
+    
+        // Handle different possible return types of getValue
+        const hasValidValue =
+            (typeof value === "string" && value !== "") || // Non-empty string
+            (Array.isArray(value) && value.length > 0);   // Non-empty array
+
+        if (hasValidValue) {
+            countValidSelectors++;
+        }
+    });
+
+    if (countValidSelectors === 0) {
+        e.preventDefault();
+        alert("Please supply at least one gene/allele/transgene/balancer.");
+    } else {
+        e.stopImmediatePropagation();
+    }
+});
+
+
+
+
+
+
       });
     </script>
   </head>
