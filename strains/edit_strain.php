@@ -97,6 +97,7 @@
         edit_strain_lastvial_thawed_required_button();
         cancelButton();
 
+
     
     $('form').on('submit', function (e) {
     let countValidSelectors = 0;
@@ -117,8 +118,6 @@
     if (countValidSelectors === 0) {
         e.preventDefault();
         alert("Please supply at least one gene/allele/transgene/balancer.");
-    } else {
-        e.stopImmediatePropagation();
     }
 });
 
@@ -267,10 +266,10 @@
                 $theMarkedAlleles = new LoadAllelesToStrain($theOriginalStrainID);
                 $theMarkedAllelesArray = $theMarkedAlleles->ReturnMarkedGeneElements();
                 $theMarkedAlleles->PopulateHiddenArray();
-                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray,Requirements::Required);
+                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray);
               } else {
                 $multiple = true;
-                $theAlleleListing->buildSelectTable($multiple,Requirements::Required);
+                $theAlleleListing->buildSelectTable($multiple);
               }
             ?>
           </div>
