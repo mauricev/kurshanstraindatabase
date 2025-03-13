@@ -695,6 +695,7 @@
 			echo "</select>";
 		}
 
+		// LoadAllele
 		// needs to display both the allele and the associated gene
 		public function buildSelectedTablesWithMultipleEntries($arrayToSelect_param, Requirements $requirement = Requirements::Not_required) {
 			$theEntireArray = $this->returnAll();
@@ -706,10 +707,12 @@
 			// speed up our searches
 			sort($theEntireArray);
 			sort($arrayToSelect_param);
+			
 			foreach ($theEntireArray as $theEntireArrayItem)
 			{
 				$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
 				$id = $theEntireArrayItem[$this->elementIDColumn_prop];
+	
 				$selected = false;
 				foreach ($arrayToSelect_param as $theMarkedArrayItem)
 				{
@@ -727,15 +730,22 @@
 				$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
 
 				// BUGFixed 2024-4-23, not all alleles have genes
-				if (isset($geneElementArrayToEdit) && is_array($geneElementArrayToEdit)) {
-					$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+				// BUGFixed again 2025-03-13, this if check is removing alleles without genes
+				$geneToAdd = $geneElementArrayToEdit['geneName_col'];
 
-					if ($selected) {
-						echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
-					} else {
-						echo "<option value=\"$id\">$geneToAdd ($name)</option>";
-					}
+				// BUGFixed 2025-03-13 missing this code
+				if ($geneElementArrayToEdit != null) {
+					$geneToAdd = $geneElementArrayToEdit['geneName_col'];
+				} else {
+					$geneToAdd = "no gene assigned";
 				}
+
+				if ($selected) {
+					echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
+				} else {
+					echo "<option value=\"$id\">$geneToAdd ($name)</option>";
+				}
+				
 				
 			}
 			echo "</select>";
@@ -788,7 +798,6 @@
 		// 	return($existingElement);
 		// }
 	}
-
 
 
 	class LoadBalancer extends LoadGeneticElement {
@@ -903,11 +912,12 @@
 			return ($arrayToReturn);
 		}
 
+		// what is this for?
 		public function PopulateHiddenArray() {
 			$arrayOfItems = $this->ReturnMarkedGeneElements();
 			foreach($arrayOfItems as $theItem) {
-	      echo "<input type=\"hidden\" name=\"$this->hiddenArrayName_prop[]\" value=\"$theItem\">";
-	    }
+	      		echo "<input type=\"hidden\" name=\"$this->hiddenArrayName_prop[]\" value=\"$theItem\">";
+	    	}
 		}
 	}
 
