@@ -31,7 +31,7 @@
        // BUGFixed 2025-05-20 remove spurious returns and newline
       $stringToAppend_param = str_replace([chr(13), chr(10)],'', $stringToAppend_param);
 
-      echo "<td>$stringToAppend_param</td>";
+      echo "<td class='wrap'>$stringToAppend_param</td>";
       $this->fileData = $this->fileData . $stringToAppend_param;
       $this->appendColumn();
     }

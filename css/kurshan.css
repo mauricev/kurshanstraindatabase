@@ -82,3 +82,10 @@ body {
 .selectize-control.is-invalid {
     border-color: #dc3545; /* This is the Bootstrap red color for invalid fields */
 }
+
+/* BUGFixed 2025-05-20 for some reason some cells are drawing too wide*/
+td.wrap {
+  max-width: 420px;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
