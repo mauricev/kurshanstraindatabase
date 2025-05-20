@@ -55,6 +55,9 @@
         require_once("../classes/classes_search.php");
         require_once("../classes/classes_load_elements.php");
 
+
+        //$start = microtime(true);
+
         $theSearchResult = searchDatabaseForStrains();
 
         if ($theSearchResult === false) {
@@ -584,9 +587,12 @@
               $theTableOutputClass->appendTableData($data);
               $thePrintOutputClass->appendToPrintData($data);
 
+// strain comments
               //$theTableOutputClass->appendTableData($theStrainArray['comments_col']); // BUG; there is some character here causing a hidden field to become unhidden
               $theComments = htmlspecialchars($theStrainArray['comments_col'],ENT_QUOTES);
+
               $theTableOutputClass->appendTableData($theComments);
+
               $thePrintOutputClass->appendToPrintData($theComments);
 
               // we may change this: put chromosome at beginning and bold it, put in a return
@@ -861,9 +867,17 @@
 
           echo "<input type='hidden' id='excelWhichSearch' value='strainSearchResults'>";
           $theFileData = $theTableOutputClass->returnTheFileData();
+
+          // BUGFixed 2025-05-20 remove spurious html breaks
+          $theFileData = str_replace(["<br>"],'',$theFileData);
+
           echo "<input type='hidden' id='excelDownloadData' value=\"$theFileData\">";
           
         }
+        //$end = microtime(true);
+        //$executionTime = $end - $start;
+        //error_log("Execution time: {$executionTime} seconds");
+        //echo "<br>Execution time: {$executionTime} seconds";
       ?>
   </body>
 </html>

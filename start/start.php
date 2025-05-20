@@ -136,6 +136,21 @@
 				}
 			?>
 
+			<div class='row'>
+				<div class='col-md-2 mb-3'>
+					<h6>info</h6>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 mb-3">
+					<a href="https://docs.google.com/document/d/1ZBut7wuuBaXX04ZlGjBbkNaCX2NC52ET2ygkas7xqxQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Worm Nomenclature</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 mb-3">
+					<a href="https://kurshanlabdatabase.org/kurshanlab_strain_database_user_guide_5th_edition.pdf" target="_blank" rel="noopener noreferrer">User guide for this program</a>
+				</div>
+			</div>
 			<!-- 1 of 3 thawed (last vialed) strains -->
 
 			<div class="row">
