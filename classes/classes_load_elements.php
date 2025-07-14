@@ -707,7 +707,7 @@
 			// speed up our searches
 			sort($theEntireArray);
 			sort($arrayToSelect_param);
-			
+
 			foreach ($theEntireArray as $theEntireArrayItem)
 			{
 				$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
@@ -729,10 +729,6 @@
 				$theGeneObject = new LoadGene();
 				$geneElementArrayToEdit = $theGeneObject->returnSpecificRecord($alleleElementArrayToEdit['gene_fk']);
 
-				// BUGFixed 2024-4-23, not all alleles have genes
-				// BUGFixed again 2025-03-13, this if check is removing alleles without genes
-				$geneToAdd = $geneElementArrayToEdit['geneName_col'];
-
 				// BUGFixed 2025-03-13 missing this code
 				if ($geneElementArrayToEdit != null) {
 					$geneToAdd = $geneElementArrayToEdit['geneName_col'];
@@ -743,10 +739,8 @@
 				if ($selected) {
 					echo "<option value=\"$id\" selected>$geneToAdd ($name)</option>";
 				} else {
-					echo "<option value=\"$id\">$geneToAdd ($name)</option>";
+					echo "<option value=\"$id\">$geneToAdd ($name)</option>";			
 				}
-				
-				
 			}
 			echo "</select>";
 		}
@@ -913,6 +907,8 @@
 		}
 
 		// what is this for?
+		// it is for comparing the original array in an edited strain to determine whether the user
+		// made any changes
 		public function PopulateHiddenArray() {
 			$arrayOfItems = $this->ReturnMarkedGeneElements();
 			foreach($arrayOfItems as $theItem) {

@@ -11,6 +11,7 @@
     <script src="../js/selectize.js"></script>
     <script src="../js/common-functions.js"></script>
     <script src="/js/strain-javascript.js"></script>
+    <script src="/js/exclude-genes.js"></script>
 
     <script>
       $( document ).ready(function()
@@ -266,7 +267,18 @@
                 $theMarkedAlleles = new LoadAllelesToStrain($theOriginalStrainID);
                 $theMarkedAllelesArray = $theMarkedAlleles->ReturnMarkedGeneElements();
                 $theMarkedAlleles->PopulateHiddenArray();
-                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray);
+                // already here I need to create a list of genes associated with the marked array elements
+                // then i need to filter them from the select table (note that marked items will not be filtered as they are simply selected
+                // so the filtering only takes places on non-marked items
+                // make a list of genes associated with the marked array
+                // also make a list of genes in this whole array 
+                // for each one that matches except those that marked, filter
+                // all of this above is for the opening list!
+                // we need to all this again live in javascript
+                // or just have one javascript function to review the list after it's been built 
+                // and it keeps monitoring the list for changes
+
+                $theAlleleListing->buildSelectedTablesWithMultipleEntries($theMarkedAllelesArray,Requirements::Not_required);
               } else {
                 $multiple = true;
                 $theAlleleListing->buildSelectTable($multiple);
