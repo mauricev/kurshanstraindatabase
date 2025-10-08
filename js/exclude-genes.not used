@@ -1,0 +1,115 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const selectEl = document.getElementById("select-allele");
+
+  const fullOptionSet = [];
+  const prefixMap = new Map();
+
+  function extractPrefix(text) {
+    if (text.startsWith("no gene assigned")) return null;
+    const parenIndex = text.indexOf("(");
+    return parenIndex > 0 ? text.slice(0, parenIndex).trim() : null;
+  }
+
+  // Step 1: capture all options BEFORE Selectize initializes
+  selectEl.querySelectorAll("option").forEach((opt) => {
+    const value = opt.value;
+    const text = opt.textContent;
+    const selected = opt.selected;
+    const prefix = extractPrefix(text);
+
+    fullOptionSet.push({ value, text, prefix });
+
+    if (prefix && selected) {
+      prefixMap.set(prefix, false); // exclude others with same prefix
+    } else if (prefix && !prefixMap.has(prefix)) {
+      prefixMap.set(prefix, true); // include by default
+    }
+  });
+
+  // Step 2: wait for Selectize to be initialized (PHP initialized it)
+  setTimeout(() => {
+    const selectize = $(selectEl)[0].selectize;
+
+    if (!selectize) {
+      console.error("Selectize not initialized.");
+      return;
+    }
+
+    // Optional: keep dropdown open for tag-style UX
+    selectize.settings.closeAfterSelect = false;
+
+    function refreshDropdown(selectedValues) {
+		  // Temporarily remove handlers to avoid recursion
+		  selectize.off("item_add", handleChange);
+		  selectize.off("item_remove", handleChange);
+
+		  // Step 1: preserve selected values and their options
+		  const selectedSet = new Set(selectedValues);
+		  const preserved = new Set(); // keys we will not remove
+
+		  // Step 2: Add back allowed options and mark what to keep
+		  fullOptionSet.forEach(({ value, text, prefix }) => {
+		    const shouldInclude =
+		      prefix === null ||
+		      prefixMap.get(prefix) !== false ||
+		      selectedSet.has(value);
+
+		    if (shouldInclude) {
+		      selectize.addOption({ value, text });
+		      preserved.add(value);
+		    }
+		  });
+
+		  // Step 3: Remove only unselected and now-excluded options
+		  const allOptions = Object.keys(selectize.options);
+		  for (const value of allOptions) {
+		    if (!preserved.has(value)) {
+		      selectize.removeOption(value);
+		    }
+		  }
+
+		  // Step 4: Do NOT clear, just re-assert selection
+		  selectize.setValue([...selectedValues]);
+
+		  // Step 5: Refresh dropdown (quietly)
+		  selectize.refreshOptions(false);
+
+		  // Reattach handlers
+		  selectize.on("item_add", handleChange);
+		  selectize.on("item_remove", handleChange);
+		}
+
+
+    function handleChange() {
+      const selectedValues = selectize.getValue();
+      const selectedPrefixes = new Set();
+
+      for (const val of selectedValues) {
+        const match = fullOptionSet.find((opt) => opt.value === val);
+        if (match?.prefix) {
+          selectedPrefixes.add(match.prefix);
+        }
+      }
+
+      for (const { prefix } of fullOptionSet) {
+        if (prefix && selectedPrefixes.has(prefix)) {
+          prefixMap.set(prefix, false);
+        }
+      }
+
+      refreshDropdown(selectedValues);
+    }
+
+    // Step 3: Initialize dropdown to match PHP-selected items
+    const initiallySelected = fullOptionSet
+      .filter(opt =>
+        selectEl.querySelector(`option[value="${opt.value}"]`)?.selected
+      )
+      .map(opt => opt.value);
+
+    refreshDropdown(initiallySelected);
+
+    selectize.on("item_add", handleChange);
+    selectize.on("item_remove", handleChange);
+  }, 0); // Wait until PHP-based Selectize has initialized
+});
