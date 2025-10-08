@@ -11,7 +11,6 @@
     <script src="../js/selectize.js"></script>
     <script src="../js/common-functions.js"></script>
     <script src="/js/strain-javascript.js"></script>
-    <script src="/js/exclude-genes.js"></script>
 
     <script>
       $( document ).ready(function()
@@ -121,12 +120,6 @@
         alert("Please supply at least one gene/allele/transgene/balancer.");
     }
 });
-
-
-
-
-
-
       });
     </script>
   </head>
