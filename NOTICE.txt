@@ -1,0 +1,32 @@
+Third-Party Libraries and Licenses
+----------------------------------
+
+This software uses the following open-source components:
+
+1. jQuery  
+   Copyright © OpenJS Foundation and other contributors  
+   License: MIT License  
+   https://jquery.org/license/
+
+2. Bootstrap  
+   Copyright © 2011-2025 The Bootstrap Authors  
+   License: MIT License  
+   https://github.com/twbs/bootstrap/blob/main/LICENSE
+
+3. FileSaver.js  
+   Copyright © 2016-2025 Eli Grey  
+   License: MIT License  
+   https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+
+4. Selectize.js  
+   Copyright © 2013-2025 Contributors to Selectize.js  
+   License: Apache License 2.0  
+   https://github.com/selectize/selectize.js/blob/master/LICENSE
+
+----------------------------------
+
+These libraries are redistributed under their respective open-source licenses.
+Copies of each license are provided in the accompanying LICENSES/ directory or
+available from the URLs above.
+
+This product itself is licensed under the MIT license.
