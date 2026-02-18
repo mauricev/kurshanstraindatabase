@@ -11,14 +11,19 @@ This software uses the following open-source components:
 2. Bootstrap  
    Copyright © 2011-2025 The Bootstrap Authors  
    License: MIT License  
-   https://github.com/twbs/bootstrap/blob/main/LICENSE
+   https://github.com/twbs/bootstrap/blob/main/LICENSE'
 
-3. FileSaver.js  
+3. Datepicker for Bootstrap  
+   Copyright © 2016 eternicode Revision 9252578f  
+   License: Apache License 2.0   
+   https://github.com/uxsolutions/bootstrap-datepicker/blob/master/LICENSE
+
+4. FileSaver.js  
    Copyright © 2016-2025 Eli Grey  
    License: MIT License  
    https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
 
-4. Selectize.js  
+5. Selectize.js  
    Copyright © 2013-2025 Contributors to Selectize.js  
    License: Apache License 2.0  
    https://github.com/selectize/selectize.js/blob/master/LICENSE
