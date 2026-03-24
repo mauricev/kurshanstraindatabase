@@ -1,27 +1,36 @@
 <?php
 
 class Logger {
+    private function returnLogPath($fileName_param) {
+      return $_SERVER['DOCUMENT_ROOT'] . "/logging_files/$fileName_param";
+    }
 
     public function isLogFileSet() {
-      return isset($_SESSION['loggerFileName']);
+      return isset($_SESSION['loggerFileName']) && ($_SESSION['loggerFileName'] !== "");
     }
 
     public function createLogFile() {
-      // make up a random name
       $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-      $_SESSION['loggerFileName'] = str_shuffle($permitted_chars);
-      // create the file initially
-      $theFileName = $_SESSION['loggerFileName'];
-      // possible BUG, was using a relative reference, now uses document root
-      $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
-      if ($theFileReference) {
-        fclose($theFileReference);
+
+      for ($attemptNumber = 0; $attemptNumber < 5; $attemptNumber++) {
+        $theFileName = str_shuffle($permitted_chars);
+        $theFileReference = @fopen($this->returnLogPath($theFileName), 'x');
+        if ($theFileReference !== false) {
+          fclose($theFileReference);
+          $_SESSION['loggerFileName'] = $theFileName;
+          return true;
+        }
       }
+
+      unset($_SESSION['loggerFileName']);
+      return false;
     }
 
     public function returnLogFileName() {
-      if (!($this->isLogFileSet())) {
-        $this->createLogFile();
+      if (!($this->isLogFileSet()) || !(is_file($this->returnLogPath($_SESSION['loggerFileName'])))) {
+        if (!($this->createLogFile())) {
+          return false;
+        }
       }
       return $_SESSION['loggerFileName'];
     }
@@ -32,16 +41,32 @@ class Logger {
 
   public function appendToLog ($stringToAppend_param) {
     $theFileName = $this->returnLogFileName();
-    $theFileReference = fopen($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", 'a+');
+    if ($theFileName === false) {
+      return false;
+    }
+
+    $theFileReference = @fopen($this->returnLogPath($theFileName), 'a+');
     if ($theFileReference !== false) {
       $theWriteResult = fwrite($theFileReference, $stringToAppend_param . "\n");
       fclose($theFileReference);
+      return ($theWriteResult !== false);
     }
+
+    return false;
   }
 
   public function returnLog () {
     $theFileName = $this->returnLogFileName();
-    $theFileArray = file($_SERVER['DOCUMENT_ROOT'] . "/logging_files/$theFileName", FILE_IGNORE_NEW_LINES);
+    if ($theFileName === false) {
+      return "";
+    }
+
+    $theLogPath = $this->returnLogPath($theFileName);
+    if (!(is_file($theLogPath) && is_readable($theLogPath))) {
+      return "";
+    }
+
+    $theFileArray = file($theLogPath, FILE_IGNORE_NEW_LINES);
     if ($theFileArray !== false) {
       // the last entries are the first ones done, so we need to reverse the array
       $theFileArrayReversed = array_reverse($theFileArray);
