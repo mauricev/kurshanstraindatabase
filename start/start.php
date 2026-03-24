@@ -119,7 +119,7 @@
 				//this field will show only for users designated as editors
 				require_once('../classes/classes_database.php');
 
-				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+				$userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
 				if ($userObject->IsCurrentUserAnEditor()) {
 					echo "<div class='row'>";
 						echo "<div class='col-md-2 mb-3'>";
@@ -265,7 +265,7 @@ ORDER BY strainName_col ASC;";
 							echo "<table class='table table-striped table-hover table-bordered twelvepoints' id='handoff-table'>";
 								echo "<th class='font-weight-bold'>strain name</th>";
 
-								$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+								$userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
 								if ($userObject->IsCurrentUserAnEditor()) {
 									echo "<th class='font-weight-bold'>hand off to me</th>";
 								} else {
@@ -313,7 +313,7 @@ ORDER BY strainName_col ASC;";
 			<div class="row">
 				<div class="col-md-12 mb-3">
 					<?php
-						$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+						$userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
 						if ($userObject->IsCurrentUserAnEditor()) {
 							// we had no choice but to hard code is null, binding a null value does not work
 							

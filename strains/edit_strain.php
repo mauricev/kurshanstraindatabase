@@ -513,7 +513,7 @@
           <!-- <div class="checkbox-group d-flex justify-content-start"> -->
           <div class="row justify-content-between">
           <?php
-            $userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+            $userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
             if ($userObject->IsCurrentUserAnEditor()) {
 
               // for editor, we will have a frozen checkbox

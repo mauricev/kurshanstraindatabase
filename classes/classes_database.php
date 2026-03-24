@@ -51,20 +51,24 @@ class Peri_Database {
 class User extends Peri_Database {
   protected $actualName_prop;
   protected $actualEmail_prop;
-  protected $actualPassword_prop;
+  protected $actualInternalCode_prop;
   protected $actualHashedPassword_prop;
+  protected $actualAuthProvider_prop;
   protected $actualVerified_prop = 1;
   protected $actualActiveStatus_prop = 1;
   protected $actualToken;
 
-  public function __construct($name_param, $email_param, $password_param) {
+  public function __construct($name_param, $email_param, $internalCode_param, $authProvider_param) {
 
     $this->tableName_prop = 'author_table';
     $this->actualName_prop = $name_param;
     $this->actualEmail_prop = $email_param;
-    $this->actualPassword_prop = $password_param;
-    if ($password_param != ""){
-      $this->actualHashedPassword_prop = password_hash($password_param, PASSWORD_DEFAULT);
+    $this->actualInternalCode_prop = $internalCode_param;
+    $this->actualAuthProvider_prop = $authProvider_param;
+    if (($this->actualAuthProvider_prop === "local") && ($internalCode_param != "")){
+      $this->actualHashedPassword_prop = password_hash($internalCode_param, PASSWORD_DEFAULT);
+    } else {
+      $this->actualHashedPassword_prop = NULL;
     }
     // token is not currently used; I think the plan was to send the token in email
     // and then when going to to token page, it would compare with the saved token and that’s how it
@@ -90,6 +94,15 @@ class User extends Peri_Database {
     try {
       require_once(__DIR__ . '/classes_single_element.php');
 
+      if (!(in_array($this->actualAuthProvider_prop, ["local","okta"], true))) {
+        throw new Exception("invalid auth provider");
+      }
+
+      $theOIDCSub = NULL;
+      if ($this->actualAuthProvider_prop === "okta") {
+        $theOIDCSub = $this->actualInternalCode_prop;
+      }
+
       $this->beginTransaction();
 
       $newContributorObject = new NewContributor($this->actualName_prop);
@@ -97,7 +110,7 @@ class User extends Peri_Database {
 
       $preparedSQLInsert = Peri_Database::$pdo_prop->prepare("INSERT INTO $this->tableName_prop (authorName_col,email_col,hashedPassword_col,isActive_col, verified_col, contributor_fk, authProvider_col, oidcSub_col) VALUES (?,?,?,?,?,?,?,?)");
 
-      $itemstoInsert = array($this->actualName_prop,$this->actualEmail_prop,$this->actualHashedPassword_prop, $this->actualActiveStatus_prop, $this->actualVerified_prop, $newContributorID, "local", NULL);
+      $itemstoInsert = array($this->actualName_prop,$this->actualEmail_prop,$this->actualHashedPassword_prop, $this->actualActiveStatus_prop, $this->actualVerified_prop, $newContributorID, $this->actualAuthProvider_prop, $theOIDCSub);
       $userAdded = $preparedSQLInsert->execute($itemstoInsert);
       $this->commit();
       return ($preparedSQLInsert->rowCount() == 1);
@@ -115,13 +128,13 @@ class User extends Peri_Database {
     $theUserIsValid = false;
 
     try {
-      $preparedSQLQuery = $this->sqlPrepare("SELECT hashedPassword_col,isActive_col FROM $this->tableName_prop WHERE authorName_col = ?");
+      $preparedSQLQuery = $this->sqlPrepare("SELECT hashedPassword_col,isActive_col,authProvider_col FROM $this->tableName_prop WHERE authorName_col = ?");
       $itemsToCheck = array($this->actualName_prop);
       $preparedSQLQuery->execute($itemsToCheck);
       $existingElement = $preparedSQLQuery->fetch();
 
-      if ($existingElement['isActive_col']) {
-        $theUserIsValid = password_verify($this->actualPassword_prop, $existingElement['hashedPassword_col']);
+      if (($existingElement !== false) && $existingElement['isActive_col'] && ($existingElement['authProvider_col'] === "local") && ($existingElement['hashedPassword_col'] !== NULL)) {
+        $theUserIsValid = password_verify($this->actualInternalCode_prop, $existingElement['hashedPassword_col']);
       }
       return $theUserIsValid;
     }
@@ -170,7 +183,7 @@ class User extends Peri_Database {
 
   /*
 
-    $userObject = new User("","","");
+    $userObject = new User("","","","local");
     $author = $userObject->fetchUserIdentify($_SESSION['user']);
   */
 

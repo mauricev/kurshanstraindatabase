@@ -7,7 +7,7 @@
 
 	require_once('../classes/classes_database.php');
 
-	$userObject = new User($userName, $email, $password);
+	$userObject = new User($userName, $email, $password, "local");
 	if (!($userObject->alreadyExists())) {
 			if ($userObject->submituser()) {
 				$result = header("location: ../start/login_landing.php");

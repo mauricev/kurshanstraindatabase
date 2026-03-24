@@ -58,7 +58,7 @@
 		public function translateSessionToUser() {
 			require_once('../classes/classes_database.php');
 
-			$userObject = new User("","","");
+			$userObject = new User("","","","local");
     		$author = $userObject->fetchUserIdentify($_SESSION['user']);
     		if (!isset($author)) {
     			$author = "not found";
@@ -1003,7 +1003,7 @@
 		      	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateHandedOff_prop = ? WHERE strain_id = ?");
 				$itemstoUpdate = array($this->actualDateHandedOff_prop,$existingGeneElementID_param);
 
-				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+				$userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
 				if ($userObject->IsCurrentUserAnEditor()) {
 					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed off to me";
 				} else {
@@ -1014,7 +1014,7 @@
 		       	$preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnDateHandedOff_prop = ?, $this->columnDateMoved_prop = ? WHERE strain_id = ?");
 				$itemstoUpdate = array($this->actualDateHandedOff_prop,$this->actualDateMoved_prop, $existingGeneElementID_param);
 
-				$userObject = new User("","",""); // we don’t need to assign any variables here; we just need it to query the database author table
+				$userObject = new User("","","","local"); // we don’t need to assign any variables here; we just need it to query the database author table
 				if ($userObject->IsCurrentUserAnEditor()) {
 					$theStrainLog = "updated strain " . $this->actualElementName_prop . " with status: handed back to the strain creator";
 				} else {

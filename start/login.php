@@ -8,7 +8,7 @@
 	require_once('../classes/classes_database.php');
 	error_log("in login.php, user is $userName");
 
-	$userObject = new User($userName, "", $password);
+	$userObject = new User($userName, "", $password, "local");
 	if ($userObject->IsValidUser()) {
 		$userObject->setupSession();
 	}
