@@ -1231,7 +1231,7 @@
 					// for alleles/transgenes
 					$theSelectString = "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . $orderBy;
 
-					print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
+					//print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
 
 			
 					// if we are searching both genes and something else, set up for intersection
@@ -1316,7 +1316,7 @@
 					// for alleles/transgenes
 					$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " .$theANDCommentJoinClause . $thePrimaryJoinClause . " WHERE " . $theANDCommentWhereClause . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . " ORDER BY 2";
 
-					print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
+					//print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
 					//var_dump($theBuddingQueryArray);
 					//print_r("<br>");
 					// if we are searching both genes and something else, set up for intersection
@@ -1328,7 +1328,7 @@
 						// for alleles/transgenes and genes
 						$theSelectString = $commentSearchOR . $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY 2";
 						
-						print_r("theSelectString2 is $theSelectString<br><br>");
+						//print_r("theSelectString2 is $theSelectString<br><br>");
 						//var_dump($theBuddingQueryArray);
 						//print_r("<br>");
 					
@@ -1339,13 +1339,14 @@
 
 						// for just genes
 						$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause  . $outGroupByHavingClauseForGenes . " ORDER BY 2";
-						print_r("theSelectString3 is $theSelectString<br><br>");
+						//print_r("theSelectString3 is $theSelectString<br><br>");
 						//var_dump($theBuddingQueryArray);
 						//print_r("<br>");
 					}
 					break;
 			}
 
+			//print_r("final, $theSelectString <br>");
 			if ($searchState != 'searchForNothing') {
 				$searchDatabase = new Peri_Database();
 
@@ -1444,6 +1445,7 @@
 					$theSelectString = $theSelectString . " UNION SELECT DISTINCT plasmid_id, plasmidName_col FROM plasmid_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY plasmidName_col";
 					break;
 			}
+
 
 			if ($searchState != 'searchForNothing') {
 				$searchDatabase = new Peri_Database();
