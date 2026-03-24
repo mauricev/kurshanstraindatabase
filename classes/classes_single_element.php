@@ -1,7 +1,7 @@
 <?php
 
-  require_once('classes_database.php');
-  require_once('../classes/logger.php');
+  require_once(__DIR__ . '/classes_database.php');
+  require_once(__DIR__ . '/logger.php');
 
   class NewElement extends Peri_Database {
     protected $elementKind_prop;
@@ -85,6 +85,16 @@
       $preparedSQLInsert->execute($itemstoInsert);
 
       $this->actualLoggingObject->appendToLog("created " . $this->elementKind_prop . ": " . $this->actualElementName_prop);
+    }
+
+    public function insertOurEntryAndReturnID () {
+      $preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->classTable_prop ($this->classTableName_prop, $this->classOutsideContributor_prop) VALUES (?,?)");
+      $itemstoInsert = array($this->actualElementName_prop,$this->actualOutsideContributor_prop);
+      $preparedSQLInsert->execute($itemstoInsert);
+
+      $this->actualLoggingObject->appendToLog("created " . $this->elementKind_prop . ": " . $this->actualElementName_prop);
+
+      return $this->lastInsertId();
     }
 
     public function updateOurEntry ($existingGeneElementID_param) {

@@ -88,13 +88,24 @@ class User extends Peri_Database {
 
   public function submitUser() {
     try {
-      $preparedSQLInsert = Peri_Database::$pdo_prop->prepare("INSERT INTO $this->tableName_prop (authorName_col,email_col,hashedPassword_col,isActive_col, verified_col) VALUES (?,?,?,?,?)");
+      require_once(__DIR__ . '/classes_single_element.php');
 
-      $itemstoInsert = array($this->actualName_prop,$this->actualEmail_prop,$this->actualHashedPassword_prop, $this->actualActiveStatus_prop, $this->actualVerified_prop);
+      $this->beginTransaction();
+
+      $newContributorObject = new NewContributor($this->actualName_prop);
+      $newContributorID = $newContributorObject->insertOurEntryAndReturnID();
+
+      $preparedSQLInsert = Peri_Database::$pdo_prop->prepare("INSERT INTO $this->tableName_prop (authorName_col,email_col,hashedPassword_col,isActive_col, verified_col, contributor_fk, authProvider_col, oidcSub_col) VALUES (?,?,?,?,?,?,?,?)");
+
+      $itemstoInsert = array($this->actualName_prop,$this->actualEmail_prop,$this->actualHashedPassword_prop, $this->actualActiveStatus_prop, $this->actualVerified_prop, $newContributorID, "local", NULL);
       $userAdded = $preparedSQLInsert->execute($itemstoInsert);
+      $this->commit();
       return ($preparedSQLInsert->rowCount() == 1);
     }
     catch(Exception $e) {
+      if (Peri_Database::$pdo_prop->inTransaction()) {
+        $this->rollback();
+      }
       echo $e->getMessage();
       return false;
     }
