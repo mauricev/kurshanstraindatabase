@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.30, for macos12.4 (x86_64)
+-- MySQL dump 10.13  Distrib 8.4.0, for macos13.2 (x86_64)
 --
--- Host: localhost    Database: straindatabase-withtestdata
+-- Host: localhost    Database: straindatabase
 -- ------------------------------------------------------
--- Server version	8.0.29
+-- Server version	9.6.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,11 +27,13 @@ CREATE TABLE `allele_table` (
   `alleleName_col` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gene_fk` int DEFAULT NULL,
   `comments_col` varchar(768) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sequenceDataName_col` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sequence_data_col` mediumtext COLLATE utf8mb4_general_ci,
+  `sequenceDataName_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sequence_data_col` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `gene2_fk` int DEFAULT NULL,
   PRIMARY KEY (`allele_id`),
-  UNIQUE KEY `alleleName_col` (`alleleName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `alleleName_col` (`alleleName_col`),
+  FULLTEXT KEY `comments_col` (`comments_col`)
+) ENGINE=InnoDB AUTO_INCREMENT=341 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +48,7 @@ CREATE TABLE `antibiotic_table` (
   `antibioticName_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`antibiotic_id`),
   UNIQUE KEY `antibioticName` (`antibioticName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,15 +62,19 @@ CREATE TABLE `author_table` (
   `author_id` int NOT NULL AUTO_INCREMENT,
   `authorName_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `hashedPassword_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `hashedPassword_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `isActive_col` tinyint(1) NOT NULL DEFAULT '0',
   `verified_col` tinyint(1) NOT NULL DEFAULT '0',
   `token_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `adminUser_col` tinyint(1) NOT NULL DEFAULT '0',
+  `contributor_fk` int NOT NULL,
+  `authProvider_col` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `oidcSub_col` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`author_id`),
   UNIQUE KEY `recordedName_col` (`authorName_col`),
-  UNIQUE KEY `hashedPassword_col` (`hashedPassword_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `hashedPassword_col` (`hashedPassword_col`),
+  UNIQUE KEY `oidSub_unique` (`oidcSub_col`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,13 +86,13 @@ DROP TABLE IF EXISTS `balancer_table`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `balancer_table` (
   `balancer_id` int NOT NULL AUTO_INCREMENT,
-  `balancerName_col` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `chromosomeName_col` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `balancerName_col` varchar(15) NOT NULL,
+  `chromosomeName_col` varchar(3) NOT NULL,
   `chromosomeName2_col` varchar(3) NOT NULL,
   `comments_col` varchar(768) DEFAULT NULL,
-  PRIMARY KEY (`balancer_id`) USING BTREE,
+  PRIMARY KEY (`balancer_id`),
   UNIQUE KEY `balancerName_col` (`balancerName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +107,7 @@ CREATE TABLE `coinjection_marker_table` (
   `coInjectionMarkerName_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`coInjectionMarker_id`),
   UNIQUE KEY `coInjectionMarkerName_col` (`coInjectionMarkerName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,9 +120,10 @@ DROP TABLE IF EXISTS `contributor_table`;
 CREATE TABLE `contributor_table` (
   `contributor_id` int NOT NULL AUTO_INCREMENT,
   `contributorName_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `outside_contributor_col` tinyint DEFAULT NULL,
   PRIMARY KEY (`contributor_id`),
   UNIQUE KEY `contributorName_col` (`contributorName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +145,7 @@ CREATE TABLE `counter_table` (
   `nitrogenNumber_col` int DEFAULT NULL,
   `nitrogenLetter_col` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`counter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +160,7 @@ CREATE TABLE `fluoro_tag_table` (
   `fluoroTagName_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`fluoroTag_id`),
   UNIQUE KEY `fluroTagName_col` (`fluoroTagName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,12 +172,14 @@ DROP TABLE IF EXISTS `gene_table`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `gene_table` (
   `gene_id` int NOT NULL AUTO_INCREMENT,
-  `geneName_col` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `geneName_col` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `chromosomeName_col` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `comments_col` varchar(768) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `customNameFlag` tinyint(1) NOT NULL,
   PRIMARY KEY (`gene_id`),
-  UNIQUE KEY `geneName_col` (`geneName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `geneName_col` (`geneName_col`),
+  FULLTEXT KEY `comments_col` (`comments_col`)
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,18 +193,18 @@ CREATE TABLE `plasmid_table` (
   `plasmid_id` int NOT NULL AUTO_INCREMENT,
   `plasmidName_col` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `contributor_fk` int DEFAULT NULL,
-  `plasmidLocation_col` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `plasmidLocation_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `promotorGene_fk` int DEFAULT NULL,
   `gene_fk` int DEFAULT NULL,
   `other_cDNA_col` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `comments_col` varchar(768) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sequenceDataName_col` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sequenceDataName_col` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `sequence_data_col` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `author_fk` int DEFAULT NULL,
   `editor_fk` int DEFAULT NULL,
   PRIMARY KEY (`plasmid_id`),
   UNIQUE KEY `plasmidName_col` (`plasmidName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,14 +271,21 @@ CREATE TABLE `strain_table` (
   `contributor_fk` int DEFAULT NULL,
   `author_fk` int DEFAULT NULL,
   `editor_fk` int DEFAULT NULL,
-  `isLastVial_col` tinyint(1) DEFAULT NULL,
+  `isLastVial_col` tinyint DEFAULT NULL,
   `lastVialContributor_fk` int DEFAULT NULL,
+  `dateHandedOff_col` date DEFAULT NULL,
+  `dateSurvived_col` date DEFAULT NULL,
+  `dateMoved_col` date DEFAULT NULL,
+  `date_nitrogenFrozen` date DEFAULT NULL,
+  `initial_nitrogenFrozen` tinyint DEFAULT NULL,
+  `high_value_reason_fk` int DEFAULT NULL,
   PRIMARY KEY (`strain_id`),
   UNIQUE KEY `fullNitrogen_col` (`fullNitrogen_col`),
   UNIQUE KEY `fullFreezer_col` (`fullFreezer_col`),
   KEY `strainName_col` (`strainName_col`),
-  KEY `comments_col` (`comments_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `comments_col` (`comments_col`),
+  FULLTEXT KEY `comments_col_2` (`comments_col`)
+) ENGINE=InnoDB AUTO_INCREMENT=901 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +313,7 @@ CREATE TABLE `strain_to_balancer_table` (
   `strain_fk` int NOT NULL,
   `balancer_fk` int NOT NULL,
   PRIMARY KEY (`strain_fk`,`balancer_fk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,6 +345,20 @@ CREATE TABLE `strain_to_transgene_table` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `strain_value_table`
+--
+
+DROP TABLE IF EXISTS `strain_value_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `strain_value_table` (
+  `strain_value_id` int NOT NULL AUTO_INCREMENT,
+  `strain_value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`strain_value_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `transgene_table`
 --
 
@@ -346,8 +376,9 @@ CREATE TABLE `transgene_table` (
   `author_fk` int DEFAULT NULL,
   `editor_fk` int DEFAULT NULL,
   PRIMARY KEY (`transgene_id`),
-  UNIQUE KEY `transgene_name` (`transgeneName_col`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `transgene_name` (`transgeneName_col`),
+  FULLTEXT KEY `comments_col` (`comments_col`)
+) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -373,4 +404,4 @@ CREATE TABLE `transgene_to_plasmids_table` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-15 14:47:10
+-- Dump completed on 2026-03-24 18:53:41
