@@ -200,14 +200,108 @@ class User extends Peri_Database {
     return ($existingElement['author_id']);
   }
 
-  public function setupSession() {
-    session_start();
+  private function cleanOktaAuthorName(string $name, string $email): string {
+    $baseName = trim($name);
+
+    if ($baseName === "" && $email !== "") {
+      $baseName = explode("@", $email)[0];
+    }
+
+    $baseName = preg_replace('/\s+/', ' ', $baseName);
+    $baseName = preg_replace('/[^A-Za-z0-9 ._@-]/', '', $baseName);
+    $baseName = trim($baseName);
+
+    if ($baseName === "") {
+      $baseName = "okta-user";
+    }
+
+    return substr($baseName, 0, 30);
+  }
+
+  private function uniqueAuthorName(string $baseName): string {
+    $candidate = substr($baseName, 0, 30);
+    $suffix = 1;
+
+    while (true) {
+      $preparedSQLQuery = $this->sqlPrepare("SELECT COUNT(*) FROM $this->tableName_prop WHERE authorName_col = ?");
+      $preparedSQLQuery->execute([$candidate]);
+      $existingElement = $preparedSQLQuery->fetch();
+
+      if ($existingElement["COUNT(*)"] == 0) {
+        return $candidate;
+      }
+
+      $suffixText = "-" . $suffix;
+      $candidate = substr($baseName, 0, 30 - strlen($suffixText)) . $suffixText;
+      $suffix++;
+    }
+  }
+
+  private function contributorIDForName(string $name): int {
+    $preparedSQLQuery = $this->sqlPrepare("SELECT contributor_id FROM contributor_table WHERE contributorName_col = ?");
+    $preparedSQLQuery->execute([$name]);
+    $existingContributor = $preparedSQLQuery->fetch();
+
+    if ($existingContributor !== false) {
+      return (int)$existingContributor['contributor_id'];
+    }
+
+    $preparedSQLInsert = $this->sqlPrepare("INSERT INTO contributor_table (contributorName_col, outside_contributor_col) VALUES (?, ?)");
+    $preparedSQLInsert->execute([$name, 0]);
+
+    return (int)$this->lastInsertId();
+  }
+
+  public function syncOktaUserAndReturnID(string $oidcSub, string $displayName, string $email, bool $isAdmin): int {
+    $preparedSQLQuery = $this->sqlPrepare("SELECT author_id FROM $this->tableName_prop WHERE oidcSub_col = ?");
+    $preparedSQLQuery->execute([$oidcSub]);
+    $existingUser = $preparedSQLQuery->fetch();
+
+    if ($existingUser !== false) {
+      $preparedSQLUpdate = $this->sqlPrepare("UPDATE $this->tableName_prop SET email_col = ?, isActive_col = ?, verified_col = ?, adminUser_col = ?, authProvider_col = ? WHERE author_id = ?");
+      $preparedSQLUpdate->execute([$email, 1, 1, $isAdmin ? 1 : 0, "okta", $existingUser['author_id']]);
+
+      return (int)$existingUser['author_id'];
+    }
+
+    try {
+      $this->beginTransaction();
+
+      $baseAuthorName = $this->cleanOktaAuthorName($displayName, $email);
+      $authorName = $this->uniqueAuthorName($baseAuthorName);
+      $contributorID = $this->contributorIDForName($authorName);
+
+      $preparedSQLInsert = $this->sqlPrepare("INSERT INTO $this->tableName_prop (authorName_col,email_col,hashedPassword_col,isActive_col, verified_col, adminUser_col, contributor_fk, authProvider_col, oidcSub_col) VALUES (?,?,?,?,?,?,?,?,?)");
+      $preparedSQLInsert->execute([$authorName, $email, NULL, 1, 1, $isAdmin ? 1 : 0, $contributorID, "okta", $oidcSub]);
+      $authorID = (int)$this->lastInsertId();
+
+      $this->commit();
+
+      return $authorID;
+    }
+    catch(Exception $e) {
+      if (Peri_Database::$pdo_prop->inTransaction()) {
+        $this->rollback();
+      }
+
+      throw $e;
+    }
+  }
+
+  public function setupSessionForUserID(int $authorID) {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+      session_start();
+    }
     $_SESSION['loggedin'] = true;
-    $user = $this->fetchUserID();
-    $_SESSION['user'] = $user;
-    error_log("in setupSession, user is $user");
+    $_SESSION['user'] = $authorID;
+    error_log("in setupSessionForUserID, user is $authorID");
     $result = header("location: ../start/start.php");
     exit();
+  }
+
+  public function setupSession() {
+    $user = $this->fetchUserID();
+    $this->setupSessionForUserID($user);
   }
 }
 ?>

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+	require_once(__DIR__ . '/../classes/classes_app_settings.php');
+	$instanceKey = AppSettings::instanceKey();
+?>
 <html>
 <head>
 		<title>KurshanLab Strain Database</title>
@@ -27,6 +31,21 @@
       <h2>KurshanLab Strain Database</h2>
       <p class="lead">Login</p>
     </div>
+		<?php if ($instanceKey === 'elisa') { ?>
+		<form class="form-signin needs-validation" action="login.php" method="post">
+			<div class="row">
+				<div class="col-md-5 mb-3">
+					<!-- placeholder -->
+				</div>
+				<div class="col-md-2 mb-3 d-flex justify-content-center">
+					<input type="submit" name='submit_htmlName' id='submit_btn_id' class="btn btn-primary btn-block" value="Login with Okta" alt="Login with Okta"/>
+				</div>
+				<div class="col-md-5 mb-3">
+					<!-- placeholder -->
+				</div>
+			</div>
+		</form>
+		<?php } elseif ($instanceKey === 'peri') { ?>
     <form class="form-signin needs-validation" action="login.php" method="post">
 			<div class="row">
 				<div class="col-md-4 mb-3">
@@ -57,6 +76,13 @@
 				</div>
 			</div>
 		</form>
+		<?php } else { ?>
+			<div class="row">
+				<div class="col-md-12 mb-3 text-center">
+					Login is not configured for this database instance.
+				</div>
+			</div>
+		<?php } ?>
 	</div>
 </body>
 </html>

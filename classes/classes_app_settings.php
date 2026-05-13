@@ -2,6 +2,7 @@
 
 class AppSettings {
   private const SETTINGS_FILE = '/users/maurice/peri-password/app_settings.php';
+  private const OKTA_SETTINGS_FILE = '/users/maurice/peri-password/okta_settings.php';
 
   private static ?array $settings_prop = NULL;
 
@@ -25,6 +26,25 @@ class AppSettings {
       throw new RuntimeException("Missing app setting: $key");
     }
     return $settings[$key];
+  }
+
+  public static function oktaSettings(): array {
+    if (!is_readable(self::OKTA_SETTINGS_FILE)) {
+      throw new RuntimeException('Okta settings file not found: ' . self::OKTA_SETTINGS_FILE);
+    }
+
+    $settings = require(self::OKTA_SETTINGS_FILE);
+    if (!is_array($settings)) {
+      throw new RuntimeException('Okta settings file must return an array.');
+    }
+
+    foreach (['issuer', 'client_id', 'client_secret', 'redirect_uri'] as $key) {
+      if (!array_key_exists($key, $settings) || $settings[$key] === '') {
+        throw new RuntimeException("Missing Okta setting: $key");
+      }
+    }
+
+    return $settings;
   }
 
   public static function databaseName(): string {
