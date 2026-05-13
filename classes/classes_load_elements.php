@@ -862,6 +862,14 @@
 		}
 	}
 
+	class LoadEditableStrains extends LoadParentStrains {
+		public function returnAll() {
+			$this->preparedSQLQuery_prop = $this->sqlPrepare("SELECT * FROM $this->tableName_prop WHERE NOT (fullFreezer_col IS NULL AND fullNitrogen_col IS NULL) ORDER BY $this->elementNameColumn_prop");
+			$this->preparedSQLQuery_prop->execute();
+			return ($this->preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC));
+		}
+	}
+
 	class LoadPlasmid extends LoadGeneticElement {
 		public function __construct() {
 			parent::__construct();

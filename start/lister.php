@@ -132,7 +132,7 @@
 				<div class="col-md-3 mb-3">
 					<?php
 	          require_once("../classes/classes_load_elements.php");
-	          $theStrainsListing = new LoadParentStrains();
+	          $theStrainsListing = new LoadEditableStrains();
 						$isMultiple = false;
 	          $theStrainsListing->buildSelectTable($isMultiple);
 	        ?>
