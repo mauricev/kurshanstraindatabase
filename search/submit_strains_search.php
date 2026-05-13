@@ -10,7 +10,6 @@
     <script src="/js/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/common-functions.js"></script>
     <script src="../js/search-javascript.js"></script>
-    <script src="../js/FileSaver.js/src/FileSaver.js"></script>
 
     <style>
       body {

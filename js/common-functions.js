@@ -395,6 +395,21 @@ function data2blob(data) {
   return theBlob;
 }
 
+function downloadBlob(blob, filename) {
+	var theURLFactory = window.URL || window.webkitURL;
+	var theURL = theURLFactory.createObjectURL(blob);
+	var theLink = document.createElement('a');
+	theLink.href = theURL;
+	theLink.download = filename || 'download';
+	theLink.style.display = 'none';
+	document.body.appendChild(theLink);
+	theLink.click();
+	document.body.removeChild(theLink);
+	setTimeout(function() {
+		theURLFactory.revokeObjectURL(theURL);
+	}, 100);
+}
+
 // attaches an event listener to every download button and retrieves which file they're associated with
 // through hidden variables
 // function downloadPlasmidSequenceButton() {
@@ -415,21 +430,19 @@ function data2blob(data) {
 // 			var thePlasmidName = document.getElementById(theHiddenFieldID).name;
 //
 // 			var theSequenceData = document.getElementById(theHiddenFieldID).value;
-// 			saveAs(data2blob(theSequenceData),thePlasmidName);
-// 			//the above can be window.saveAs(blob, filename)
+// 			downloadBlob(data2blob(theSequenceData),thePlasmidName);
 // 		}
 // 		theDownloadButtons[theIndex].addEventListener('click',handleDownloadButtonClick);
 // 	}
 //  }
 
- function downloadSearchAsExcelButton() {
- 	var theDownloadButton = document.getElementById('excelDownloadBtn');
+function downloadSearchAsExcelButton() {
+	var theDownloadButton = document.getElementById('excelDownloadBtn');
 
 	function handleSearchButtonClick(inEvent_param) {
 		var theFileData = document.getElementById('excelDownloadData').value;
 		var theFileName = document.getElementById('excelWhichSearch').value;
-		saveAs(data2blob(theFileData),theFileName + ".tsv");
-		//the above can be window.saveAs(blob, filename)
+		downloadBlob(data2blob(theFileData),theFileName + ".tsv");
 	}
 	theDownloadButton.addEventListener('click',handleSearchButtonClick);
 }

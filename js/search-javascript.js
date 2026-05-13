@@ -154,7 +154,22 @@ function data2blob(data) {
   return theBlob;
 }
 
-//saveAs(data2blob(theSequenceData),theSequenceFileName);
+function downloadBlob(blob, filename) {
+	var theURLFactory = window.URL || window.webkitURL;
+	var theURL = theURLFactory.createObjectURL(blob);
+	var theLink = document.createElement('a');
+	theLink.href = theURL;
+	theLink.download = filename || 'download';
+	theLink.style.display = 'none';
+	document.body.appendChild(theLink);
+	theLink.click();
+	document.body.removeChild(theLink);
+	setTimeout(function() {
+		theURLFactory.revokeObjectURL(theURL);
+	}, 100);
+}
+
+//downloadBlob(data2blob(theSequenceData),theSequenceFileName);
 //'../sequence/fetch_sequence_file.php'
 // function fetchSequenceFileContents(filename) {
 //   var formData = new FormData();
@@ -170,7 +185,7 @@ function data2blob(data) {
 //     return response.blob();
 //   })
 //   .then(blob => {
-//     saveAs(blob, filename);
+//     downloadBlob(blob, filename);
 //   })
 //   .catch(error => {
 //     console.error('Error:', error);
@@ -178,20 +193,20 @@ function data2blob(data) {
 // }
 
 function fetchSequenceFileContents(filename) {
-  var formData = new FormData();
-  formData.append('filename', filename);
+	var formData = new FormData();
+	formData.append('filename', filename);
 
-  fetch('../sequence/fetch_sequence_file.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.blob())
-  .then(blob => {
-    saveAs(blob, filename);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+	fetch('../sequence/fetch_sequence_file.php', {
+		method: 'POST',
+		body: formData
+	})
+	.then(response => response.blob())
+	.then(blob => {
+		downloadBlob(blob, filename);
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
 }
 
 
@@ -254,14 +269,13 @@ function downloadSequenceButton() {
  }
 }
 
- function downloadSearchAsExcelButton() {
- 	var theDownloadButton = document.getElementById('excelDownloadBtn');
+function downloadSearchAsExcelButton() {
+	var theDownloadButton = document.getElementById('excelDownloadBtn');
 
 	function handleSearchButtonClick(inEvent_param) {
 		var theFileData = document.getElementById('excelDownloadData').value;
 		var theFileName = document.getElementById('excelWhichSearch').value;
-		saveAs(data2blob(theFileData),theFileName + ".tsv");
-		//the above can be window.saveAs(blob, filename)
+		downloadBlob(data2blob(theFileData),theFileName + ".tsv");
 	}
 	theDownloadButton.addEventListener('click',handleSearchButtonClick);
 }
