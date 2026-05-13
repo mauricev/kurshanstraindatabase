@@ -131,7 +131,7 @@
 
         $switchedState ="";
         // original transgene letters and numbers are populated regardless of the transgene's state, lab-produced or externally-sourced
-        if ($_POST['originalGeneLetters_postVar'] == 'kur') {
+        if ($_POST['originalGeneLetters_postVar'] == AppSettings::labElementPrefix()) {
           if ($_POST['manufacturedWhere_htmlName'] == "externally-sourced") {
             $switchedState = "toExternallySourced";
            } else {

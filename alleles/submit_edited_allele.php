@@ -53,7 +53,7 @@
 				}
       } else {
         $switchedState ="";
-        if ($_POST['original_allele_letters_postvar'] == 'kur') {
+        if ($_POST['original_allele_letters_postvar'] == AppSettings::labElementPrefix()) {
         	if ($_POST['manufacturedWhere_htmlName'] == "externally-sourced") {
         		$switchedState = "toExternallySourced";
         	 } else {

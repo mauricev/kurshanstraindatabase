@@ -1,6 +1,8 @@
 
     <?php
 
+      require_once(__DIR__ . '/classes_app_settings.php');
+
 
       enum Requirements {
         case Required;
@@ -9,7 +11,7 @@
 
       function whatIsTheState ($letters_param, $manufacturedWhere_param) {
         $switchedState ="";
-        if ($letters_param == 'kur') {
+        if ($letters_param == AppSettings::labElementPrefix()) {
           if ($manufacturedWhere_param == "externally-sourced") {
             $switchedState = "toExternallySourced";
            } else {
@@ -82,7 +84,6 @@
       function buildTransGeneHiddenField($locationString_param,$locationField_param) {
         $theTempTransGene = createTransGenePlaceHolder($locationString_param);
         $theTempTransGene->getNextName($theGeneCurrentCount,$theNextName);
-			  $theNextName = preg_replace("/kur/","",$theNextName);
         echo "<input type='hidden' id=$locationField_param name='hidden-label' value=$theNextName>";
       }
     ?>

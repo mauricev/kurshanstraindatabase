@@ -94,7 +94,7 @@
               <?php
                 require_once("../classes/classes_gene_elements.php");
                 if ($isEntityBeingEdited) {
-                  if($alleleNameArray[0] == 'kur') {
+                  if($alleleNameArray[0] == AppSettings::labElementPrefix()) {
                     echo "<input type = 'radio' id='lab-produced' name ='manufacturedWhere_htmlName' checked value= 'lab-produced' class='form-check-input' required>";
         					} else {
                     echo "<input type = 'radio' id='lab-produced' name ='manufacturedWhere_htmlName' value= 'lab-produced' class='form-check-input' required>";
@@ -110,7 +110,7 @@
                   // we look at the existing allele name to know whether we were ORIGINALLY lab produced
                   // if we are, the display NOTHING
                   // else we need to display, BUT if we are currently lab produced and not being edited, we should display
-                  $alleleIsLabProduced = ($alleleNameArray[0] == 'kur');
+                  $alleleIsLabProduced = ($alleleNameArray[0] == AppSettings::labElementPrefix());
                   echo "<input type='hidden' id='alleleLabProducedStateHiddenField' name='hidden-label' value=$alleleIsLabProduced>";
                 }
               ?>
@@ -130,7 +130,7 @@
               <div class="form-check">
                 <?php
                   if ($isEntityBeingEdited) {
-                    if($alleleNameArray[0]== 'kur') {
+                    if($alleleNameArray[0]== AppSettings::labElementPrefix()) {
                         echo "<input type = 'radio' id='externally-sourced' name ='manufacturedWhere_htmlName' value= 'externally-sourced' class='form-check-input' required>";
                     } else {
                         echo "<input type = 'radio' id='externally-sourced' name ='manufacturedWhere_htmlName' checked value= 'externally-sourced' class='form-check-input' required>";
@@ -157,7 +157,7 @@
                   <div class="form-check" style="margin-top:-40px">
                   <?php
                     if ($isEntityBeingEdited) {
-                      if($alleleNameArray[0]== 'kur') {
+                      if($alleleNameArray[0]== AppSettings::labElementPrefix()) {
             					  echo "<input type='text' name='geneElementLetters_htmlName' pattern='[a-z]{1,3}' disabled required class='form-control' title='letters'/>";
                       } else {
                         echo "<input type='text' name='geneElementLetters_htmlName' pattern='[a-z]{1,3}' required class='form-control' value=$alleleNameArray[0] title='letters'/>";
@@ -178,7 +178,7 @@
               <div class="form-check" style="margin-top:-40px">
                 <?php
                   if ($isEntityBeingEdited) {
-          					if($alleleNameArray[0]== 'kur') {
+                    if($alleleNameArray[0]== AppSettings::labElementPrefix()) {
                       echo "<input type='text' name='geneElementNumbers_htmlName' pattern='[0-9]{1,6}' disabled required class='form-control' title='numbers'/>";
           				  } else {
                       echo "<input type='text' name='geneElementNumbers_htmlName' pattern='[0-9]{1,6}' required class='form-control' value=$alleleNameArray[1] title='numbers'/>";

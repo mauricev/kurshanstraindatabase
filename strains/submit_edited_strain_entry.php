@@ -208,7 +208,7 @@
         }
       
         $switchedState ="";
-        if ($_POST['originalGeneLetters_postVar'] == 'PTK') {
+        if ($_POST['originalGeneLetters_postVar'] == AppSettings::strainPrefix()) {
           if ($_POST['manufacturedWhere_htmlName'] == "externally-sourced_value") {
             $switchedState = "toExternallySourced";
            } else {

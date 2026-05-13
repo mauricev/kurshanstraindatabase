@@ -4,7 +4,22 @@ New users should start with/start/registration_landing.php. This page is an on
 
 login_landing.php is directed by login.php to the start/start.php page where all the action is.
 
-classes_database.php references a config file stored outside the web root (/users/maurice/peri-password/db_settings.php) to retrieve the database name (this file path is on my local Mac, and I've created an analogous path on the server), and mysql credentials to open and maintain a session to the database.
+classes_database.php uses classes/classes_app_settings.php to load an app settings file stored outside the web root. The app settings file replaces the older db_settings.php file. Its temporary configured path is /users/maurice/peri-password/app_settings.php; update AppSettings::SETTINGS_FILE if the file moves.
+
+The app settings file must return an array with these keys:
+
+```
+<?php
+
+return [
+    'db_name' => 'straindatabase',
+    'db_user' => 'root',
+    'db_pass' => '',
+    'instance_key' => 'elisa',
+];
+```
+
+The instance_key controls generated lab-produced names. For instance_key elisa, alleles and transgenes use the grz prefix and strains use UPS. For instance_key peri, alleles and transgenes use kur and strains use PTK. The same setting is also used by the edit/submit pages to decide whether an existing allele, transgene, or strain is lab-produced.
 
 Notice that the reference to the database is a static class variable, and the option PDO::ATTR_PERSISTENT is passed to PDO to ensure we keep the same database connection for the entire time the user is logged in.
 

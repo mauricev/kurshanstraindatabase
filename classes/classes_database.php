@@ -1,15 +1,17 @@
 <?php
 
+require_once(__DIR__ . '/classes_app_settings.php');
+
 class Peri_Database {
   static protected $pdo_prop;
   protected $tableName_prop;
   protected $columnWithElementName_prop;
 
   public function __construct() {
-    // this account has full permissions for the database and nothing else
-    // The password is located outside the Apache environment for security
-    //this path is created on the server to match my test environment
-    include("/users/maurice/peri-password/db_settings.php");
+    // The settings file is located outside the Apache environment for security.
+    $db_name = AppSettings::databaseName();
+    $db_user = AppSettings::databaseUser();
+    $db_pass = AppSettings::databasePassword();
     $dsn = "mysql:host=localhost;dbname=$db_name;charset=utf8mb4";
     $options =
     [

@@ -19,7 +19,7 @@ function setupTransGeneStates(transGeneStateObject) {
 
 function lablabelText(inHiddenField) {
 	labLabel = "lab-produced, tentative designation: ";
-	labLabelMerged = labLabel.concat("kur", inHiddenField);
+	labLabelMerged = labLabel.concat(inHiddenField);
 	$("#lab-label").text(labLabelMerged);
 }
 

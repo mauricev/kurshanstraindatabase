@@ -128,7 +128,7 @@
           // // this value contains the transgene_id
           // $_POST['selectedElement'] = $selectedElement[0];
 
-          $IsInternallyProduced = preg_match("/kur/",$theTransGeneName);
+          $IsInternallyProduced = AppSettings::hasLabElementPrefix($theTransGeneName);
         }
       ?>
       <form class="needs-validation" novalidate action="../transgenes/submit_edited_transgene.php" method="POST">

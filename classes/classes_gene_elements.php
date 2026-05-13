@@ -330,7 +330,7 @@
 
 			$this->tableName_prop = "transgene_table";
 			$this->columnNameForElement_prop = "transgeneName_col";
-			$this->prefixForNamingSubGenes_prop = "kur";
+			$this->prefixForNamingSubGenes_prop = AppSettings::labElementPrefix();
 
 			// $this->integratedOrExString_prop was assigned in the parent class via $location_param
 			$this->columnNameForCounterTable_prop = "transGeneIsCounter_col";
@@ -517,7 +517,7 @@
 
 			$this->tableName_prop = "allele_table";
 			$this->columnNameForElement_prop = "alleleName_col";
-			$this->prefixForNamingSubGenes_prop = "kur";
+			$this->prefixForNamingSubGenes_prop = AppSettings::labElementPrefix();
 
 			$this->columnNameForCounterTable_prop = "alleleCounter_col";
 
@@ -647,7 +647,7 @@
 			parent::__construct($name_param,"",$comments_param,"");
 			$this->tableName_prop = "strain_table";
 			$this->columnNameForElement_prop = "strainName_col";
-			$this->prefixForNamingSubGenes_prop = "PTK";
+			$this->prefixForNamingSubGenes_prop = AppSettings::strainPrefix();
 
 			// $this->integratedOrExString_prop was assigned in the parent class via $location_param
 			$this->columnNameForCounterTable_prop = "strainCounter_col";

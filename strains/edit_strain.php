@@ -211,7 +211,7 @@
             }
 
             $labProduced = false;
-            if ($strainNameArray[0] == 'PTK') {
+            if ($strainNameArray[0] == AppSettings::strainPrefix()) {
               $labProduced = true;
             }
 

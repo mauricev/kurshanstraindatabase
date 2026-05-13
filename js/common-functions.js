@@ -67,7 +67,7 @@ function edit_strain_lastvial_thawed_required_button() {
 
 function lablabelText(inHiddenField) {
 	labLabel = "lab-produced, tentative designation: ";
-	labLabelMerged = labLabel.concat("kur", inHiddenField);
+	labLabelMerged = labLabel.concat(inHiddenField);
 	$("#lab-label").text(labLabelMerged);
 }
 
