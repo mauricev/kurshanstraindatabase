@@ -868,6 +868,27 @@
 			$this->preparedSQLQuery_prop->execute();
 			return ($this->preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC));
 		}
+
+		public function buildSelectTable ($isMultiple_param, Requirements $requirement = Requirements::Not_required) {
+			$theArray = $this->returnAll();
+			if ($isMultiple_param){
+				echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_multiple_prop\"  multiple>";
+				echo "<option value=''>$this->placeholder_multiple_prop</option>";
+			} else {
+				echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
+				echo "<option value=''>$this->placeholder_prop</option>";
+			}
+			foreach($theArray as $row) {
+				$name = $row[$this->elementNameColumn_prop];
+				if (!empty($row['isDuplicate_col'])) {
+					$name = $name . " (duplicate)";
+				}
+				$name = htmlspecialchars($name,ENT_QUOTES);
+				$id = $row[$this->elementIDColumn_prop];
+				echo "<option value=\"$id\">$name</option>";
+			}
+			echo "</select>";
+		}
 	}
 
 	class LoadPlasmid extends LoadGeneticElement {
