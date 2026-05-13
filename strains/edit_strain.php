@@ -642,8 +642,12 @@
               $theTempStrain->prepareNextFreezerNitrogenNumber($theFreezerNumber_placeholder, $thereezerIndex__placeholder, $theNitrogenNNumber__placeholder, $theNitrogenIndex__placeholder);
               $theTempStrain->returnFreezerNitrogenNumbers($theFreezerNumber,$theNitrogenNumber);
               echo "<label class='control-label' >tentative locations: $theFreezerNumber; $theNitrogenNumber</label>";
+            } else if (($theOriginalFullFreezer === NULL) && ($theOriginalNitrogen === NULL)) {
+              echo "<label class='control-label' >storage locations: this strain is not physically present</label>";
             } else {
-              echo "<label class='control-label' >storage locations: $theOriginalFullFreezer; $theOriginalNitrogen</label>";
+              $displayFreezerLocation = htmlspecialchars($theOriginalFullFreezer, ENT_QUOTES);
+              $displayNitrogenLocation = htmlspecialchars($theOriginalNitrogen, ENT_QUOTES);
+              echo "<label class='control-label' >storage locations: $displayFreezerLocation; $displayNitrogenLocation</label>";
             }
           ?>
         </div>
