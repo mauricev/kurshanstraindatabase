@@ -69,11 +69,11 @@ class OktaAuth {
 
   public function isAuthorizedUser(array $claims): bool {
     $groups = $this->groupsFromClaims($claims);
-    return in_array('frankeldatabase_users', $groups, true) || in_array('frankeldatabase_admins', $groups, true);
+    return in_array('frankeldatabase_users', $groups, true) || in_array('frankeldatabase_admin_users', $groups, true);
   }
 
   public function isAdmin(array $claims): bool {
-    return in_array('frankeldatabase_admins', $this->groupsFromClaims($claims), true);
+    return in_array('frankeldatabase_admin_users', $this->groupsFromClaims($claims), true);
   }
 
   public function displayName(array $claims): string {
