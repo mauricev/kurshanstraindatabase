@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>KurshanLab Strain Database</title>
+    <title><?php echo AppSettings::labName(); ?> Strain Database</title>
 
     <link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
     <script src="/js/jquery.min.js"></script>

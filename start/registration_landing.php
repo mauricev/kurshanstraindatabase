@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+<?php
+	require_once(__DIR__ . '/../classes/classes_app_settings.php');
+?>
 <html>
 <head>
-		<title>KurshanLab Strain Database</title>
+		<title><?php echo AppSettings::labName(); ?> Strain Database</title>
 		<meta charset="utf-8">
 
 		<link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
@@ -23,7 +26,7 @@
 	<div class="container">
 		<div class="py-5 text-center">
       <img class="d-block mx-auto mb-4" alt="" width="72" height="72">
-      <h2>KurshanLab Strain Database</h2>
+      <h2><?php echo AppSettings::labName(); ?> Strain Database</h2>
       <p class="lead">Registration</p>
     </div>
     <form class="form-signin needs-validation" action="register.php" oninput='passwordConfirmation.setCustomValidity(passwordConfirmation.value != password.value ? "Passwords do not match." : "")' method="post">

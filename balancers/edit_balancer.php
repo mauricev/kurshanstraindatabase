@@ -30,7 +30,7 @@
     <div class="container">
       <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
-        <h2>KurshanLab Strain Database</h2>
+        <h2><?php echo AppSettings::labName(); ?> Strain Database</h2>
         <?php
           $isBalancerBeingEdited = false;
           if (isset($_POST['balancersArray_htmlName'])) {

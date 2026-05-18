@@ -63,6 +63,16 @@ class AppSettings {
     return self::get('instance_key');
   }
 
+  public static function labName(): string {
+    $instanceKey = self::instanceKey();
+
+    return match ($instanceKey) {
+      'peri' => 'KurshanLab',
+      'elisa' => 'FrankelLab',
+      default => throw new RuntimeException("Unsupported instance key: $instanceKey"),
+    };
+  }
+
   public static function labElementPrefix(): string {
     return self::instanceKey() === 'elisa' ? 'grz' : 'kur';
   }

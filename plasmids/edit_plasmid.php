@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <title>KurshanLab Strain Database</title>
+    <title><?php echo AppSettings::labName(); ?> Strain Database</title>
    	<meta charset="utf-8">
 
     <link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
@@ -91,7 +91,7 @@
   	<div class="container">
   		<div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
-        <h2>KurshanLab Strain Database</h2>
+        <h2><?php echo AppSettings::labName(); ?> Strain Database</h2>
         <?php
           $isEntityBeingEdited = false;
           if (isset($_POST['plasmidArray_htmlName'])) {
