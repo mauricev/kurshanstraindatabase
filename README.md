@@ -4,7 +4,7 @@ New users should start with/start/registration_landing.php. This page is an on
 
 login_landing.php is directed by login.php to the start/start.php page where all the action is.
 
-classes_database.php uses classes/classes_app_settings.php to load an app settings file stored outside the web root. The app settings file replaces the older db_settings.php file. Its temporary configured path is /users/maurice/peri-password/app_settings.php; update AppSettings::SETTINGS_FILE if the file moves.
+classes_database.php uses classes/classes_app_settings.php to load app settings files stored outside the web root. The app settings file replaces the older db_settings.php file. The configured settings directory is /opt/straindatabase/appdata, with app settings in app_settings.php and Okta settings in okta_settings.php.
 
 The app settings file must return an array with these keys:
 

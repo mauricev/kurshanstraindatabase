@@ -1,8 +1,8 @@
 <?php
 
 class AppSettings {
-  private const SETTINGS_FILE = '/users/maurice/peri-password/app_settings.php';
-  private const OKTA_SETTINGS_FILE = '/users/maurice/peri-password/okta_settings.php';
+  private const SETTINGS_FILE = '/opt/straindatabase/appdata/app_settings.php';
+  private const OKTA_SETTINGS_FILE = '/opt/straindatabase/appdata/okta_settings.php';
 
   private static ?array $settings_prop = NULL;
 
