@@ -73,14 +73,16 @@
       $this->fileData = $this->fileData . "¶"  . $stringToAppend_param;
     }
 
-    public function assignToStrainName ($inID_param) {
+    public function assignToStrainName ($inID_param, $inLinkText_param = NULL) {
     
       //BUGFixed, need to encode and decode because html can't process original string
       $fileDataEncoded = urlencode($this->fileData);
+      $linkText = $inLinkText_param ?? $inID_param;
+      $linkHtml = '<a href="print_strain.php?output=' . $fileDataEncoded . '" target="_blank" rel="noopener noreferrer">' . $linkText . '</a>';
 
       echo '<script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
-          document.getElementById("' . $inID_param . '").innerHTML = \'<a href="print_strain.php?output=' . $fileDataEncoded . '" target="_blank" rel="noopener noreferrer">' . $inID_param . '</a>\';
+          document.getElementById(' . json_encode($inID_param, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ').innerHTML = ' . json_encode($linkHtml, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';
         });
       </script>';
 

@@ -430,10 +430,14 @@
             $theTableOutputClass->appendTableRow();
 
             $strainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
+            if (!empty($theStrainArray['isDuplicate_col'])) {
+              $strainName = $strainName . " (duplicate)";
+            }
+            $strainCellID = "strain-result-" . $strainID;
             
             //$strainLink = '<a href=print_strain.php?id=' . $strainID . '>' . $strainName . '</a>'; // by concatenating double quotes aren’t needed
 
-            $theTableOutputClass->appendTableDataWithClassAndID($strainName,'strain', $strainName); // what class is this?
+            $theTableOutputClass->appendTableDataWithClassAndID($strainName,'strain', $strainCellID); // what class is this?
             $thePrintOutputClass->appendToPrintData($strainName);
 
 // this is the genotype cell
@@ -764,9 +768,9 @@
     		          $theSequenceData = htmlspecialchars($theAllele['sequence_data_col'],ENT_QUOTES);
 
   		            $theNumberOfAlleles = $theNumberOfAlleles + 1;
-  		            $theHiddenID = "hidden-" . $theStrainArray['strainName_col'] . "_" . $theNumberOfAlleles; // where x is the number in the loop of alleles
+  		            $theHiddenID = "hidden-strain-" . $strainID . "_" . $theNumberOfAlleles; // where x is the number in the loop of alleles
 
-  		            $theButtonID = "button-" . $theStrainArray['strainName_col']  . "_" . $theNumberOfAlleles;
+  		            $theButtonID = "button-strain-" . $strainID  . "_" . $theNumberOfAlleles;
 
   		            echo "<input type='hidden' id=$theHiddenID name=\"$theSequenceFileName\" value=\"$theSequenceData\">";
                   // download button is here
@@ -850,7 +854,7 @@
               $thePrintOutputClass->appendToPrintData($data);
 
               // assign the http link (URL) of all the strain info to the strain name
-              $thePrintOutputClass->assignToStrainName($strainName);
+              $thePrintOutputClass->assignToStrainName($strainCellID, $strainName);
 
             $theTableOutputClass->appendTableRow();
           }
