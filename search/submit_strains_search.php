@@ -75,8 +75,6 @@
 
 // SECTION 1 first row is the heading colunn row
             echo "<tr class='table-primary'>"; // this is start of a table row; we don’t need to put this in excel; only the ending row call
-              $theTableOutputClass->appendTableHeader('ID'); // could we make this class TableOutputClass and pass the type
-
               $theTableOutputClass->appendTableHeader('strain');
 
               $theTableOutputClass->appendTableHeader('genotype');
@@ -125,8 +123,6 @@
             $theTableOutputClass->appendTableRowStartWithClass('table-primary');
 
 // SECTION 2
-// placeholder for the strain id
-              $theTableOutputClass->appendTableHeader('');
 // strain name
               // we need to test element 0 of the array
 
@@ -432,10 +428,6 @@
             $strainID = $theStrainArray['strain_id'];
 
             $theTableOutputClass->appendTableRow();
-
-           
-            $theTableOutputClass->appendTableData($strainID);
-            $thePrintOutputClass->appendToPrintData($strainID);
 
             $strainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
             

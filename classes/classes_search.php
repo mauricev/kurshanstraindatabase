@@ -988,11 +988,14 @@
 			// display all strains
 			$searchDatabase = new Peri_Database();
 			// here's where the parent strain is being aliased
-			$theSelectString = "SELECT truestrain_table.strain_id FROM strain_table as truestrain_table";
+			$theSelectString = "SELECT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table";
 			$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
 			$preparedSQLQuery_prop->execute();
 
-			return ($preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC));
+			$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+			sortStrainSearchResultsNaturally($theResult);
+
+			return ($theResult);
 		} else {
 
 			$searchState = 'searchForNothing';
@@ -1355,6 +1358,7 @@
 				$preparedSQLQuery_prop->execute($theBuddingQueryArray);
 
 				$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+				sortStrainSearchResultsNaturally($theResult);
 
 				return ($theResult);
 			} else {
@@ -1362,6 +1366,20 @@
 			}
 
 		}
+	}
+
+	function sortStrainSearchResultsNaturally(&$theResult) {
+		usort($theResult, function($firstStrain, $secondStrain) {
+			$firstStrainName = $firstStrain['strainName_col'] ?? '';
+			$secondStrainName = $secondStrain['strainName_col'] ?? '';
+
+			$nameComparison = strnatcasecmp($firstStrainName, $secondStrainName);
+			if ($nameComparison !== 0) {
+				return $nameComparison;
+			}
+
+			return ((int) ($firstStrain['strain_id'] ?? 0)) <=> ((int) ($secondStrain['strain_id'] ?? 0));
+		});
 	}
 
 	function searchDatabaseForPlasmids() {
