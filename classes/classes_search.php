@@ -1384,14 +1384,17 @@
 
 	function searchDatabaseForPlasmids() {
 
-		if (isset($_POST['allPlasmids_chkbox_htmlName']) && $_POST['allPlasmids_chkbox_htmlName']) {
-			// display all plasmids
-			$searchDatabase = new Peri_Database();
-			$theSelectString = "SELECT plasmid_id FROM plasmid_table";
-			$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
-			$preparedSQLQuery_prop->execute();
-			return ($preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC));
-		} else {
+			if (isset($_POST['allPlasmids_chkbox_htmlName']) && $_POST['allPlasmids_chkbox_htmlName']) {
+				// display all plasmids
+				$searchDatabase = new Peri_Database();
+				$theSelectString = "SELECT plasmid_id, plasmidName_col FROM plasmid_table";
+				$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
+				$preparedSQLQuery_prop->execute();
+				$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+				sortPlasmidSearchResultsNaturally($theResult);
+
+				return ($theResult);
+			} else {
 
 			$theSelectString = "";
 			$thePrimaryJoinClause = "";
@@ -1470,14 +1473,30 @@
 
 				$preparedSQLQuery_prop = $searchDatabase->sqlPrepare($theSelectString);
 
-				$preparedSQLQuery_prop->execute($theBuddingQueryArray);
+					$preparedSQLQuery_prop->execute($theBuddingQueryArray);
 
-				$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
-				return ($theResult);
+					$theResult = $preparedSQLQuery_prop->fetchAll(PDO::FETCH_ASSOC);
+					sortPlasmidSearchResultsNaturally($theResult);
+
+					return ($theResult);
 			} else {
 				echo "we are in the wrong place<br>";
 				return false;
 			}
 
+			}
 		}
-	}
+
+		function sortPlasmidSearchResultsNaturally(&$theResult) {
+			usort($theResult, function($firstPlasmid, $secondPlasmid) {
+				$firstPlasmidName = $firstPlasmid['plasmidName_col'] ?? '';
+				$secondPlasmidName = $secondPlasmid['plasmidName_col'] ?? '';
+
+				$nameComparison = strnatcasecmp($firstPlasmidName, $secondPlasmidName);
+				if ($nameComparison !== 0) {
+					return $nameComparison;
+				}
+
+				return ((int) ($firstPlasmid['plasmid_id'] ?? 0)) <=> ((int) ($secondPlasmid['plasmid_id'] ?? 0));
+			});
+		}

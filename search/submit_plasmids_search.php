@@ -77,8 +77,6 @@
             echo "<tr class='table-primary'>";
               $theTableOutputClass->appendTableHeader('plasmid');
 
-              $theTableOutputClass->appendTableHeader('ID');
-
               $theTableOutputClass->appendTableHeader('cDNA');
 
               $theTableOutputClass->appendTableHeader('contributor');
@@ -109,9 +107,6 @@
               } else {
                 $theTableOutputClass->appendTableHeader('');
               }
-
-              // placeholder for the plasmid id
-              $theTableOutputClass->appendTableHeader('');
 
               if ((isset($_POST['cDNA_htmlName'])) && ($_POST['cDNA_htmlName'] != "")) {
                 $theTableOutputClass->appendTableHeader(htmlspecialchars($_POST['cDNA_htmlName'],ENT_QUOTES));
@@ -219,8 +214,6 @@
             $thePlasmidArray = $thePlasmidClass->returnSpecificRecord($thePlasmidID['plasmid_id']);
             echo "<tr>";
               $theTableOutputClass->appendTableData(htmlspecialchars($thePlasmidArray['plasmidName_col'],ENT_QUOTES));
-
-              $theTableOutputClass->appendTableData(htmlspecialchars($thePlasmidArray['plasmid_id'],ENT_QUOTES));
 
               $theTableOutputClass->appendTableData(htmlspecialchars($thePlasmidArray['other_cDNA_col'],ENT_QUOTES));
 
