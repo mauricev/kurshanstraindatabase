@@ -1,7 +1,9 @@
 <?php
+require_once(__DIR__ . '/../classes/classes_app_settings.php');
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $filename = $_POST["filename"];
-  $file = $_SERVER['DOCUMENT_ROOT'] . "/sequence_files/" . $filename;
+  $file = AppSettings::sequenceFilesDirectory() . "/" . $filename;
   error_log("the file is " . $file);
 
   //$fileContents = file_get_contents($filename);

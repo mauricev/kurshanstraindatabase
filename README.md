@@ -4,7 +4,7 @@ New users should start with/start/registration_landing.php. This page is an on
 
 login_landing.php is directed by login.php to the start/start.php page where all the action is.
 
-classes_database.php uses classes/classes_app_settings.php to load app settings files stored outside the web root. The app settings file replaces the older db_settings.php file. The configured settings directory is /opt/straindatabase/appdata, with app settings in app_settings.php and Okta settings in okta_settings.php.
+classes_database.php uses classes/classes_app_settings.php to load app settings files stored outside the web root. The app settings file replaces the older db_settings.php file. The configured appdata directory is /opt/straindatabase/appdata, with app settings in app_settings.php, Okta settings in okta_settings.php, log files in logging_files, and uploaded sequence files in sequence_files.
 
 The app settings file must return an array with these keys:
 
@@ -36,4 +36,4 @@ The edit pages serve a dual role for entering new data and editing existing entr
 
 The table classes outputting the search serve a dual role now. They also setup for saving all the results to a csv file.
 
-There is one other major class, Logger. The logger class is responsible for logging every action taken to the database, both new entries and editing of existing entries. The way logging works is that it is a randomly-named file stored in the folder logging_files. The file is created per-user per-session and records the actions just described. It's 36-character filename that is shuffled based on all the digits and lowercase letters. Very unlikely we will hit a conflict. However, over time the filenames will build up. We will eventually have a script that runs once a month or so to cleanup the files that are over 30 days old. So this way, this won't build up forever.We could store all this in the database and have a PHP script do the deleting.
+There is one other major class, Logger. The logger class is responsible for logging every action taken to the database, both new entries and editing of existing entries. The way logging works is that it is a randomly-named file stored in the folder /opt/straindatabase/appdata/logging_files. The file is created per-user per-session and records the actions just described. It's 36-character filename that is shuffled based on all the digits and lowercase letters. Very unlikely we will hit a conflict. However, over time the filenames will build up. We will eventually have a script that runs once a month or so to cleanup the files that are over 30 days old. So this way, this won't build up forever.We could store all this in the database and have a PHP script do the deleting.

@@ -1,8 +1,9 @@
 <?php
+require_once(__DIR__ . '/classes_app_settings.php');
 
 class Logger {
     private function returnLogPath($fileName_param) {
-      return $_SERVER['DOCUMENT_ROOT'] . "/logging_files/$fileName_param";
+      return AppSettings::loggingFilesDirectory() . "/$fileName_param";
     }
 
     public function isLogFileSet() {

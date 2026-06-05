@@ -76,6 +76,24 @@ class OktaAuth {
     return in_array('frankeldatabase_admin_users', $this->groupsFromClaims($claims), true);
   }
 
+  public function authorizationDebug(array $claims): array {
+    $groups = $this->groupsFromClaims($claims);
+    return [
+      'required_groups' => [
+        'frankeldatabase_users',
+        'frankeldatabase_admin_users',
+      ],
+      'groups_claim_exists' => array_key_exists('groups', $claims),
+      'groups_claim_type' => array_key_exists('groups', $claims) ? gettype($claims['groups']) : NULL,
+      'groups_returned' => $groups,
+      'authorized' => $this->isAuthorizedUser($claims),
+      'admin' => $this->isAdmin($claims),
+      'claim_keys_returned' => array_keys($claims),
+      'subject_present' => isset($claims['sub']) && is_string($claims['sub']) && $claims['sub'] !== '',
+      'email_present' => isset($claims['email']) && is_string($claims['email']) && $claims['email'] !== '',
+    ];
+  }
+
   public function displayName(array $claims): string {
     foreach (['name', 'preferred_username', 'email'] as $key) {
       if (isset($claims[$key]) && is_string($claims[$key]) && trim($claims[$key]) !== '') {
@@ -246,6 +264,11 @@ class OktaAuth {
   private function postForm(string $url, array $fields, array $headers): array {
     $body = http_build_query($fields);
     $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+    $requestDebug = [
+      'url' => $url,
+      'grant_type' => $fields['grant_type'] ?? NULL,
+      'redirect_uri' => $fields['redirect_uri'] ?? NULL,
+    ];
 
     $context = stream_context_create([
       'http' => [
@@ -257,18 +280,32 @@ class OktaAuth {
     ]);
 
     $response = file_get_contents($url, false, $context);
+    $responseHeaders = $http_response_header ?? [];
     if ($response === false) {
-      throw new RuntimeException('Unable to exchange Okta authorization code.');
+      $lastError = error_get_last();
+      throw new RuntimeException('Unable to exchange Okta authorization code. Debug: ' . json_encode([
+        'request' => $requestDebug,
+        'response_headers' => $responseHeaders,
+        'php_error' => $lastError['message'] ?? NULL,
+      ], JSON_UNESCAPED_SLASHES));
     }
 
     $decoded = json_decode($response, true);
     if (!(is_array($decoded))) {
-      throw new RuntimeException('Okta token endpoint returned invalid JSON.');
+      throw new RuntimeException('Okta token endpoint returned invalid JSON. Debug: ' . json_encode([
+        'request' => $requestDebug,
+        'response_headers' => $responseHeaders,
+        'response_body' => $response,
+      ], JSON_UNESCAPED_SLASHES));
     }
 
     if (isset($decoded['error'])) {
       $description = $decoded['error_description'] ?? $decoded['error'];
-      throw new RuntimeException('Okta token exchange failed: ' . $description);
+      throw new RuntimeException('Okta token exchange failed: ' . $description . ' Debug: ' . json_encode([
+        'request' => $requestDebug,
+        'response_headers' => $responseHeaders,
+        'response_body' => $decoded,
+      ], JSON_UNESCAPED_SLASHES));
     }
 
     return $decoded;

@@ -1,6 +1,7 @@
 <?php
 
 class AppSettings {
+  private const APPDATA_DIR = '/opt/straindatabase/appdata';
   private const SETTINGS_FILE = '/opt/straindatabase/appdata/app_settings.php';
   private const OKTA_SETTINGS_FILE = '/opt/straindatabase/appdata/okta_settings.php';
 
@@ -49,6 +50,18 @@ class AppSettings {
 
   public static function databaseName(): string {
     return self::get('db_name');
+  }
+
+  public static function appdataDirectory(): string {
+    return self::APPDATA_DIR;
+  }
+
+  public static function loggingFilesDirectory(): string {
+    return self::APPDATA_DIR . '/logging_files';
+  }
+
+  public static function sequenceFilesDirectory(): string {
+    return self::APPDATA_DIR . '/sequence_files';
   }
 
   public static function databaseUser(): string {
