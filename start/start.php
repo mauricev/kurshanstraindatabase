@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Peri Database Test 1</title>
+	<title><?php echo AppSettings::labName(); ?> Database</title>
 	<meta charset="utf-8">
 
 	<link rel="stylesheet" type="text/css" href="../css/kurshan.css"/>
