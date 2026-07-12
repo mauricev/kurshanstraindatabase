@@ -1312,12 +1312,12 @@
 					// if we are searching genes too, then we are conducting an intersecting search and order by can’t be used in the first portion of the select
 					$orderBy = "";
 					if (mb_strlen($theGenesWhereClause) == 0) {
-						$orderBy = " ORDER BY truestrain_table.strainName_col";
+						$orderBy = " ORDER BY 2";
 					}
 
 
 					// for alleles/transgenes
-					$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " .$theANDCommentJoinClause . $thePrimaryJoinClause . " WHERE " . $theANDCommentWhereClause . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . " ORDER BY 2";
+					$theSelectString = $commentSearchOR . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " .$theANDCommentJoinClause . $thePrimaryJoinClause . " WHERE " . $theANDCommentWhereClause . $thePrimaryWhereClause . $restrictSearchClause. $outGroupByHavingClause . $orderBy;
 
 					//print_r("theSelectString1 is $theSelectString<br><br>restrictsearch is $restrictSearchClause<br><br>");
 					//var_dump($theBuddingQueryArray);
@@ -1329,7 +1329,7 @@
 						$theBuddingQueryArray = array_merge($theBuddingQueryArray, $theGeneQueryArray);
 
 						// for alleles/transgenes and genes
-						$theSelectString = $commentSearchOR . $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY 2";
+						$theSelectString = $theSelectString  . ' INTERSECT ' . "SELECT DISTINCT truestrain_table.strain_id, truestrain_table.strainName_col FROM strain_table as truestrain_table " . $theANDCommentJoinClause . $theGeneJoinClause . " WHERE " . $theANDCommentWhereClause . $theGenesWhereClause . $outGroupByHavingClauseForGenes . " ORDER BY 2";
 						
 						//print_r("theSelectString2 is $theSelectString<br><br>");
 						//var_dump($theBuddingQueryArray);
