@@ -660,7 +660,7 @@
 					$joinObject_param->addToJoinString('balancer_bottom');
 
 					$this->IsItORSearch_prop = true;
-					if (!isset($_POST['balancersArray_htmlName']) && $theArrayCount > 1) {
+					if (!isset($_POST['balancerName_chkbox_htmlName']) && $theArrayCount > 1) {
 						$this->IsItORSearch_prop = false;
 					}
 					if ($this->IsItORSearch_prop == false ) {
@@ -916,8 +916,8 @@
 					$joinObject_param->addToJoinString('antibiotic_bottom');
 
 					$this->IsItORSearch_prop = true;
-					if (!isset($_POST['antibioticArray_htmlName']) && $theArrayCount > 1) {
-						$this->IsItORSearch_prop = $_POST['antibioticArray_htmlName'];
+					if (!isset($_POST['antibiotic_chkbox_htmlName']) && $theArrayCount > 1) {
+						$this->IsItORSearch_prop = false;
 					}
 					if ($this->IsItORSearch_prop == false ) {
 						$this->searchParameter_prop = 'antibiotic_table.antibiotic_id '; // remove the = ?
@@ -943,7 +943,7 @@
 
 					$this->IsItORSearch_prop = true;
 					if (!isset($_POST['fluoroTag_chkbox_htmlName']) && $theArrayCount > 1) {
-						$this->IsItORSearch_prop = $_POST['fluoroTag_chkbox_htmlName'];
+						$this->IsItORSearch_prop = false;
 					}
 					if ($this->IsItORSearch_prop == false ) {
 						$this->searchParameter_prop = 'fluoro_tag_table.fluoroTag_id '; // remove the = ?
@@ -956,12 +956,12 @@
 		}
 	}
 
-	function buildGroupByHavingClause($inHavingCountArray,&$theBuddingQueryArray_param, &$outGroupByHavingClause) {
+	function buildGroupByHavingClause($inHavingCountArray,&$theBuddingQueryArray_param, &$outGroupByHavingClause, $groupByColumn = 'truestrain_table.strain_id') {
 		$outGroupByHavingClause = "";
 		$theArraySize = count ($inHavingCountArray) - 1;
 		// if $theArraySize > 1 then we having at least one having clause
 		if ($theArraySize > - 1) { // if array size is 1, theArraySize is 0. 0 and above should trigger the following code
-			$outGroupByHavingClause = "GROUP BY truestrain_table.strain_id HAVING "; //plasmids don't have an AND search; do we just turn on the OR search for them?
+			$outGroupByHavingClause = "GROUP BY " . $groupByColumn . " HAVING ";
 			$theHavingCountArrayKeys = array_keys($inHavingCountArray);
 			// assumes keys are indexed the same as the actual values
 			//echo "<br>inHavingCountArray size is ". $theArraySize ."<br>";
@@ -1435,6 +1435,8 @@
 			$thePrimaryWhereClause = $theFluroTagObject->concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause);
 
 			$thePrimaryJoinClause = $innerJoinObject->getJoinString();
+			$outGroupByHavingClause = "";
+			buildGroupByHavingClause($theHavingCountArray, $theBuddingQueryArray, $outGroupByHavingClause, 'plasmid_table.plasmid_id');
 
 			$searchState = 'searchForNothing';
 			//$theSelectString not empty means there is a comments search
@@ -1459,11 +1461,11 @@
 				case 'searchForCommentsOnly':
 					break;
 				case 'searchForSomethingElse':
-					$theSelectString = "SELECT DISTINCT plasmid_id, plasmidName_col FROM plasmid_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY plasmid_table.plasmidName_col";
+					$theSelectString = "SELECT DISTINCT plasmid_id, plasmidName_col FROM plasmid_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " " . $outGroupByHavingClause . " ORDER BY plasmid_table.plasmidName_col";
 					break;
 
 				case 'searchForEverything':
-					$theSelectString = $theSelectString . " UNION SELECT DISTINCT plasmid_id, plasmidName_col FROM plasmid_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " ORDER BY plasmidName_col";
+					$theSelectString = $theSelectString . " UNION SELECT DISTINCT plasmid_id, plasmidName_col FROM plasmid_table " . $thePrimaryJoinClause . " WHERE " . $thePrimaryWhereClause . " " . $outGroupByHavingClause . " ORDER BY plasmidName_col";
 					break;
 			}
 

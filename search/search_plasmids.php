@@ -216,7 +216,7 @@
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="input-group-addon" ><input type="checkbox" checked disabled name="antibiotic_chkbox_htmlName">OR search</label>
+            <label class="input-group-addon" ><input type="checkbox" checked name="antibiotic_chkbox_htmlName">OR search</label>
             <?php
               require_once("../classes/classes_load_elements.php");
               $theAntibioticListing = new LoadAntibiotic();
@@ -229,7 +229,7 @@
 
         <div class='row'>
           <div class="col-md-3 mb-3">
-            <label class="input-group-addon" ><input type="checkbox" checked disabled name="fluoroTag_chkbox_htmlName">OR search</label>
+            <label class="input-group-addon" ><input type="checkbox" checked name="fluoroTag_chkbox_htmlName">OR search</label>
             <?php
               require_once("../classes/classes_load_elements.php");
               $theFluoroTagListing = new LoadFluoroTag();

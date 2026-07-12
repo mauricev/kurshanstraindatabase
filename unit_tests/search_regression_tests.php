@@ -194,11 +194,27 @@ function search_test_cases(array $ids): array {
 			'callback' => static fn() => searchDatabaseForPlasmids(),
 		],
 		[
+			'name' => 'plasmid antibiotics AND path executes',
+			'post' => [
+				'plasmidArray_htmlName' => [''],
+				'antibioticArray_htmlName' => $ids['antibiotics'],
+			],
+			'callback' => static fn() => searchDatabaseForPlasmids(),
+		],
+		[
 			'name' => 'plasmid fluorotags path executes',
 			'post' => [
 				'plasmidArray_htmlName' => [''],
 				'fluorotagArray_htmlName' => $ids['fluorotags'],
 				'fluoroTag_chkbox_htmlName' => 'on',
+			],
+			'callback' => static fn() => searchDatabaseForPlasmids(),
+		],
+		[
+			'name' => 'plasmid fluorotags AND path executes',
+			'post' => [
+				'plasmidArray_htmlName' => [''],
+				'fluorotagArray_htmlName' => $ids['fluorotags'],
 			],
 			'callback' => static fn() => searchDatabaseForPlasmids(),
 		],
