@@ -142,16 +142,16 @@
 			parent::__construct(); // this would appear not to make sense to be called at the end
 
 			$this->joinCatalog_prop['allele_top'] =' INNER JOIN strain_to_allele_table AS inner_strain_to_allele ON truestrain_table.strain_ID = inner_strain_to_allele.strain_fk ';
-			$this->joinCatalog_prop['allele_bottom'] =' INNER JOIN allele_table AS inner_allele ON strain_to_allele_table.allele_fk = inner_allele.allele_id ';
+			$this->joinCatalog_prop['allele_bottom'] =' INNER JOIN allele_table AS inner_allele ON inner_strain_to_allele.allele_fk = inner_allele.allele_id ';
 
 			// we only need to override for those used by left joins for comments, namely the alleles, genes and transgenes; strains are already aliased
 			//$this->joinCatalog_prop['balancer_top'] =' INNER JOIN strain_to_balancer_table AS inner_strain_to_balancer ON truestrain_table.strain_ID = inner_strain_to_balancer.strain_fk ';
 			//$this->joinCatalog_prop['balancer_bottom'] =' INNER JOIN balancer_table AS inner_balancer ON strain_to_balancer_table.balancer_fk = inner_balancer.balancer_id ';
 
-			$this->joinCatalog_prop['gene'] = ' INNER JOIN gene_table AS inner_strain_to_gene ON allele_table.gene_fk = inner_strain_to_gene.gene_ID ';
+			$this->joinCatalog_prop['gene'] = ' INNER JOIN gene_table AS inner_strain_to_gene ON inner_allele.gene_fk = inner_strain_to_gene.gene_ID ';
 
 			$this->joinCatalog_prop['transgene_top'] = ' INNER JOIN strain_to_transgene_table AS inner_strain_to_transgene ON truestrain_table.strain_ID = inner_strain_to_transgene.strain_fk ';
-			$this->joinCatalog_prop['transgene_bottom'] =' INNER JOIN transgene_table AS inner_transgene ON strain_to_transgene_table.transgene_fk = inner_transgene.transgene_id ';
+			$this->joinCatalog_prop['transgene_bottom'] =' INNER JOIN transgene_table AS inner_transgene ON inner_strain_to_transgene.transgene_fk = inner_transgene.transgene_id ';
 			//print_r("InnerJoinerForStrainsAfterComments constructor<br>");
 
 		}
