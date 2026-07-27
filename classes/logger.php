@@ -6,16 +6,38 @@ class Logger {
       return AppSettings::loggingFilesDirectory() . "/$fileName_param";
     }
 
+    private function rememberLoggingError($message_param) {
+      $_SESSION['loggerLastError'] = $message_param;
+    }
+
+    private function openLogFile($logPath_param, $mode_param) {
+      $theErrorMessage = "";
+      set_error_handler(function($errno, $errstr) use (&$theErrorMessage) {
+        $theErrorMessage = $errstr;
+        return true;
+      });
+
+      $theFileReference = fopen($logPath_param, $mode_param);
+      restore_error_handler();
+
+      if ($theFileReference === false) {
+        $this->rememberLoggingError("fopen($logPath_param, $mode_param) failed: " . ($theErrorMessage !== "" ? $theErrorMessage : "unknown error"));
+      }
+
+      return $theFileReference;
+    }
+
     public function isLogFileSet() {
       return isset($_SESSION['loggerFileName']) && ($_SESSION['loggerFileName'] !== "");
     }
 
     public function createLogFile() {
       $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+      unset($_SESSION['loggerLastError']);
 
       for ($attemptNumber = 0; $attemptNumber < 5; $attemptNumber++) {
         $theFileName = str_shuffle($permitted_chars);
-        $theFileReference = @fopen($this->returnLogPath($theFileName), 'x');
+        $theFileReference = $this->openLogFile($this->returnLogPath($theFileName), 'x');
         if ($theFileReference !== false) {
           fclose($theFileReference);
           $_SESSION['loggerFileName'] = $theFileName;
@@ -46,7 +68,7 @@ class Logger {
       return false;
     }
 
-    $theFileReference = @fopen($this->returnLogPath($theFileName), 'a+');
+    $theFileReference = $this->openLogFile($this->returnLogPath($theFileName), 'a+');
     if ($theFileReference !== false) {
       $theWriteResult = fwrite($theFileReference, $stringToAppend_param . "\n");
       fclose($theFileReference);
@@ -54,6 +76,33 @@ class Logger {
     }
 
     return false;
+  }
+
+  public function returnDiagnostics() {
+    $theLogDirectory = AppSettings::loggingFilesDirectory();
+    $theSessionLogFile = $this->isLogFileSet() ? $_SESSION['loggerFileName'] : "";
+    $theSessionLogPath = $theSessionLogFile !== "" ? $this->returnLogPath($theSessionLogFile) : "";
+    $thePhpUser = "unknown";
+
+    if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+      $theUserInfo = posix_getpwuid(posix_geteuid());
+      if ($theUserInfo !== false && isset($theUserInfo['name'])) {
+        $thePhpUser = $theUserInfo['name'];
+      }
+    }
+
+    return [
+      'log directory' => $theLogDirectory,
+      'directory exists' => file_exists($theLogDirectory) ? 'yes' : 'no',
+      'is directory' => is_dir($theLogDirectory) ? 'yes' : 'no',
+      'directory readable' => is_readable($theLogDirectory) ? 'yes' : 'no',
+      'directory writable' => is_writable($theLogDirectory) ? 'yes' : 'no',
+      'PHP effective user' => $thePhpUser,
+      'session log file' => $theSessionLogFile !== "" ? $theSessionLogFile : 'not set',
+      'session log path' => $theSessionLogPath !== "" ? $theSessionLogPath : 'not set',
+      'session log exists' => $theSessionLogPath !== "" && is_file($theSessionLogPath) ? 'yes' : 'no',
+      'last logging error' => $_SESSION['loggerLastError'] ?? 'none recorded',
+    ];
   }
 
   public function returnLog () {

@@ -15,7 +15,7 @@
 		exit();
 	}
 
-	$userName = $_POST['username'] ?? '';
+	$userName = trim($_POST['username'] ?? '');
 	$password = $_POST['password'] ?? '';
 
 	error_log("in login.php, user is $userName");
@@ -25,7 +25,7 @@
 		$userObject->setupSession();
 	}
 	else {
-		$result = header("location: ../start/login_landing.php");
+		$result = header("location: ../start/login_landing.php?login=failed");
 		exit();
 	}
 ?>

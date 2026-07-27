@@ -30,6 +30,11 @@
 			<img class="d-block mx-auto mb-4" alt="" width="144" height="144" src="/images/peri-logo.jpg">
       <h2><?php echo AppSettings::labName(); ?> Strain Database</h2>
       <p class="lead">Login</p>
+			<?php if (($_GET['login'] ?? '') === 'failed') { ?>
+				<div class="alert alert-danger" role="alert">
+					That username or password did not match an active local account.
+				</div>
+			<?php } ?>
     </div>
 		<?php if ($instanceKey === 'elisa') { ?>
 		<form class="form-signin needs-validation" action="login.php" method="post">
