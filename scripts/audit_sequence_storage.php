@@ -100,6 +100,10 @@ function cleanFilename(?string $filename): string {
   return trim((string)$filename);
 }
 
+function isSafeSequenceFilename(string $filename): bool {
+  return $filename !== '' && $filename !== '.' && $filename !== '..' && strpbrk($filename, "/\\\0") === false;
+}
+
 function sequencePath(string $sequenceDirectory, string $filename): string {
   return rtrim($sequenceDirectory, '/') . '/' . $filename;
 }
@@ -108,6 +112,15 @@ function diskState(string $sequenceDirectory, string $filename): array {
   if ($filename === '') {
     return [
       'disk_exists' => 'no_filename',
+      'disk_readable' => 'no',
+      'disk_bytes' => '',
+      'disk_sha256' => '',
+    ];
+  }
+
+  if (!isSafeSequenceFilename($filename)) {
+    return [
+      'disk_exists' => 'invalid_filename',
       'disk_readable' => 'no',
       'disk_bytes' => '',
       'disk_sha256' => '',
@@ -160,6 +173,9 @@ function classifyState(array $sql, array $disk): string {
   }
   if ($sql['sql_has_sequence_data'] === 'yes' && $disk['disk_exists'] === 'no_filename') {
     return 'sql_only_no_filename';
+  }
+  if ($disk['disk_exists'] === 'invalid_filename') {
+    return $sql['sql_has_sequence_data'] === 'yes' ? 'sql_present_invalid_filename' : 'invalid_filename';
   }
   if ($sql['sql_has_sequence_data'] === 'yes' && $disk['disk_readable'] === 'no') {
     return 'sql_present_disk_unreadable';

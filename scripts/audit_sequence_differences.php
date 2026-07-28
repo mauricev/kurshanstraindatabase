@@ -151,6 +151,10 @@ function cleanFilename(?string $filename): string {
   return trim((string)$filename);
 }
 
+function isSafeSequenceFilename(string $filename): bool {
+  return $filename !== '' && $filename !== '.' && $filename !== '..' && strpbrk($filename, "/\\\0") === false;
+}
+
 function sequencePath(string $sequenceDirectory, string $filename): string {
   return rtrim($sequenceDirectory, '/') . '/' . $filename;
 }
@@ -339,6 +343,18 @@ function compareData(?string $sqlData, ?string $diskData): array {
   ] + metricDefaults($sqlBytes, $diskBytes, $sqlHash, $diskHash);
 }
 
+function invalidFilenameComparison(?string $sqlData): array {
+  $sqlHasData = $sqlData !== null && $sqlData !== '';
+  $sqlBytes = $sqlHasData ? strlen($sqlData) : 0;
+  $sqlHash = $sqlHasData ? hash('sha256', $sqlData) : '';
+
+  return [
+    'classification' => 'invalid_sequence_filename',
+    'recommended_source' => 'manual_review',
+    'confidence' => 'high',
+  ] + metricDefaults($sqlBytes, 0, $sqlHash, '');
+}
+
 function metricDefaults(int $sqlBytes, int $diskBytes, string $sqlHash, string $diskHash): array {
   return [
     'sql_bytes' => $sqlBytes,
@@ -371,8 +387,9 @@ function auditTable(PDO $db, string $sequenceDirectory, array $config, $detailsH
     $name = (string)$row['entity_name'];
     $filename = cleanFilename($row['sequenceDataName_col'] ?? '');
     $sqlData = $row['sequence_data_col'] ?? null;
-    $diskData = readDiskData($sequenceDirectory, $filename);
-    $comparison = compareData($sqlData, $diskData);
+    $hasInvalidFilename = $filename !== '' && !isSafeSequenceFilename($filename);
+    $diskData = $hasInvalidFilename ? null : readDiskData($sequenceDirectory, $filename);
+    $comparison = $hasInvalidFilename ? invalidFilenameComparison($sqlData) : compareData($sqlData, $diskData);
     $classification = $comparison['classification'];
     $summaryKey = "$entityType\t$classification\t{$comparison['recommended_source']}\t{$comparison['confidence']}";
     $summary[$summaryKey] = ($summary[$summaryKey] ?? 0) + 1;
