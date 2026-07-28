@@ -1,25 +1,26 @@
 <?php
-require_once(__DIR__ . '/../classes/classes_app_settings.php');
+require_once(__DIR__ . '/sequence_file_paths.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $filename = $_POST["filename"];
-  $file = AppSettings::sequenceFilesDirectory() . "/" . $filename;
-  error_log("the file is " . $file);
+  try {
+    $filename = sequenceSafeFilename($_POST["filename"] ?? NULL);
+    $file = sequenceFilePath($filename, true);
 
-  //$fileContents = file_get_contents($filename);
+    header("Content-Disposition: attachment; filename=\"" . addcslashes($filename, "\\\"") . "\"");
+    header("Content-Type: application/octet-stream");
+    header("Content-Length: " . filesize($file));
+    header("Content-Transfer-Encoding: binary");
 
-  // Set appropriate headers for file download
-  header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
-  header("Content-Type: application/octet-stream");
-  header("Content-Length: " . filesize($file));
-
-  //header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
-  header("Content-Transfer-Encoding: binary");
-
-    // Output the file contents
-  readfile($file);
+    readfile($file);
+  }
+  catch (Throwable $e) {
+    error_log("File NOT fetched: " . $e->getMessage());
+    http_response_code(404);
+    echo "File not found.";
+  }
 
 } else {
-  error_log("File NOT saved.");
+  http_response_code(405);
+  error_log("File NOT fetched.");
 }
 ?>
