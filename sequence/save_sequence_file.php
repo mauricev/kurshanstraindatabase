@@ -1,8 +1,10 @@
 <?php
+require_once(__DIR__ . '/../classes/session.php');
 require_once(__DIR__ . '/sequence_file_paths.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   try {
+    csrfValidateRequest();
     $filename = sequenceFilenameFromContentDisposition($_SERVER['HTTP_CONTENT_DISPOSITION'] ?? NULL);
     $file = sequenceFilePath($filename, false);
     $data = file_get_contents("php://input");

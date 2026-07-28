@@ -1,5 +1,10 @@
 <?php
   include_once('../classes/session.php');
+  if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code(405);
+    exit();
+  }
+  csrfValidateRequest();
   include_once('../classes/classes_database.php');
   include_once("../classes/classes_load_elements.php");
 

@@ -1,6 +1,7 @@
 <?php
 
-		session_start();
+		require_once(__DIR__ . '/../classes/csrf.php');
+		csrfValidateRequest();
 		$_SESSION = [];
 
 		if (ini_get("session.use_cookies")) {

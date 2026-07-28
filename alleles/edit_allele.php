@@ -87,6 +87,7 @@
         <!-- <form action="../alleles/submit_edited_allele.php" onsubmit="$(this).find('input').prop('disabled', false)" method="post"> -->
         <!-- enctype="multipart/form-data" is required to load the file -->
         <form class="needs-validation" novalidate action="../alleles/submit_edited_allele.php" method="post" enctype="multipart/form-data">
+          <?php echo csrfInput(); ?>
 
         <div class="row">
           <div class="col-md-3 mb-3">

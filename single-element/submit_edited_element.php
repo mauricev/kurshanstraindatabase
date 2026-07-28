@@ -1,4 +1,4 @@
-<?php include_once('../classes/session.php');?>
+<?php include_once('../classes/session.php'); csrfValidateRequest(); ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>

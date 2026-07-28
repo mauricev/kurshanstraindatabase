@@ -67,10 +67,11 @@ async function displayDate(whichProcess, theButtonID,strainID) {
 
 function processStrain(whichProcess, strainID, theButtonID, checkBoxState) {
 	try {
+	  var csrfToken = document.querySelector('input[name="csrf_token"]').value;
 	  $.ajax({
 	    url: '../strain_processing/process_strain.php',
 	    method: 'POST',
-	    data: { strainID: strainID, whichProcess: whichProcess, checkBoxState: checkBoxState },
+	    data: { strainID: strainID, whichProcess: whichProcess, checkBoxState: checkBoxState, csrf_token: csrfToken },
 	    success: function(data) {
 	    	// should run only for frozen and freeze
 	    	switch(whichProcess) {
@@ -276,4 +277,3 @@ function handleStrainButtons() {
 });
 
 }
-

@@ -1,6 +1,7 @@
 <?php
 
   include_once('../classes/session.php');
+  csrfValidateRequest();
 
   //header('Content-Type: application/json');
 

@@ -117,6 +117,7 @@
         ?>
       	</div>
     		<form class='needs-validation' action='../single-element/submit_edited_element.php' method='post'>
+          <?php echo csrfInput(); ?>
       		<div class='row'>
         		<div class='col-md-3 mb-3'>
           		<?php

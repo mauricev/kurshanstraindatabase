@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 	require_once(__DIR__ . '/../classes/classes_app_settings.php');
+	require_once(__DIR__ . '/../classes/csrf.php');
 ?>
 <html>
 <head>
@@ -30,6 +31,7 @@
       <p class="lead">Registration</p>
     </div>
     <form class="form-signin needs-validation" action="register.php" oninput='passwordConfirmation.setCustomValidity(passwordConfirmation.value != password.value ? "Passwords do not match." : "")' method="post">
+			<?php echo csrfInput(); ?>
 			<div class="row">
 				<div class="col-md-4 mb-3">
 					<!-- placeholder -->

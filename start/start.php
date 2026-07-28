@@ -34,6 +34,7 @@
 	<div class="container">
 		
 		<form class="needs-validation" action="" method="post">
+			<?php echo csrfInput(); ?>
 
 			<div class="row">
 				<div class="col-md-2 mb-3">

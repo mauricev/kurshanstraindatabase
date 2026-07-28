@@ -132,6 +132,7 @@
         }
       ?>
       <form class="needs-validation" novalidate action="../transgenes/submit_edited_transgene.php" method="POST">
+        <?php echo csrfInput(); ?>
         <div class="row">
           <div class="col-md-3 mb-3">
             <div class="custom-control custom-radio">

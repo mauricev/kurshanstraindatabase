@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-
 <?php
+	require_once('../classes/csrf.php');
+	csrfValidateRequest();
+
 	$userName = $_POST['username'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];

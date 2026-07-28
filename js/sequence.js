@@ -12,6 +12,7 @@ $(document).ready(function() {
       theReaderBinary.addEventListener('load', function(e) {
         var arrayBuffer = e.target.result;
         let filename = theFile.name;
+        var csrfToken = document.querySelector('input[name="csrf_token"]').value;
 
         $.ajax({
           url: "../sequence/save_sequence_file.php",
@@ -20,7 +21,8 @@ $(document).ready(function() {
           processData: false,
           contentType: "application/octet-stream",
           headers: {
-            "Content-Disposition": "attachment; filename=\"" + filename + "\""
+            "Content-Disposition": "attachment; filename=\"" + filename + "\"",
+            "X-CSRF-Token": csrfToken
           },
           success: function(response) {
             console.log(response);

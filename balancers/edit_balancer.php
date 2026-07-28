@@ -62,6 +62,7 @@
         }
       ?>
       <form class="needs-validation" novalidate action="../balancers/submit_edited_balancer.php" method="post">
+        <?php echo csrfInput(); ?>
         <div class="row">
           <div class="col-md-3">
             <label id='letters-label' class="tinylabel" for="balancerName_postvar">balancer name</label>

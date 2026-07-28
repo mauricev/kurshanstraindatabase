@@ -81,6 +81,7 @@
         }
       ?>
       <form class="needs-validation" novalidate action="../genes/submit_edited_gene.php" method="post">
+        <?php echo csrfInput(); ?>
         <div class="row">
           <div class="col-md-1">
             <label id='letters-label' class="tinylabel" for="geneLetters_postvar" >gene letters</label>

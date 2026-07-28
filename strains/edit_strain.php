@@ -248,6 +248,7 @@
           $theMoveButtonEnabledState = "disabled";
       ?>
       <form class="needs-validation" novalidate action="../strains/submit_edited_strain_entry.php"  method="post">
+        <?php echo csrfInput(); ?>
 
         <div class="row">
 

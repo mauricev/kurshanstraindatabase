@@ -131,6 +131,7 @@
 
       <!-- enctype="multipart/form-data" is required to load the file -->
       <form class="needs-validation" action="../plasmids/submit_edited_plasmid.php" method="post" enctype="multipart/form-data">
+        <?php echo csrfInput(); ?>
 
   			<div class="row">
   				<div class="form-group col-md-5 mb-3">

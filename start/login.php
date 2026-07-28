@@ -1,6 +1,8 @@
 <?php
 	//include_once('../classes/session.php');
 	require_once(__DIR__ . '/../classes/classes_database.php');
+	require_once(__DIR__ . '/../classes/csrf.php');
+	csrfValidateRequest();
 
 	if (AppSettings::instanceKey() === 'elisa') {
 		require_once(__DIR__ . '/../classes/classes_okta.php');
