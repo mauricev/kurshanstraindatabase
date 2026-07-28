@@ -166,11 +166,20 @@ function normalizeNewlines(string $value): string {
   return str_replace(["\r\n", "\r"], "\n", $value);
 }
 
+function stringEndsWith(string $value, string $suffix): bool {
+  $suffixLength = strlen($suffix);
+  if ($suffixLength === 0) {
+    return true;
+  }
+
+  return substr($value, -$suffixLength) === $suffix;
+}
+
 function trimOneFinalNewline(string $value): string {
-  if (str_ends_with($value, "\r\n")) {
+  if (stringEndsWith($value, "\r\n")) {
     return substr($value, 0, -2);
   }
-  if (str_ends_with($value, "\n") || str_ends_with($value, "\r")) {
+  if (stringEndsWith($value, "\n") || stringEndsWith($value, "\r")) {
     return substr($value, 0, -1);
   }
   return $value;
@@ -428,4 +437,3 @@ fclose($summaryHandle);
 echo "Wrote $detailsPath\n";
 echo "Wrote $summaryPath\n";
 echo "Wrote $recoveryPath\n";
-

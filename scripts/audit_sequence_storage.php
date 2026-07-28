@@ -301,10 +301,9 @@ foreach ($allFilenames as $filename => $references) {
   if (count($references) < 2) {
     continue;
   }
-  $referenceStrings = array_map(
-    static fn(array $reference): string => "{$reference['entity_type']}:{$reference['id']}:{$reference['name']}",
-    $references
-  );
+  $referenceStrings = array_map(function(array $reference): string {
+    return "{$reference['entity_type']}:{$reference['id']}:{$reference['name']}";
+  }, $references);
   writeTsvRow($duplicateHandle, [$filename, count($references), implode('; ', $referenceStrings)]);
 }
 fclose($duplicateHandle);
