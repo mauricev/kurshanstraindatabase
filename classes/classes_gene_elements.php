@@ -708,7 +708,7 @@
 		public function returnCurrentFreezerNitrogenNumbers(&$outCurrentFreezerFNumber_param, &$outCurrentFreezerIndex_param, &$outCurrentNitrogenNNumber_param, &$outCurrentNitrogenIndex_param) {
 			//$theCurrentFreezerFNumber_param, freezerNumber_col, is F-000 number
 			//$theCurrentNitrogenNNumber_param, nitrogenNumber_col, is N-000 number
-			$preparedSQLQuery = $this->sqlPrepare("SELECT freezerNumber_col,freezerLetter_col,nitrogenNumber_col,nitrogenLetter_col FROM counter_table WHERE counter_id = ?");
+			$preparedSQLQuery = $this->sqlPrepare("SELECT freezerNumber_col,freezerLetter_col,nitrogenNumber_col,nitrogenLetter_col FROM counter_table WHERE counter_id = ? FOR UPDATE");
 			$preparedSQLQuery->execute([1]);
 			$existingElement = $preparedSQLQuery->fetch();
 			$outCurrentFreezerFNumber_param = $existingElement['freezerNumber_col'];
