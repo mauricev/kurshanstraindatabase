@@ -1,14 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-require_once(__DIR__ . '/../classes/classes_database.php');
-require_once(__DIR__ . '/../classes/classes_app_settings.php');
-
 $sequenceDirectory = '/var/www/localhost/htdocs/straindatabase/sequence_files';
 $outputDirectory = getcwd();
+$databaseHost = 'localhost';
+$databaseName = 'straindatabase';
+$databaseUser = 'readonly';
 
 function usage(): void {
-  global $sequenceDirectory, $outputDirectory;
+  global $sequenceDirectory, $outputDirectory, $databaseHost, $databaseName, $databaseUser;
 
   echo <<<USAGE
 Usage: php scripts/audit_sequence_storage.php [options]
@@ -19,10 +19,16 @@ with sequence files on disk.
 Defaults:
   Sequence files: $sequenceDirectory
   Output dir:      $outputDirectory
+  MySQL host:      $databaseHost
+  MySQL database:  $databaseName
+  MySQL user:      $databaseUser
 
 Options:
   --sequence-dir DIR   Directory containing sequence files.
   --output-dir DIR     Directory for TSV output files.
+  --host HOST          MySQL host.
+  --database NAME      MySQL database name.
+  --user USER          MySQL user.
   --help              Show this help.
 
 Outputs:
@@ -46,6 +52,27 @@ for ($i = 1; $i < $argc; $i++) {
       $outputDirectory = $argv[++$i] ?? '';
       if ($outputDirectory === '') {
         fwrite(STDERR, "Missing value for --output-dir\n");
+        exit(2);
+      }
+      break;
+    case '--host':
+      $databaseHost = $argv[++$i] ?? '';
+      if ($databaseHost === '') {
+        fwrite(STDERR, "Missing value for --host\n");
+        exit(2);
+      }
+      break;
+    case '--database':
+      $databaseName = $argv[++$i] ?? '';
+      if ($databaseName === '') {
+        fwrite(STDERR, "Missing value for --database\n");
+        exit(2);
+      }
+      break;
+    case '--user':
+      $databaseUser = $argv[++$i] ?? '';
+      if ($databaseUser === '') {
+        fwrite(STDERR, "Missing value for --user\n");
         exit(2);
       }
       break;
@@ -153,7 +180,37 @@ function writeTsvRow($handle, array $row): void {
   fputcsv($handle, $row, "\t", '"', "\\");
 }
 
-function auditTable(Peri_Database $db, string $sequenceDirectory, string $outputPath, array $config, array &$filenames): array {
+function promptForPassword(string $user, string $host): string {
+  fwrite(STDERR, "MySQL password for $user@$host: ");
+  $canHideInput = function_exists('shell_exec') && function_exists('stream_isatty') && stream_isatty(STDIN);
+  if ($canHideInput) {
+    shell_exec('stty -echo');
+  }
+  $password = fgets(STDIN);
+  if ($canHideInput) {
+    shell_exec('stty echo');
+  }
+  fwrite(STDERR, "\n");
+
+  return rtrim((string)$password, "\r\n");
+}
+
+function connectDatabase(string $host, string $database, string $user): PDO {
+  $password = promptForPassword($user, $host);
+  $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
+
+  try {
+    return new PDO($dsn, $user, $password, [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+  } catch (PDOException $e) {
+    fwrite(STDERR, "Could not connect to MySQL as $user@$host for database $database: {$e->getMessage()}\n");
+    exit(1);
+  }
+}
+
+function auditTable(PDO $db, string $sequenceDirectory, string $outputPath, array $config, array &$filenames): array {
   $handle = fopen($outputPath, 'w');
   if ($handle === false) {
     throw new RuntimeException("Could not write $outputPath");
@@ -175,7 +232,7 @@ function auditTable(Peri_Database $db, string $sequenceDirectory, string $output
   ]);
 
   $sql = "SELECT {$config['id_column']} AS entity_id, {$config['name_column']} AS entity_name, sequenceDataName_col, sequence_data_col FROM {$config['table']} ORDER BY {$config['id_column']}";
-  $statement = $db->sqlPrepare($sql);
+  $statement = $db->prepare($sql);
   $statement->execute();
 
   $summary = [];
@@ -214,7 +271,7 @@ function auditTable(Peri_Database $db, string $sequenceDirectory, string $output
   return $summary;
 }
 
-$db = new Peri_Database();
+$db = connectDatabase($databaseHost, $databaseName, $databaseUser);
 $allFilenames = [];
 
 $alleleOutput = rtrim($outputDirectory, '/') . '/sequence_audit_alleles.tsv';
