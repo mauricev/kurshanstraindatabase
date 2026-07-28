@@ -292,6 +292,7 @@ class User extends Peri_Database {
     if (session_status() !== PHP_SESSION_ACTIVE) {
       session_start();
     }
+    session_regenerate_id(true);
     $_SESSION['loggedin'] = true;
     $_SESSION['user'] = $authorID;
     error_log("in setupSessionForUserID, user is $authorID");
