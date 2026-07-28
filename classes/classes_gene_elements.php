@@ -242,7 +242,7 @@
 		// SubGene
 		public function getNewCount () {
 
-			$preparedSQLQuery = $this->sqlPrepare("SELECT $this->columnNameForCounterTable_prop FROM counter_table WHERE counter_id = ?");
+			$preparedSQLQuery = $this->sqlPrepare("SELECT $this->columnNameForCounterTable_prop FROM counter_table WHERE counter_id = ? FOR UPDATE");
 			$preparedSQLQuery->execute([1]);
 			$existingCounter = $preparedSQLQuery->fetch();
 
@@ -273,11 +273,10 @@
 		// we handle the transaction
 		public function insertOurEntryWithCounterTableUpdate() {
 
-			$this->getNextName($theSubGeneCurrentCount,$theSubGeneName);
-
 			try {
 
 				$this->beginTransaction();
+				$this->getNextName($theSubGeneCurrentCount,$theSubGeneName);
 				// we are putting a number into $this->columnNameForCounterTable_prop: the updated number of records for this column
 				$preparedSQLQuery = $this->sqlPrepare("UPDATE counter_table SET $this->columnNameForCounterTable_prop = ? WHERE counter_id = ?");
 				$preparedSQLQuery->execute([$theSubGeneCurrentCount,"1"]);
@@ -297,11 +296,10 @@
 	// parent method insertOurEntryWithCounterTableUpdate handles the transaction
 	public function updateOurEntryWithCounterTableUpdate($existingAlleleID_param) {
 
-		$this->getNextName($theSubGeneCurrentCount,$theSubGeneName);
-
 		try {
 
 			$this->beginTransaction();
+			$this->getNextName($theSubGeneCurrentCount,$theSubGeneName);
 
 			// we are putting a number into $this->columnNameForCounterTable_prop: the updated number of records for this column
 			$preparedSQLQuery = $this->sqlPrepare("UPDATE counter_table SET $this->columnNameForCounterTable_prop = ? WHERE counter_id = ?");
