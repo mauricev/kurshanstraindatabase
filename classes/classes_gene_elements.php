@@ -37,7 +37,7 @@
 		public function doesItAlreadyExist() {
 
 				// how many records have this particular gene name?
-			$preparedSQLQuery = $this->sqlPrepare("SELECT COUNT(*) FROM $this->tableName_prop WHERE $this->columnNameForElement_prop = ?");
+			$preparedSQLQuery = $this->sqlPrepare("SELECT COUNT(*) AS existing_count FROM $this->tableName_prop WHERE $this->columnNameForElement_prop = ?");
 
 			$theArray = array($this->actualElementName_prop);
 
@@ -45,8 +45,7 @@
 
 			$existingElement = $preparedSQLQuery->fetch();
 
-			// if ($existingElement["COUNT(*)"] == "") element doesn't exist
-			$existingState = (!($existingElement["COUNT(*)"] == 0)); //BUG PHP 8 requires a number here, not ""
+			$existingState = ((int) $existingElement["existing_count"] !== 0);
 			if ($existingState) {
 				$this->actualLoggingObject->appendToLog("The item you just submitted, "  . $this->actualElementName_prop . ", was already in the database");
 				// it may be possible if need be to get the ID of the affected item and reload it, but let's see how it plays out before doing that
