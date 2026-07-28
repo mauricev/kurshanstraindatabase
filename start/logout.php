@@ -1,12 +1,22 @@
 <?php
 
-	session_start();
-	unset($_SESSION['loggerFileName']);
-	unset($_SESSION['user']);
-	unset($_SESSION['loggedin']);
-	unset($_SESSION['loggerFileName']);
-	unset($_SESSION['okta_state']);
-	unset($_SESSION['okta_nonce']);
+		session_start();
+		$_SESSION = [];
 
-	$result = header("location: ../start/login_landing.php");
-?>
+		if (ini_get("session.use_cookies")) {
+			$params = session_get_cookie_params();
+			setcookie(
+				session_name(),
+				'',
+				time() - 42000,
+				$params["path"],
+				$params["domain"],
+				$params["secure"],
+				$params["httponly"]
+			);
+		}
+
+		session_destroy();
+
+		$result = header("location: ../start/login_landing.php");
+	?>
