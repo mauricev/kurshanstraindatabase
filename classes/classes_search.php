@@ -222,7 +222,7 @@
 
 				$theOutGoingWhereString = "";
 				if (($incomingWhereString1 != "" ) && ($incomingWhereString2 != "" )) {
-					if ($incomingWhereString1 == "(") {
+					if ($this->isOpenGroupingClause($incomingWhereString1)) {
 						$theOutGoingWhereString = $incomingWhereString1 . $incomingWhereString2;
 					} else {
 						$theOutGoingWhereString = $incomingWhereString1 . $inConjunction_param . $incomingWhereString2;
@@ -236,6 +236,10 @@
 				//echo "<br>theOutGoingWhereString: " . $theOutGoingWhereString . "<br>";
 				//print_r("outgoing where, $theOutGoingWhereString <br>");
 				return $theOutGoingWhereString;
+		}
+
+		private function isOpenGroupingClause($whereClause_param) {
+				return trim($whereClause_param) === "(";
 		}
 
 		public function concatElementWhereClauseToMasterWhereClause($thePrimaryWhereClause_param) {

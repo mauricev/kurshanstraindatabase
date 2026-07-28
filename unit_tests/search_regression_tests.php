@@ -141,6 +141,21 @@ function search_test_assert_and_clause(string $name, array $clause, int $selecte
 	search_test_assert(reset($clause['having']) === $selectedCount, "$name should require all selected values in HAVING.");
 }
 
+function search_test_clause_combiner(string $elementWhereClause): GeneElementSearch {
+	$reflection = new ReflectionClass(GeneElementSearch::class);
+	$search = $reflection->newInstanceWithoutConstructor();
+	$whereProperty = $reflection->getProperty('theWhereClauseString_prop');
+	$whereProperty->setValue($search, $elementWhereClause);
+
+	return $search;
+}
+
+function search_test_assert_open_group_does_not_add_conjunction(string $name, string $openGroup): void {
+	$search = search_test_clause_combiner('foo = ?');
+	$combined = $search->concatElementWhereClauseToMasterWhereClauseInternal($openGroup, ' OR ');
+	search_test_assert($combined === $openGroup . 'foo = ?', "$name should append without adding a conjunction.");
+}
+
 function search_test_cases(array $ids): array {
 	return [
 		[
@@ -243,6 +258,8 @@ $shapeCases = [
 	['antibiotics AND clause shape', static fn() => search_test_assert_and_clause('antibiotics AND clause shape', search_test_antibiotic_clause($ids['antibiotics'], false), count($ids['antibiotics']))],
 	['fluorotags OR clause shape', static fn() => search_test_assert_or_clause('fluorotags OR clause shape', search_test_fluorotag_clause($ids['fluorotags'], true))],
 	['fluorotags AND clause shape', static fn() => search_test_assert_and_clause('fluorotags AND clause shape', search_test_fluorotag_clause($ids['fluorotags'], false), count($ids['fluorotags']))],
+	['open group clause append shape', static fn() => search_test_assert_open_group_does_not_add_conjunction('open group clause append shape', '(')],
+	['spaced open group clause append shape', static fn() => search_test_assert_open_group_does_not_add_conjunction('spaced open group clause append shape', '( ')],
 ];
 
 foreach ($shapeCases as [$name, $callback]) {
