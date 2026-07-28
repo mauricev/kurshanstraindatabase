@@ -27,22 +27,36 @@ class Logger {
       return $theFileReference;
     }
 
+    private function createUniqueLogFile() {
+      $theErrorMessage = "";
+      $theLogDirectory = AppSettings::loggingFilesDirectory();
+      set_error_handler(function($errno, $errstr) use (&$theErrorMessage) {
+        $theErrorMessage = $errstr;
+        return true;
+      });
+
+      $theLogPath = tempnam($theLogDirectory, 'peri-log-');
+      restore_error_handler();
+
+      if ($theLogPath === false) {
+        $this->rememberLoggingError("tempnam($theLogDirectory, peri-log-) failed: " . ($theErrorMessage !== "" ? $theErrorMessage : "unknown error"));
+        return false;
+      }
+
+      return $theLogPath;
+    }
+
     public function isLogFileSet() {
       return isset($_SESSION['loggerFileName']) && ($_SESSION['loggerFileName'] !== "");
     }
 
     public function createLogFile() {
-      $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
       unset($_SESSION['loggerLastError']);
 
-      for ($attemptNumber = 0; $attemptNumber < 5; $attemptNumber++) {
-        $theFileName = str_shuffle($permitted_chars);
-        $theFileReference = $this->openLogFile($this->returnLogPath($theFileName), 'x');
-        if ($theFileReference !== false) {
-          fclose($theFileReference);
-          $_SESSION['loggerFileName'] = $theFileName;
-          return true;
-        }
+      $theLogPath = $this->createUniqueLogFile();
+      if ($theLogPath !== false) {
+        $_SESSION['loggerFileName'] = basename($theLogPath);
+        return true;
       }
 
       unset($_SESSION['loggerFileName']);
