@@ -130,10 +130,17 @@ function connectDatabase(string $host, string $database, string $user): PDO {
   $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
   try {
-    return new PDO($dsn, $user, $password, [
+    $options = [
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
       PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+    ];
+    if (defined('Pdo\Mysql::ATTR_USE_BUFFERED_QUERY')) {
+      $options[constant('Pdo\Mysql::ATTR_USE_BUFFERED_QUERY')] = false;
+    } elseif (defined('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY')) {
+      $options[@constant('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY')] = false;
+    }
+
+    return new PDO($dsn, $user, $password, $options);
   } catch (PDOException $e) {
     fwrite(STDERR, "Could not connect to MySQL as $user@$host for database $database: {$e->getMessage()}\n");
     exit(1);
@@ -235,6 +242,18 @@ function printableSample(string $value): string {
   return $escaped;
 }
 
+function transformedComparisonResult(string $classification, string $left, string $right, string $recommendedSource, string $confidence, int $sqlBytes, int $diskBytes, string $sqlHash, string $diskHash): ?array {
+  if ($left !== $right) {
+    return null;
+  }
+
+  return [
+    'classification' => $classification,
+    'recommended_source' => $recommendedSource,
+    'confidence' => $confidence,
+  ] + metricDefaults($sqlBytes, $diskBytes, $sqlHash, $diskHash);
+}
+
 function compareData(?string $sqlData, ?string $diskData): array {
   $sqlHasData = $sqlData !== null && $sqlData !== '';
   $diskHasData = $diskData !== null && $diskData !== '';
@@ -257,26 +276,58 @@ function compareData(?string $sqlData, ?string $diskData): array {
     return ['classification' => 'exact_match', 'recommended_source' => 'either', 'confidence' => 'high'] + metricDefaults($sqlBytes, $diskBytes, $sqlHash, $diskHash);
   }
 
-  $tests = [
-    'newline_only' => [normalizeNewlines($sqlData), normalizeNewlines($diskData), 'either_after_newline_normalization', 'high'],
-    'one_final_newline_only' => [trimOneFinalNewline($sqlData), trimOneFinalNewline($diskData), 'either_after_final_newline_trim', 'high'],
-    'newlines_and_final_newline_only' => [trimOneFinalNewline(normalizeNewlines($sqlData)), trimOneFinalNewline(normalizeNewlines($diskData)), 'either_after_newline_normalization', 'high'],
-    'sql_html_entity_encoded' => [htmlDecode($sqlData), $diskData, 'disk', 'high'],
-    'disk_html_entity_encoded' => [$sqlData, htmlDecode($diskData), 'sql', 'medium'],
-    'control_chars_removed_only' => [removeControlCharacters($sqlData), removeControlCharacters($diskData), 'disk_probably_original', 'medium'],
-    'nul_bytes_removed_only' => [removeNulBytes($sqlData), removeNulBytes($diskData), 'disk_probably_original', 'medium'],
-    'decoded_sql_and_normalized_newlines' => [normalizeNewlines(htmlDecode($sqlData)), normalizeNewlines($diskData), 'disk', 'high'],
-    'control_chars_and_newlines_only' => [removeControlCharacters(normalizeNewlines($sqlData)), removeControlCharacters(normalizeNewlines($diskData)), 'disk_probably_original', 'medium'],
-  ];
+  $result = transformedComparisonResult('newline_only', normalizeNewlines($sqlData), normalizeNewlines($diskData), 'either_after_newline_normalization', 'high', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
 
-  foreach ($tests as $classification => [$left, $right, $recommendedSource, $confidence]) {
-    if ($left === $right) {
-      return [
-        'classification' => $classification,
-        'recommended_source' => $recommendedSource,
-        'confidence' => $confidence,
-      ] + metricDefaults($sqlBytes, $diskBytes, $sqlHash, $diskHash);
-    }
+  $result = transformedComparisonResult('one_final_newline_only', trimOneFinalNewline($sqlData), trimOneFinalNewline($diskData), 'either_after_final_newline_trim', 'high', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $sqlTransformed = trimOneFinalNewline(normalizeNewlines($sqlData));
+  $diskTransformed = trimOneFinalNewline(normalizeNewlines($diskData));
+  $result = transformedComparisonResult('newlines_and_final_newline_only', $sqlTransformed, $diskTransformed, 'either_after_newline_normalization', 'high', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  unset($sqlTransformed, $diskTransformed);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $result = transformedComparisonResult('sql_html_entity_encoded', htmlDecode($sqlData), $diskData, 'disk', 'high', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $result = transformedComparisonResult('disk_html_entity_encoded', $sqlData, htmlDecode($diskData), 'sql', 'medium', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $result = transformedComparisonResult('control_chars_removed_only', removeControlCharacters($sqlData), removeControlCharacters($diskData), 'disk_probably_original', 'medium', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $result = transformedComparisonResult('nul_bytes_removed_only', removeNulBytes($sqlData), removeNulBytes($diskData), 'disk_probably_original', 'medium', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $sqlTransformed = normalizeNewlines(htmlDecode($sqlData));
+  $diskTransformed = normalizeNewlines($diskData);
+  $result = transformedComparisonResult('decoded_sql_and_normalized_newlines', $sqlTransformed, $diskTransformed, 'disk', 'high', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  unset($sqlTransformed, $diskTransformed);
+  if ($result !== null) {
+    return $result;
+  }
+
+  $sqlTransformed = removeControlCharacters(normalizeNewlines($sqlData));
+  $diskTransformed = removeControlCharacters(normalizeNewlines($diskData));
+  $result = transformedComparisonResult('control_chars_and_newlines_only', $sqlTransformed, $diskTransformed, 'disk_probably_original', 'medium', $sqlBytes, $diskBytes, $sqlHash, $diskHash);
+  unset($sqlTransformed, $diskTransformed);
+  if ($result !== null) {
+    return $result;
   }
 
   $offset = firstDifferenceOffset($sqlData, $diskData);
