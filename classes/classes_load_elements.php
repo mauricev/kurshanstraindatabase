@@ -59,10 +59,13 @@
 		}
 
 		public function returnNamedSpecificRecord($elementToReturn_param) {
-			if (($elementToReturn_param != 0) || ($elementToReturn_param != NULL)) {
+			if (($elementToReturn_param != 0) && ($elementToReturn_param != NULL)) {
 				$this->preparedSQLQuery_prop = $this->sqlPrepare("SELECT $this->elementNameColumn_prop FROM $this->tableName_prop WHERE $this->elementIDColumn_prop = ?");
 				$this->preparedSQLQuery_prop->execute([$elementToReturn_param]);
 				$existingElement = $this->preparedSQLQuery_prop->fetch();
+				if ($existingElement === false) {
+					return "";
+				}
 				//we summarily return the entire associative array
 				return ($existingElement[$this->elementNameColumn_prop]);
 			} else {
