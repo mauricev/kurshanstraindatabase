@@ -192,8 +192,8 @@
 
 		public function updateOurEntry ($existingGeneElementID_param) {
 
-			$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForChromosome_prop = ? WHERE balancer_id = ?");
-			$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualChromosomeName_prop, $existingGeneElementID_param]);
+			$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForChromosome_prop = ?, $this->columnNameForChromosome2_prop = ? WHERE balancer_id = ?");
+			$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualChromosomeName_prop,$this->actualChromosomeName2_prop, $existingGeneElementID_param]);
 
 			$this->fillCommentString($theComment);
 			$this->fillChromosomeString($theChromosomeString);
