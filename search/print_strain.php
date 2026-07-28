@@ -33,104 +33,35 @@
         $theOutputString = urldecode($_GET['output']);
         
         $theOutputStringBrokenUp = explode("¶", $theOutputString);
-        $strainID = $theOutputStringBrokenUp[1];
-        $strainName = $theOutputStringBrokenUp[2];
-        $genoType = $theOutputStringBrokenUp[3];
-        $isolation = $theOutputStringBrokenUp[4];
-        $strain_comments = $theOutputStringBrokenUp[5];
-        $genoType_comments = $theOutputStringBrokenUp[6];
-        $transgene_info = $theOutputStringBrokenUp[7];
-        $parent_strains = $theOutputStringBrokenUp[8];
-        $contributor = $theOutputStringBrokenUp[9];
-        $freezer = $theOutputStringBrokenUp[10];
-        $nitrogen = $theOutputStringBrokenUp[11];
-        $allele_sequence = $theOutputStringBrokenUp[12];
-        $handed = $theOutputStringBrokenUp[13];
-        $frozen = $theOutputStringBrokenUp[14];
-        $survived = $theOutputStringBrokenUp[15];
-        $moved = $theOutputStringBrokenUp[16];
-        $thawed = $theOutputStringBrokenUp[17];
-        $authored = $theOutputStringBrokenUp[18];
-        $edited = $theOutputStringBrokenUp[19];
+        $strainFields = [
+          'strain id' => $theOutputStringBrokenUp[1] ?? '',
+          'strain name' => $theOutputStringBrokenUp[2] ?? '',
+          'genotype' => $theOutputStringBrokenUp[3] ?? '',
+          'isolation name' => $theOutputStringBrokenUp[4] ?? '',
+          'strain comments' => $theOutputStringBrokenUp[5] ?? '',
+          'genotype comments' => $theOutputStringBrokenUp[6] ?? '',
+          'transgene info' => $theOutputStringBrokenUp[7] ?? '',
+          'parent strains' => $theOutputStringBrokenUp[8] ?? '',
+          'contributor' => $theOutputStringBrokenUp[9] ?? '',
+          'freezer location' => $theOutputStringBrokenUp[10] ?? '',
+          'nitrogen location' => $theOutputStringBrokenUp[11] ?? '',
+          'allele sequence file' => $theOutputStringBrokenUp[12] ?? '',
+          'handed off date' => $theOutputStringBrokenUp[13] ?? '',
+          'frozen on' => $theOutputStringBrokenUp[14] ?? '',
+          'survived on' => $theOutputStringBrokenUp[15] ?? '',
+          'moved to final dest on' => $theOutputStringBrokenUp[16] ?? '',
+          'thawed on' => $theOutputStringBrokenUp[17] ?? '',
+          'authored by' => $theOutputStringBrokenUp[18] ?? '',
+          'edited by' => $theOutputStringBrokenUp[19] ?? '',
+        ];
 
         echo "<table class='table table-striped table-hover table-bordered'>";
-        $theTableOutputClass = new TableOutputClass();
+        foreach ($strainFields as $label => $value) {
           echo "<tr class='table-primary'>";
-            echo "<td>strain id</td>";
-            echo "<td>$strainID</td>";
+            echo "<td>" . h($label) . "</td>";
+            echo "<td>" . h($value) . "</td>";
           echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>strain name</td>";
-            echo "<td>$strainName</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>genotype</td>";
-            echo "<td>$genoType</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>isolation name</td>";
-            echo "<td>$isolation</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>strain comments</td>";
-            echo "<td>$strain_comments</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>genotype comments</td>";
-            echo "<td>$genoType_comments</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>transgene info</td>";
-            echo "<td>$transgene_info</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>parent strains</td>";
-            echo "<td>$parent_strains</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>contributor</td>";
-            echo "<td>$contributor</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>freezer location</td>";
-            echo "<td>$freezer</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>nitrogen location</td>";
-            echo "<td>$nitrogen</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>allele sequence file</td>";
-            echo "<td>$allele_sequence</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>handed off date</td>";
-            echo "<td>$handed</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>frozen on</td>";
-            echo "<td>$frozen</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>survived on</td>";
-            echo "<td>$survived</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>moved to final dest on</td>";
-            echo "<td>$moved</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>thawed on</td>";
-            echo "<td>$thawed</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>authored by</td>";
-            echo "<td>$authored</td>";
-          echo "</tr>";
-          echo "<tr class='table-primary'>";
-            echo "<td>edited by</td>";
-            echo "<td>$edited</td>";
-          echo "</tr>";
+        }
         echo "</table>";
 
       ?>

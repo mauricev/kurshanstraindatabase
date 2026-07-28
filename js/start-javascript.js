@@ -100,7 +100,7 @@ function updateLog() {
 	    url: '../strain_processing/update_log.php',
 	    method: 'POST',
 	    success: function(data) {
-	    	document.getElementById('textareaID').innerHTML = data;
+	    	document.getElementById('textareaID').value = data;
 	    },
 	    error: function(error) {
 	    	console.log(error);

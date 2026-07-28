@@ -149,7 +149,7 @@ class Logger {
         $theLogString = $theLogString . $theCounter . " " . $theLine . "\n";
         $theCounter++;
       }
-      return htmlspecialchars($theLogString,ENT_QUOTES);
+      return $theLogString;
     }
   }
 }

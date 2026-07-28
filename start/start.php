@@ -282,18 +282,19 @@ ORDER BY strainName_col ASC;";
 								foreach ($theSearchResult as $theStrainID) {
 
 									// we track row numbers so we know which one to delete when handed off
-									echo "<tr id=$theRowNumber>";
+									echo "<tr id='" . h($theRowNumber) . "'>";
 
 
 									$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
-									$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-									echo "<td>$theStrainName</td>";
+									$theStrainName = $theStrainArray['strainName_col'];
+									$theStrainIDValue = $theStrainID['strain_id'];
+									echo "<td>" . h($theStrainName) . "</td>";
 
 									echo "<td>";
-                  					$theButtonID = "handoff-button-row-" . $theRowNumber . "-strainid-" . $theStrainID['strain_id'] . "-strain_name-" . $theStrainName;
+                  					$theButtonID = "handoff-button-row-" . $theRowNumber . "-strainid-" . $theStrainIDValue . "-strain_name-" . $theStrainName;
                   					// class "download" is used to identify the button
                   					// we use a class because there are multiple buttons on this page
-                  					echo "<button type='button' id=$theButtonID class='btn btn-outline-info btn-sm handoff'>handoff</button>";
+                  					echo "<button type='button' id='" . h($theButtonID) . "' class='btn btn-outline-info btn-sm handoff'>handoff</button>";
 									echo "</td>";
 
 									echo "</tr>";
@@ -347,29 +348,29 @@ ORDER BY strainName_col ASC;";
 									foreach ($theSearchResult as $theStrainID) {
 
 										// we track row numbers so we know which one to delete when handed off
-										echo "<tr id=$theRowNumber>";
+										echo "<tr id='" . h($theRowNumber) . "'>";
 
 										$theStrainArray = $theStrainClass->returnSpecificRecord($theStrainID['strain_id']);
-										$theStrainName = htmlspecialchars($theStrainArray['strainName_col'],ENT_QUOTES);
-										$theStrainID = htmlspecialchars($theStrainArray['strain_id'],ENT_QUOTES);
+										$theStrainName = $theStrainArray['strainName_col'];
+										$theStrainID = $theStrainArray['strain_id'];
 										if ($theStrainArray['dateFrozen_col'] != null) {
-											$theFrozenDate = htmlspecialchars($theStrainArray['dateFrozen_col'],ENT_QUOTES);
+											$theFrozenDate = $theStrainArray['dateFrozen_col'];
 										} else {
 											$theFrozenDate = "";
 										}
 										if ($theStrainArray['dateSurvived_col'] != null) {
-											$theSurvivalDate = htmlspecialchars($theStrainArray['dateSurvived_col'],ENT_QUOTES);
+											$theSurvivalDate = $theStrainArray['dateSurvived_col'];
 										} else {
 											$theSurvivalDate = "";
 										}
 										
-										echo "<td>$theStrainName</td>";
+										echo "<td>" . h($theStrainName) . "</td>";
 
 										echo "<td>";
 										// i am here
 
 											$sendBackButtonID = "sendback-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
-	                  	echo "<button type='button' id=$sendBackButtonID class='btn btn-outline-info btn-sm sendback'>send back</button>";
+	                  	echo "<button type='button' id='" . h($sendBackButtonID) . "' class='btn btn-outline-info btn-sm sendback'>send back</button>";
 											
 										echo "</td>";
 
@@ -399,14 +400,14 @@ ORDER BY strainName_col ASC;";
 											echo "<div class='form-check'>";
 											  echo "<div class='custom-control custom-checkbox'>";
 											    if ($theFrozenState) {
-											      echo "<input type='checkbox' class='form-check-input frozen' checked $theFrozenButtonState id=$frozenButtonID>";
+											      echo "<input type='checkbox' class='form-check-input frozen' checked $theFrozenButtonState id='" . h($frozenButtonID) . "'>";
 											    } else {
-											      echo "<input type='checkbox' class='form-check-input frozen' $theFrozenButtonState id=$frozenButtonID>";
+											      echo "<input type='checkbox' class='form-check-input frozen' $theFrozenButtonState id='" . h($frozenButtonID) . "'>";
 											    }
-											    echo "<label class='form-check-label' for='$frozenButtonID'>Frozen?</label>";
+											    echo "<label class='form-check-label' for='" . h($frozenButtonID) . "'>Frozen?</label>";
 											  echo "</div>";
 											echo "</div>";
-											echo "<span id=$frozenDateID>$theFrozenDate</span>"; 
+											echo "<span id='" . h($frozenDateID) . "'>" . h($theFrozenDate) . "</span>"; 
 
 										echo "</td>";
 
@@ -414,28 +415,28 @@ ORDER BY strainName_col ASC;";
 											echo "<div class='form-check'>";
 			                  					echo "<div class='custom-control custom-checkbox'>";
 			                  						if ($theSurvivalState) {
-			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState checked id=$survivalButtonID>";
+			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState checked id='" . h($survivalButtonID) . "'>";
 			                  						} else {
-			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState id=$survivalButtonID>";
+			                  							echo "<input type='checkbox' class='form-check-input survival' $theSurvivalButtonEnabledState id='" . h($survivalButtonID) . "'>";
 			                  						}
 													echo "<label class='form-check-label' for='customCheck1'>Survived?</label>";
 												echo "</div>";
 											echo "</div>";
-											echo "<span id=$survivalDateID>$theSurvivalDate</span>"; 
+											echo "<span id='" . h($survivalDateID) . "'>" . h($theSurvivalDate) . "</span>"; 
 										echo "</td>";
 
 										$theHighValueArray = new LoadHighValueStrain();
 										if(isset($theStrainArray['high_value_reason_fk'])) {
 											$theHighValueReasonArray = $theHighValueArray->returnSpecificRecord($theStrainArray['high_value_reason_fk']);
 											$theHighValueReason = $theHighValueReasonArray['strain_value'];
-											echo "<td>$theHighValueReason</td>";
+											echo "<td>" . h($theHighValueReason) . "</td>";
 										} else {
 											echo "<td></td>";
 										}
 										
 										echo "<td>";
 										$finalDestinationButtonID = "finaldestination-button-row-" . $theRowNumber . "-strainid-" . $theStrainID . "-strain_name-" . $theStrainName;
-										echo "<button type='button' id=$finalDestinationButtonID class='btn btn-outline-info btn-sm finaldestination' $theMoveButtonEnabledState>final move...</button>";
+										echo "<button type='button' id='" . h($finalDestinationButtonID) . "' class='btn btn-outline-info btn-sm finaldestination' $theMoveButtonEnabledState>final move...</button>";
 										echo "</td>";
 
 										echo "</tr>";
@@ -464,29 +465,29 @@ ORDER BY strainName_col ASC;";
 
 			
 
-			<div class="row">
-				<div class="col-md-12 mb-3">
-					<label for="textarea_htmlName">what you have done so far</label>
-					<?php
-						require_once('../classes/logger.php');
+				<div class="row">
+					<div class="col-md-12 mb-3">
+						<label for="textarea_htmlName">what you have done so far</label>
+						<?php
+							require_once('../classes/logger.php');
 						$theLogObject = new Logger();
 						$theLogDiagnostics = $theLogObject->returnDiagnostics();
 						echo "<div class='alert alert-secondary twelvepoints' role='status'>";
 						echo "<strong>Logging diagnostics</strong>";
-						echo "<table class='table table-sm table-bordered mt-2 mb-0'>";
-						foreach ($theLogDiagnostics as $theDiagnosticLabel => $theDiagnosticValue) {
-							echo "<tr>";
-							echo "<th scope='row'>" . htmlspecialchars($theDiagnosticLabel, ENT_QUOTES) . "</th>";
-							echo "<td><code>" . htmlspecialchars($theDiagnosticValue, ENT_QUOTES) . "</code></td>";
-							echo "</tr>";
-						}
-						echo "</table>";
-						echo "</div>";
-						$theLogString = $theLogObject->returnLog();
-						echo "<textarea id='textareaID' name='textarea_htmlName' class='md-textarea twelvepoints'  readonly style='width:100%; overflow-y:scroll' rows='16'>$theLogString</textarea>";
-					?>
+							echo "<table class='table table-sm table-bordered mt-2 mb-0'>";
+							foreach ($theLogDiagnostics as $theDiagnosticLabel => $theDiagnosticValue) {
+								echo "<tr>";
+								echo "<th scope='row'>" . h($theDiagnosticLabel) . "</th>";
+								echo "<td><code>" . h($theDiagnosticValue) . "</code></td>";
+								echo "</tr>";
+							}
+							echo "</table>";
+							echo "</div>";
+							$theLogString = $theLogObject->returnLog();
+							echo "<textarea id='textareaID' name='textarea_htmlName' class='md-textarea twelvepoints'  readonly style='width:100%; overflow-y:scroll' rows='16'>" . h($theLogString) . "</textarea>";
+						?>
+					</div>
 				</div>
-			</div>
 
 			<div class="row">
 				<div class="col-md-2 mb-3">
