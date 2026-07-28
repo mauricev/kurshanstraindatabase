@@ -573,7 +573,7 @@
 			echo "<select id=\"$this->selectID_prop\" name=\"$this->selectName_prop\" placeholder=\"$this->placeholder_prop\">";
 			echo "<option value=''>$this->placeholder_prop</option>";
 			foreach($theArray as $row) {
-				$name = $row[$this->elementNameColumn_prop];
+				$name = htmlspecialchars($row[$this->elementNameColumn_prop],ENT_QUOTES);
 				// promoters get prepended with a P
 				$name = "P" . $name;
 				$id = $row[$this->elementIDColumn_prop];
@@ -595,7 +595,7 @@
 			foreach ($theEntireArray as $theEntireArrayItem)
 			{
 				// Promoters get marked with a P
-				$name = $theEntireArrayItem[$this->elementNameColumn_prop];
+				$name = htmlspecialchars($theEntireArrayItem[$this->elementNameColumn_prop],ENT_QUOTES);
 				// promoters get prepended with a P
 				$name = "P" . $name;
 				$id = $theEntireArrayItem[$this->elementIDColumn_prop];
