@@ -1,40 +1,41 @@
 <?php
-  // we start off by assuming nothing for the sequence stuff and then adding the filename the sequencefilename
-  // the actual sequence data is indepdenently being saved to disk by separate javascript/php code.
-  // we are just leaving thiis code here so as not to break anything with the saving code.
+  require_once(__DIR__ . '/sequence_file_paths.php');
+
+  function sequenceUniqueStoredFilename(string $filename): string {
+    $filename = sequenceSafeFilename($filename);
+    $suffix = '-' . bin2hex(random_bytes(8));
+    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+    if ($extension !== '') {
+      $stem = substr($filename, 0, -(strlen($extension) + 1));
+      $maxStemLength = 255 - strlen($suffix) - strlen($extension) - 1;
+      $storedFilename = substr($stem, 0, $maxStemLength) . $suffix . "." . $extension;
+    } else {
+      $storedFilename = substr($filename, 0, 255 - strlen($suffix)) . $suffix;
+    }
+
+    return sequenceSafeFilename($storedFilename);
+  }
+
+  // Store new uploads on disk and keep only the stored filename in the database.
   $theSequenceFileName = "";
-  $theSequenceFileData = "";
-  echo "files<br>";
-  var_dump($_FILES);
-  echo "<br>";
+  $theSequenceFileData = NULL;
+  $theSequenceFieldsShouldBeUpdated = false;
 
-  if(isset($_FILES['fileChooser_htmlName'])) {
-    $theSequenceFileName = $_FILES['fileChooser_htmlName']['name'];
+  if(isset($_FILES['fileChooser_htmlName']) && ($_FILES['fileChooser_htmlName']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK && ($_FILES['fileChooser_htmlName']['name'] ?? '') !== "") {
+    $theSequenceFileName = sequenceUniqueStoredFilename($_FILES['fileChooser_htmlName']['name']);
+    $theSequenceFilePath = sequenceFilePath($theSequenceFileName, false);
+    if (!(move_uploaded_file($_FILES['fileChooser_htmlName']['tmp_name'], $theSequenceFilePath))) {
+      throw new RuntimeException('Unable to save sequence file.');
+    }
+    $theSequenceFieldsShouldBeUpdated = true;
   }
 
-  if(isset($_POST['sequenceFileData_htmlName']) && $_POST['sequenceFileData_htmlName'] != "" ) {
-    $theSequenceFileData = $_POST['sequenceFileData_htmlName'];
-  }
   if ($isEntityBeingEdited) {
     $theOriginalSequenceFileName = $_POST['originalSequenceFileName_postvar'];
     $theOriginalSequenceData = $_POST['originalSequenceFile_postvar'];
-    // sequence data hasn't changed! Has the name changed?
-
-    // I am not quite sure what I wrote here. I think I am remove control keys and converting them to commas
-    $theOldSequenceFileDataNoCntrl = preg_replace('/[[:cntrl:]]/', '', $theOriginalSequenceData);
-    $theSequenceFileDataNoCntrl = preg_replace('/[[:cntrl:]]/', '', $theSequenceFileData);
-    if ($theOldSequenceFileDataNoCntrl == $theSequenceFileDataNoCntrl) { // either no change or loaded the same file twice
-      // one of two things are true; same data was loaded or NO data was loaded, in this last instance, filename is NULL
-      // filename may or may not have changed
-      // if filename wasn't set we didn't make any changes to the file or the filename, record the oldfilename
-      if($theSequenceFileName == "") {
-        $theSequenceFileName = $theOriginalSequenceFileName;
-      }
-    } else {
-      if ($theSequenceFileData == "") {
-        // if it's null, we never set it, so it should retain the old name
-        $theSequenceFileName = $theOriginalSequenceFileName;
-      }
+    if (!$theSequenceFieldsShouldBeUpdated) {
+      $theSequenceFileName = $theOriginalSequenceFileName;
+      $theSequenceFileData = $theOriginalSequenceData;
     }
   }
 ?>

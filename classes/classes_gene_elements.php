@@ -508,8 +508,9 @@
 		protected $correspondingGene_prop;
 		protected $actualSequenceDataFileName_prop;
 		protected $actualSequenceData;
+		protected bool $sequenceFieldsShouldBeUpdated_prop;
 
-		public function __construct($name_param, $comments_param,$correspondingGene_param,$sequenceDataFileName_param,$selectedSequenceData) {
+		public function __construct($name_param, $comments_param,$correspondingGene_param,$sequenceDataFileName_param,$selectedSequenceData,$sequenceFieldsShouldBeUpdated_param = true) {
 			parent::__construct($name_param,"",$comments_param,"");
 
 			$this->tableName_prop = "allele_table";
@@ -524,6 +525,7 @@
 
 			$this->actualSequenceData = $selectedSequenceData;
 			$this->actualSequenceDataFileName_prop = $sequenceDataFileName_param;
+			$this->sequenceFieldsShouldBeUpdated_prop = $sequenceFieldsShouldBeUpdated_param;
 		}
 
 		protected function returnLoggingForAlleleGene( &$geneForAlleleLogString_param) {
@@ -540,9 +542,13 @@
 		// there is no common method for updateourentry because the fields are always different
 		// technically, allele shouldn't be a direct descendent of subgene because its parent gene has a chromosome component and alleles do not
 		public function updateOurEntry ($existingGeneElementID_param) {
-			$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ?, sequenceDataName_col = ?, sequence_data_col = ? WHERE allele_id = ?");
-
-			$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->correspondingGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,$existingGeneElementID_param]);
+			if ($this->sequenceFieldsShouldBeUpdated_prop) {
+				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ?, sequenceDataName_col = ?, sequence_data_col = ? WHERE allele_id = ?");
+				$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->correspondingGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,$existingGeneElementID_param]);
+			} else {
+				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ? WHERE allele_id = ?");
+				$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->correspondingGene_prop,$existingGeneElementID_param]);
+			}
 
 			$this->returnLoggingForAlleleGene($geneForAlleleLogString);
 			$this->fillCommentString($theComment);
@@ -586,8 +592,13 @@
 		public function updateEntryAfterCounterTableUpdate($theSubGeneName,$existingGeneElementID_param) {
 			// I am confused, but chromosomes are entered only if the transgene is integrated and alleles don't get chromosomes
 
-			$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ?, sequenceDataName_col = ?, sequence_data_col = ? WHERE allele_id = ?");
-			$preparedSQLQuery->execute([$theSubGeneName,$this->actualComments_prop,$this->correspondingGene_prop,$this->actualSequenceDataFileName_prop,$this->actualSequenceData, $existingGeneElementID_param]);
+			if ($this->sequenceFieldsShouldBeUpdated_prop) {
+				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ?, sequenceDataName_col = ?, sequence_data_col = ? WHERE allele_id = ?");
+				$preparedSQLQuery->execute([$theSubGeneName,$this->actualComments_prop,$this->correspondingGene_prop,$this->actualSequenceDataFileName_prop,$this->actualSequenceData, $existingGeneElementID_param]);
+			} else {
+				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, $this->columnNameForGene_prop = ? WHERE allele_id = ?");
+				$preparedSQLQuery->execute([$theSubGeneName,$this->actualComments_prop,$this->correspondingGene_prop, $existingGeneElementID_param]);
+			}
 
 			$this->returnLoggingForAlleleGene($geneForAlleleLogString);
 			$this->fillCommentString($theComment);
@@ -1089,8 +1100,9 @@
 		protected $actualContributorID_prop;
 		protected $actualSequenceDataFileName_prop;
 		protected $actualSequenceData;
+		protected bool $sequenceFieldsShouldBeUpdated_prop;
 
-		public function __construct($name_param, $othercDNA_param, $location_param, $comments_param,$setOfAntibiotics_param,$setOfNTags_param,$setOfCTags_param,$setOfInternalTags_param, $promoter_param,$gene_param,$contributorID_param,$sequenceDataFileName_param,$selectedSequenceData) {
+		public function __construct($name_param, $othercDNA_param, $location_param, $comments_param,$setOfAntibiotics_param,$setOfNTags_param,$setOfCTags_param,$setOfInternalTags_param, $promoter_param,$gene_param,$contributorID_param,$sequenceDataFileName_param,$selectedSequenceData,$sequenceFieldsShouldBeUpdated_param = true) {
 			// pass empty string for chromosome.
 			parent::__construct($name_param,"",$comments_param);
 
@@ -1119,6 +1131,7 @@
 			$this->actualSequenceDataFileName_prop = $sequenceDataFileName_param;
 
 			$this->actualSequenceData = $selectedSequenceData;
+			$this->sequenceFieldsShouldBeUpdated_prop = $sequenceFieldsShouldBeUpdated_param;
 
 		}
 
@@ -1223,8 +1236,13 @@
 			try {
 				$this->beginTransaction();
 
-				$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, other_cDNA_col = ? , plasmidLocation_col = ?,promotorGene_fk = ? ,gene_fk = ?, sequenceDataName_col = ?, sequence_data_col = ?, editor_fk = ? WHERE plasmid_id = ?");
-				$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,  $_SESSION['user'], $existingGeneElementID_param]);
+				if ($this->sequenceFieldsShouldBeUpdated_prop) {
+					$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, other_cDNA_col = ? , plasmidLocation_col = ?,promotorGene_fk = ? ,gene_fk = ?, sequenceDataName_col = ?, sequence_data_col = ?, editor_fk = ? WHERE plasmid_id = ?");
+					$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop,$this->actualSequenceDataFileName_prop, $this->actualSequenceData,  $_SESSION['user'], $existingGeneElementID_param]);
+				} else {
+					$preparedSQLQuery = $this->sqlPrepare("UPDATE $this->tableName_prop SET $this->columnNameForElement_prop = ?, $this->columnWithCommentName_prop = ?, contributor_fk = ?, other_cDNA_col = ? , plasmidLocation_col = ?,promotorGene_fk = ? ,gene_fk = ?, editor_fk = ? WHERE plasmid_id = ?");
+					$preparedSQLQuery->execute([$this->actualElementName_prop,$this->actualComments_prop,$this->actualContributorID_prop,$this->actualOthercDNA_prop,$this->actualLocation_prop,$this->actualPromoter_prop,$this->actualGene_prop, $_SESSION['user'], $existingGeneElementID_param]);
+				}
 
 				$preparedSQLQuery = $this->sqlPrepare("DELETE FROM plasmid_to_antibiotic_table WHERE plasmid_fk = ?");
 				$preparedSQLQuery->execute([$existingGeneElementID_param]);

@@ -82,7 +82,7 @@
         require_once("../sequence/submit_sequence.php");
 
         echo "contributor being passed to new plasmid is " . $selectedContributor[0] . "<br>";
-        $newPlasmidObject = new Plasmid($thePlasmidName, $theOthercDNA, $thePlasmidLocation, $theComment,$selectedAntibiotics,$selectedNTags,$selectedCTags,$selectedITags,$selectedPromoter[0], $selectedGene[0],$selectedContributor[0],$theSequenceFileName,$theSequenceFileData);
+        $newPlasmidObject = new Plasmid($thePlasmidName, $theOthercDNA, $thePlasmidLocation, $theComment,$selectedAntibiotics,$selectedNTags,$selectedCTags,$selectedITags,$selectedPromoter[0], $selectedGene[0],$selectedContributor[0],$theSequenceFileName,$theSequenceFileData,$theSequenceFieldsShouldBeUpdated);
         if ($isEntityBeingEdited) {
 
           $plasmidHasBeenChanged = false;
@@ -107,8 +107,7 @@
           }
 
           // 1) new entry, has file name and data or nothing
-          // we save sequence data of nothing ($theSequenceFileData = "")
-          // or we save sequence data of somthing $theSequenceFileData = $_POST['sequenceFileData_htmlName'];
+          // new sequence uploads are saved to disk; SQL keeps only the stored filename
           // now we edit possibilities
           // 1) we leave everything alone
           // 2) we upload the same file with a different name
@@ -125,7 +124,7 @@
           // otherwise, pass back old name
 
 
-          if ($theOriginalSequenceData != $theSequenceFileData) {
+          if ($theSequenceFieldsShouldBeUpdated) {
             $plasmidHasBeenChanged = true;
           }
 
