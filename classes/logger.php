@@ -100,6 +100,10 @@ class Logger {
     $thePhpEffectiveUID = "unknown";
     $thePosixFunctionsAvailable = "no";
     $theUIDLookupStatus = "POSIX functions unavailable";
+    $theScriptFileOwner = function_exists('get_current_user') ? get_current_user() : "unknown";
+    $theServerUser = $_SERVER['USER'] ?? $_SERVER['USERNAME'] ?? $_SERVER['LOGNAME'] ?? "not set";
+    $theShellIDUser = "not available";
+    $theShellIDUID = "not available";
 
     if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
       $thePosixFunctionsAvailable = "yes";
@@ -110,6 +114,20 @@ class Logger {
         $theUIDLookupStatus = "resolved";
       } else {
         $theUIDLookupStatus = "no user name found for UID";
+      }
+    }
+    elseif (function_exists('shell_exec')) {
+      $theDisabledFunctions = array_map('trim', explode(',', (string)ini_get('disable_functions')));
+      if (!(in_array('shell_exec', $theDisabledFunctions, true))) {
+        $theShellIDUser = trim((string)shell_exec('id -un 2>/dev/null'));
+        $theShellIDUID = trim((string)shell_exec('id -u 2>/dev/null'));
+
+        if ($theShellIDUser === '') {
+          $theShellIDUser = "not available";
+        }
+        if ($theShellIDUID === '') {
+          $theShellIDUID = "not available";
+        }
       }
     }
 
@@ -123,6 +141,10 @@ class Logger {
       'PHP effective uid' => $thePhpEffectiveUID,
       'PHP effective user' => $thePhpUser,
       'UID lookup status' => $theUIDLookupStatus,
+      'script file owner' => $theScriptFileOwner,
+      'server environment user' => $theServerUser,
+      'shell id user fallback' => $theShellIDUser,
+      'shell id uid fallback' => $theShellIDUID,
       'session log file' => $theSessionLogFile !== "" ? $theSessionLogFile : 'not set',
       'session log path' => $theSessionLogPath !== "" ? $theSessionLogPath : 'not set',
       'session log exists' => $theSessionLogPath !== "" && is_file($theSessionLogPath) ? 'yes' : 'no',
