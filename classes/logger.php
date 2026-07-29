@@ -97,11 +97,19 @@ class Logger {
     $theSessionLogFile = $this->isLogFileSet() ? $_SESSION['loggerFileName'] : "";
     $theSessionLogPath = $theSessionLogFile !== "" ? $this->returnLogPath($theSessionLogFile) : "";
     $thePhpUser = "unknown";
+    $thePhpEffectiveUID = "unknown";
+    $thePosixFunctionsAvailable = "no";
+    $theUIDLookupStatus = "POSIX functions unavailable";
 
     if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
-      $theUserInfo = posix_getpwuid(posix_geteuid());
+      $thePosixFunctionsAvailable = "yes";
+      $thePhpEffectiveUID = posix_geteuid();
+      $theUserInfo = posix_getpwuid($thePhpEffectiveUID);
       if ($theUserInfo !== false && isset($theUserInfo['name'])) {
         $thePhpUser = $theUserInfo['name'];
+        $theUIDLookupStatus = "resolved";
+      } else {
+        $theUIDLookupStatus = "no user name found for UID";
       }
     }
 
@@ -111,7 +119,10 @@ class Logger {
       'is directory' => is_dir($theLogDirectory) ? 'yes' : 'no',
       'directory readable' => is_readable($theLogDirectory) ? 'yes' : 'no',
       'directory writable' => is_writable($theLogDirectory) ? 'yes' : 'no',
+      'POSIX functions available' => $thePosixFunctionsAvailable,
+      'PHP effective uid' => $thePhpEffectiveUID,
       'PHP effective user' => $thePhpUser,
+      'UID lookup status' => $theUIDLookupStatus,
       'session log file' => $theSessionLogFile !== "" ? $theSessionLogFile : 'not set',
       'session log path' => $theSessionLogPath !== "" ? $theSessionLogPath : 'not set',
       'session log exists' => $theSessionLogPath !== "" && is_file($theSessionLogPath) ? 'yes' : 'no',
