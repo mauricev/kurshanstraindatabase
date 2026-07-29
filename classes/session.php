@@ -1,9 +1,10 @@
 <?php
 require_once(__DIR__ . '/classes_app_settings.php');
+require_once(__DIR__ . '/session_cookie.php');
 require_once(__DIR__ . '/csrf.php');
 require_once(__DIR__ . '/html.php');
 
-session_start();
+startSecureSession();
 if (!(isset($_SESSION['loggedin']))) {
   // if the session loggedin is not set, we are not logged in, redirect to the login page
   header("location: ../start/login_landing.php");

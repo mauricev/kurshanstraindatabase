@@ -290,7 +290,8 @@ class User extends Peri_Database {
 
   public function setupSessionForUserID(int $authorID) {
     if (session_status() !== PHP_SESSION_ACTIVE) {
-      session_start();
+      require_once(__DIR__ . '/session_cookie.php');
+      startSecureSession();
     }
     session_regenerate_id(true);
     $_SESSION['loggedin'] = true;
