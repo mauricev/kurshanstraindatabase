@@ -6,6 +6,7 @@ $outputFile = 'missing_sequence_files.tsv';
 $databaseHost = 'localhost';
 $databaseName = 'straindatabase';
 $databaseUser = 'readonly';
+$verbose = false;
 
 function usage(): void {
   global $sequenceDirectory, $outputFile, $databaseHost, $databaseName, $databaseUser;
@@ -26,6 +27,7 @@ Defaults:
 Options:
   --sequence-dir DIR   Directory containing sequence files.
   --output FILE        TSV output file. Use "-" for stdout.
+  --verbose            Include entity type, id, missing reason, path, and SQL recovery hints.
   --host HOST          MySQL host.
   --database NAME      MySQL database name.
   --user USER          MySQL user.
@@ -42,6 +44,9 @@ for ($i = 1; $i < $argc; $i++) {
         fwrite(STDERR, "Missing value for --sequence-dir\n");
         exit(2);
       }
+      break;
+    case '--verbose':
+      $verbose = true;
       break;
     case '--output':
       $outputFile = $argv[++$i] ?? '';
@@ -213,30 +218,44 @@ if ($handle === false) {
   exit(1);
 }
 
-writeTsvRow($handle, [
-  'entity_type',
-  'id',
-  'name',
-  'sequence_filename',
-  'missing_reason',
-  'expected_path',
-  'sql_has_sequence_data',
-  'sql_sequence_bytes',
-  'sql_sequence_sha256',
-]);
+if ($verbose) {
+  writeTsvRow($handle, [
+    'entity_type',
+    'id',
+    'name',
+    'sequence_filename',
+    'missing_reason',
+    'expected_path',
+    'sql_has_sequence_data',
+    'sql_sequence_bytes',
+    'sql_sequence_sha256',
+  ]);
+} else {
+  writeTsvRow($handle, [
+    'entity_name',
+    'sequence_filename',
+  ]);
+}
 
 foreach ($rows as $row) {
-  writeTsvRow($handle, [
-    $row['entity_type'],
-    $row['id'],
-    $row['name'],
-    $row['sequence_filename'],
-    $row['missing_reason'],
-    $row['expected_path'],
-    $row['sql_has_sequence_data'],
-    $row['sql_sequence_bytes'],
-    $row['sql_sequence_sha256'],
-  ]);
+  if ($verbose) {
+    writeTsvRow($handle, [
+      $row['entity_type'],
+      $row['id'],
+      $row['name'],
+      $row['sequence_filename'],
+      $row['missing_reason'],
+      $row['expected_path'],
+      $row['sql_has_sequence_data'],
+      $row['sql_sequence_bytes'],
+      $row['sql_sequence_sha256'],
+    ]);
+  } else {
+    writeTsvRow($handle, [
+      $row['name'],
+      $row['sequence_filename'],
+    ]);
+  }
 }
 
 if ($outputFile !== '-') {
@@ -244,4 +263,3 @@ if ($outputFile !== '-') {
   echo "Wrote $outputFile\n";
 }
 echo "Missing sequence file references: " . count($rows) . "\n";
-
