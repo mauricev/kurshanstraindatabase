@@ -471,18 +471,6 @@ ORDER BY strainName_col ASC;";
 						<?php
 							require_once('../classes/logger.php');
 						$theLogObject = new Logger();
-						$theLogDiagnostics = $theLogObject->returnDiagnostics();
-						echo "<div class='alert alert-secondary twelvepoints' role='status'>";
-						echo "<strong>Logging diagnostics</strong>";
-							echo "<table class='table table-sm table-bordered mt-2 mb-0'>";
-							foreach ($theLogDiagnostics as $theDiagnosticLabel => $theDiagnosticValue) {
-								echo "<tr>";
-								echo "<th scope='row'>" . h($theDiagnosticLabel) . "</th>";
-								echo "<td><code>" . h($theDiagnosticValue) . "</code></td>";
-								echo "</tr>";
-							}
-							echo "</table>";
-							echo "</div>";
 							$theLogString = $theLogObject->returnLog();
 							echo "<textarea id='textareaID' name='textarea_htmlName' class='md-textarea twelvepoints'  readonly style='width:100%; overflow-y:scroll' rows='16'>" . h($theLogString) . "</textarea>";
 						?>
