@@ -2,8 +2,17 @@
 require_once(__DIR__ . '/classes_app_settings.php');
 
 class Logger {
+    private function currentLogPrefix() {
+      return AppSettings::instanceKey() . '-log-';
+    }
+
     private function returnLogPath($fileName_param) {
       return AppSettings::loggingFilesDirectory() . "/$fileName_param";
+    }
+
+    private function isCurrentInstanceLogFile($fileName_param) {
+      $theLogPrefix = $this->currentLogPrefix();
+      return substr($fileName_param, 0, strlen($theLogPrefix)) === $theLogPrefix;
     }
 
     private function rememberLoggingError($message_param) {
@@ -30,16 +39,17 @@ class Logger {
     private function createUniqueLogFile() {
       $theErrorMessage = "";
       $theLogDirectory = AppSettings::loggingFilesDirectory();
+      $theLogPrefix = $this->currentLogPrefix();
       set_error_handler(function($errno, $errstr) use (&$theErrorMessage) {
         $theErrorMessage = $errstr;
         return true;
       });
 
-      $theLogPath = tempnam($theLogDirectory, 'peri-log-');
+      $theLogPath = tempnam($theLogDirectory, $theLogPrefix);
       restore_error_handler();
 
       if ($theLogPath === false) {
-        $this->rememberLoggingError("tempnam($theLogDirectory, peri-log-) failed: " . ($theErrorMessage !== "" ? $theErrorMessage : "unknown error"));
+        $this->rememberLoggingError("tempnam($theLogDirectory, $theLogPrefix) failed: " . ($theErrorMessage !== "" ? $theErrorMessage : "unknown error"));
         return false;
       }
 
@@ -64,6 +74,10 @@ class Logger {
     }
 
     public function returnLogFileName() {
+      if ($this->isLogFileSet() && !($this->isCurrentInstanceLogFile($_SESSION['loggerFileName']))) {
+        unset($_SESSION['loggerFileName']);
+      }
+
       if (!($this->isLogFileSet()) || !(is_file($this->returnLogPath($_SESSION['loggerFileName'])))) {
         if (!($this->createLogFile())) {
           return false;
@@ -145,6 +159,7 @@ class Logger {
       'server environment user' => $theServerUser,
       'shell id user fallback' => $theShellIDUser,
       'shell id uid fallback' => $theShellIDUID,
+      'expected log filename prefix' => $this->currentLogPrefix(),
       'session log file' => $theSessionLogFile !== "" ? $theSessionLogFile : 'not set',
       'session log path' => $theSessionLogPath !== "" ? $theSessionLogPath : 'not set',
       'session log exists' => $theSessionLogPath !== "" && is_file($theSessionLogPath) ? 'yes' : 'no',
